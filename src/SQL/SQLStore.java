@@ -54,6 +54,8 @@ public class SQLStore extends GeneralSQL {
                 //System.out.println(rs.getString(1));
                 //System.out.println(rs.getString(2));
             }
+            
+            con.close();
 
             //Now we can display the games
             //That should be done soimewhere else, keep this exclusively to queries as much as you can
@@ -173,6 +175,8 @@ public class SQLStore extends GeneralSQL {
                 //Lists.cart.add(item);
             }
 
+            con.close();
+            
         } catch (SQLException ex) {
 
             System.out.println(ex);
@@ -192,7 +196,11 @@ public class SQLStore extends GeneralSQL {
 
             if (rs.next()) {
 
-                return rs.getString(1);
+                String newString = rs.getString(1);
+                
+                con.close();
+                
+                return newString;
 
             } else {
 
@@ -262,6 +270,8 @@ public class SQLStore extends GeneralSQL {
                 Lists.consoles.add(rs.getString(1));
 
             }
+            
+            con.close();
 
         } catch (SQLException ex) {
 
@@ -359,6 +369,8 @@ public class SQLStore extends GeneralSQL {
                 discountInfo.add("Invalid Code");
 
             }
+            
+            con.close();
 
         } catch (SQLException ex) {
 
@@ -412,6 +424,8 @@ public class SQLStore extends GeneralSQL {
 
             }
 
+            con.close();
+            
             return noBuy;
 
         } catch (SQLException ex) {
@@ -536,6 +550,8 @@ public class SQLStore extends GeneralSQL {
 
             //clear the cart
             Lists.cart.clear();
+            
+            
 
         } catch (SQLException ex) {
 

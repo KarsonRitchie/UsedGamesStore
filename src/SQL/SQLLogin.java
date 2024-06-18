@@ -56,7 +56,7 @@ public class SQLLogin extends GeneralSQL {
                 userLevel = "None";
             }
 
-            //con.close();
+            con.close();
 
         } catch (SQLException ex) {
 
@@ -98,7 +98,7 @@ public class SQLLogin extends GeneralSQL {
                 //we will verify things of the password and other ifnormation in the form
             }
 
-            //con.close();
+            con.close();
 
         } catch (SQLException ex) {
 
@@ -130,7 +130,7 @@ public class SQLLogin extends GeneralSQL {
 
             }
 
-            //con.close();
+            con.close();
 
         } catch (SQLException ex) {
 
@@ -204,7 +204,7 @@ public class SQLLogin extends GeneralSQL {
             
             }
 
-            //con.close();
+            con.close();
 
         } catch (SQLException ex) {
             
@@ -226,7 +226,7 @@ public class SQLLogin extends GeneralSQL {
             
             GeneralSQL.getConnection();
             
-            //con = DriverManager.getConnection(mySQLURL, myUsername, myPassword);
+            con = DriverManager.getConnection(mySQLURL, myUsername, myPassword);
             
             //first get the previous id
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT UserID FROM User");
@@ -244,8 +244,10 @@ public class SQLLogin extends GeneralSQL {
                     + "\"" + fName + "\", \"" + lName + "\", \"" + address1 + "\", \"" + address2 + "\", \"" + address3 + "\", \"" + city + "\", \"" + state + "\", \""
                     + zip + "\", \"" + phone + "\", \"" + email + "\", \"" + q1 + "\", \"" + q2 + "\", \"" + q3 + "\", \"" + a1 + "\", \"" + a2 + "\", \"" + a3 + "\", 1);");
             stmt.execute();
+            
+            con.close();
+            
             return "Account Created";
-            //con.close();
         } catch (SQLException ex) {
 
             System.out.println(ex);

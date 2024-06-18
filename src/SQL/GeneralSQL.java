@@ -67,6 +67,7 @@ public abstract class GeneralSQL {
             con = DriverManager.getConnection(mySQLURL);
 
             System.out.println("Connection secured");
+            
 
         } catch (SQLException ex) {
 
@@ -82,6 +83,7 @@ public abstract class GeneralSQL {
                     con = DriverManager.getConnection(mySQLURL);
 
                     System.out.println("Connection secured");
+                   
 
                 } catch (SQLException ex2) {
 

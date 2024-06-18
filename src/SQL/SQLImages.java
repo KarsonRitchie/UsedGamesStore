@@ -47,6 +47,8 @@ public class SQLImages extends GeneralSQL {
                     System.out.println("updating image");
                 }
                 
+                con.close();
+                
                 return true;
             } else {
                 
@@ -71,6 +73,8 @@ public class SQLImages extends GeneralSQL {
                 ps.executeUpdate();
 
                 System.out.println("Saving image");
+                
+                con.close();
                 
                 return true;
             }
@@ -107,11 +111,12 @@ public class SQLImages extends GeneralSQL {
 
             }
 
-            //con.close();
+            con.close();
         } catch (Exception ex) {
 
             System.out.println("Can not load images from database");
             ex.printStackTrace();
+            
         }
 
     }
@@ -127,7 +132,13 @@ public class SQLImages extends GeneralSQL {
             ps = con.prepareStatement("SELECT Image FROM Images WHERE GameID = " + gameID + " AND ImageType = " + imageType);
             ResultSet rs = ps.executeQuery();
             rs.next();
-            return rs.getBytes(1);
+            
+            byte[] b = rs.getBytes(1);
+            
+            con.close();
+            
+            return b;
+            
             
         } catch (SQLException ex) {
             System.out.println(ex);

@@ -34,7 +34,7 @@ public class SQLManager extends GeneralSQL {
         Lists.users.clear();
 
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT Level, UserID, FirstName, LastName, Email, Phone, AddressLine1, AddressLine2, AddressLine3, City, State, Zipcode, Username, Password, Enabled "
@@ -53,6 +53,8 @@ public class SQLManager extends GeneralSQL {
                 //System.out.println(rs.getString(2));
             }
 
+            con.close();
+
         } catch (SQLException ex) {
 
             System.out.println("Cant load Users");
@@ -68,6 +70,7 @@ public class SQLManager extends GeneralSQL {
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("DELETE FROM User WHERE UserID = " + userID);
             stmt.execute();
+
             return true;
 
         } catch (SQLException ex) {
@@ -83,7 +86,7 @@ public class SQLManager extends GeneralSQL {
     public static boolean saveUser(User user) {
 
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("UPDATE User SET Username = '" + user.userName + "', "
@@ -102,6 +105,8 @@ public class SQLManager extends GeneralSQL {
                     + "WHERE UserID = " + user.userID);
 
             stmt.execute();
+
+            con.close();
 
             return true;
 
@@ -125,7 +130,7 @@ public class SQLManager extends GeneralSQL {
         try {
 
             GeneralSQL.getConnection();
-            
+
             stmt = GeneralSQL.con.prepareStatement("SELECT OrderID, OrderDate, DiscountID, DiscountedOff "
                     + "FROM Orders "
                     + "WHERE UserID = " + userID);
@@ -164,6 +169,8 @@ public class SQLManager extends GeneralSQL {
 
             }
 
+            con.close();
+
         } catch (SQLException ex) {
             System.out.println(ex);
         }
@@ -175,7 +182,7 @@ public class SQLManager extends GeneralSQL {
         Lists.discounts.clear();
 
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT DiscountID, DiscountCode, Description, DiscountType, DiscountPercent, DiscountDollar, StartDate, EndDate, Active, DiscountLevel, GameTitle FROM Discounts");
@@ -190,22 +197,22 @@ public class SQLManager extends GeneralSQL {
                     Discount newDiscount = new Discount(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getFloat(5), rs.getString(7), rs.getString(8), rs.getInt(9), rs.getInt(10), rs.getString(11));
 
                     Lists.discounts.add(newDiscount);
-                    
-                    //System.out.println(rs.getString(7));
 
+                    //System.out.println(rs.getString(7));
                 } else {
 
                     Discount newDiscount = new Discount(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getFloat(6), rs.getString(7), rs.getString(8), rs.getInt(9), rs.getInt(10), rs.getString(11));
 
                     Lists.discounts.add(newDiscount);
                     //System.out.println(rs.getString(7));
-                    
 
                 }
 
                 //System.out.println(rs.getString(1));
                 //System.out.println(rs.getString(2));
             }
+
+            con.close();
 
         } catch (SQLException ex) {
 
@@ -219,24 +226,26 @@ public class SQLManager extends GeneralSQL {
     public static boolean saveDiscount(Discount discount) {
 
         try {
-            
+
             GeneralSQL.getConnection();
 
-            if(discount.discountType == 0){
-            PreparedStatement stmt = GeneralSQL.con.prepareStatement("UPDATE Discounts SET DiscountCode = \"" + discount.discountCode.toUpperCase() + "\", "
-                    + "Active = " + discount.active + ", Description = \"" + discount.description + "\", DiscountPercent = " + discount.discountAmount + " "
-                    + "WHERE DiscountID = " + discount.discountID + ";");
-
-            stmt.execute();
-            }else{
-            
+            if (discount.discountType == 0) {
                 PreparedStatement stmt = GeneralSQL.con.prepareStatement("UPDATE Discounts SET DiscountCode = \"" + discount.discountCode.toUpperCase() + "\", "
-                    + "Active = " + discount.active + ", Description = \"" + discount.description + "\", DiscountDollar = " + discount.discountAmount + " "
-                    + "WHERE DiscountID = " + discount.discountID + ";");
+                        + "Active = " + discount.active + ", Description = \"" + discount.description + "\", DiscountPercent = " + discount.discountAmount + " "
+                        + "WHERE DiscountID = " + discount.discountID + ";");
 
-            stmt.execute();
-            
+                stmt.execute();
+            } else {
+
+                PreparedStatement stmt = GeneralSQL.con.prepareStatement("UPDATE Discounts SET DiscountCode = \"" + discount.discountCode.toUpperCase() + "\", "
+                        + "Active = " + discount.active + ", Description = \"" + discount.description + "\", DiscountDollar = " + discount.discountAmount + " "
+                        + "WHERE DiscountID = " + discount.discountID + ";");
+
+                stmt.execute();
+
             }
+
+            con.close();
 
             return true;
 
@@ -272,24 +281,24 @@ public class SQLManager extends GeneralSQL {
     public static boolean createDiscount(int type, String code, String description, float amount, String startDate, String endDate, int isActive, String discountLevel, String title) {
 
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = null;
             ResultSet rs = null;
-            
+
             int idNum = 0;
-            
+
             stmt = GeneralSQL.con.prepareStatement("SELECT DiscountID FROM Discounts");
-            
+
             rs = stmt.executeQuery();
-            
-            while(rs.next()){
-            
+
+            while (rs.next()) {
+
                 idNum = rs.getInt(1);
-            
+
             }
-            
+
             if (discountLevel.equals("Cart")) {
 
                 int level = 0;
@@ -321,6 +330,9 @@ public class SQLManager extends GeneralSQL {
             }
 
             stmt.execute();
+
+            con.close();
+
             return true;
 
         } catch (SQLException ex) {
@@ -332,40 +344,42 @@ public class SQLManager extends GeneralSQL {
         }
 
     }
-    
-    public static String checkDiscount(String code){
-    
-        
+
+    public static String checkDiscount(String code) {
+
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT DiscountCode FROM Discounts WHERE DiscountCode = \"" + code + "\"");
             ResultSet rs = stmt.executeQuery();
-            
-            if(rs.next()){
-            
+
+            if (rs.next()) {
+
+                con.close();
                 return "Discount exists";
-                
-            }else{
-            
+
+            } else {
+
+                con.close();
+
                 return "Discount doesnt exist";
-                
+
             }
 
         } catch (SQLException ex) {
-            
+
             System.out.println(ex);
             return "ERROR";
 
         }
-        
+
     }
 
     public static boolean saveGame(Game game) {
 
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("UPDATE TestGames3 SET Title = \"" + game.name + "\", "
@@ -377,13 +391,16 @@ public class SQLManager extends GeneralSQL {
                     + "WHERE GameID = " + game.gameID);
 
             stmt.execute();
+
+            con.close();
+
             return true;
 
         } catch (SQLException ex) {
 
             System.out.println("Cant save game");
             System.out.println(ex);
-            
+
             return false;
 
         }
@@ -393,20 +410,20 @@ public class SQLManager extends GeneralSQL {
     public static boolean addGame(String title, float price, String genre, String console, int quantity, String description, int restock, int isActive) {
 
         try {
-            
+
             GeneralSQL.getConnection();
             ResultSet rs = null;
-            
+
             int idNum = 0;
-            
+
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT GameID FROM TestGames3");
-            
+
             rs = stmt.executeQuery();
-            
-            while(rs.next()){
-            
+
+            while (rs.next()) {
+
                 idNum = rs.getInt(1);
-            
+
             }
 
             stmt = GeneralSQL.con.prepareStatement("INSERT INTO TestGames3 VALUES(" + (idNum + 1) + ", \"" + title + "\", "
@@ -415,6 +432,9 @@ public class SQLManager extends GeneralSQL {
                     + "\"" + description + "\", " + restock + ", " + isActive + ")");
 
             stmt.execute();
+
+            con.close();
+
             return true;
 
         } catch (SQLException ex) {
@@ -426,28 +446,31 @@ public class SQLManager extends GeneralSQL {
         }
 
     }
-    
-    public static String checkGame(String title, String system){
-    
+
+    public static String checkGame(String title, String system) {
+
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT Title, Consoles.Console FROM TestGames3 "
                     + "JOIN Consoles ON TestGames3.ConsoleID = Consoles.ConsoleID "
-                    + "WHERE Title = \"" + title + "\" AND Console = \"" + system +"\"");
+                    + "WHERE Title = \"" + title + "\" AND Console = \"" + system + "\"");
 
             ResultSet rs = stmt.executeQuery();
-            
-            
-            if(rs.next()){
-            
+
+            if (rs.next()) {
+
+                con.close();
+
                 return "Exists";
-            
-            }else{
-            
+
+            } else {
+
+                con.close();
+
                 return "No";
-            
+
             }
 
         } catch (SQLException ex) {
@@ -457,13 +480,13 @@ public class SQLManager extends GeneralSQL {
             return "ERROR";
 
         }
-    
+
     }
 
     public static int recieveID(String title, String system) {
 
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT GameID FROM TestGames3 "
@@ -472,6 +495,8 @@ public class SQLManager extends GeneralSQL {
             ResultSet rs = stmt.executeQuery();
 
             rs.next();
+
+            con.close();
 
             return rs.getInt(1);
 
@@ -489,6 +514,9 @@ public class SQLManager extends GeneralSQL {
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("DELETE FROM TestGames3 WHERE GameID = " + gameID);
             stmt.execute();
+
+            con.close();
+
             return true;
 
         } catch (SQLException ex) {
@@ -504,7 +532,7 @@ public class SQLManager extends GeneralSQL {
     public static void inventoryReport() throws Exception {
 
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT Title, Price, Consoles.Console, Quantity, RestockThreshold, IsEnabled "
@@ -513,6 +541,8 @@ public class SQLManager extends GeneralSQL {
             ResultSet rs = stmt.executeQuery();
 
             Report inventoryReport = new Report(rs, true, false);
+
+            con.close();
 
         } catch (SQLException ex) {
 
@@ -525,7 +555,7 @@ public class SQLManager extends GeneralSQL {
     public static void salesReport(boolean specific, String start, String end) throws Exception {
 
         if (specific) {
-            
+
             GeneralSQL.getConnection();
 
             //only get orders from a specific customer
@@ -539,6 +569,8 @@ public class SQLManager extends GeneralSQL {
 
             Report salesReport = new Report(rs, false, true);
 
+            con.close();
+
         } else {
 
             //do a query for all orders
@@ -546,7 +578,7 @@ public class SQLManager extends GeneralSQL {
 
                 System.out.println(start);
                 GeneralSQL.getConnection();
-                
+
                 System.out.println(start);
 
                 PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT TestGames3.Title, Consoles.Console, SUM(OrderDetails.Quantity) AS 'Total Sold', SUM(OrderDetails.Total) AS 'Total Earned', OrderDate FROM OrderDetails "
@@ -558,6 +590,8 @@ public class SQLManager extends GeneralSQL {
                 ResultSet rs = stmt.executeQuery();
 
                 Report salesReport = new Report(rs, false, false);
+
+                con.close();
 
             } catch (SQLException ex) {
                 System.out.println(ex);
@@ -572,7 +606,7 @@ public class SQLManager extends GeneralSQL {
     public static float dailyCheck(LocalDate day, boolean specific) {
 
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = null;
@@ -585,8 +619,11 @@ public class SQLManager extends GeneralSQL {
             ResultSet rs = stmt.executeQuery();
 
             rs.next();
+            float newFloat = rs.getFloat(1);
 
-            return rs.getFloat(1);
+            con.close();
+
+            return newFloat;
 
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -600,28 +637,31 @@ public class SQLManager extends GeneralSQL {
     public static float weekCheck(LocalDate start, LocalDate end, boolean specific) {
 
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = null;
-            
-            if(!specific){
-                
+
+            if (!specific) {
+
                 stmt = GeneralSQL.con.prepareStatement("SELECT SUM(Total) FROM Orders WHERE OrderDate BETWEEN \"" + start + "\" AND \"" + end + "\"");
-                
-            }else{
-            
+
+            } else {
+
                 stmt = GeneralSQL.con.prepareStatement("SELECT SUM(Total) FROM Orders WHERE UserID = " + Variables.customerID + " AND OrderDate BETWEEN \"" + start + "\" AND \"" + end + "\"");
-                
+
             }
-            
+
             ResultSet rs = stmt.executeQuery();
 
             rs.next();
 
             System.out.println("Weekly earnings: " + rs.getFloat(1));
+            float newFloat = rs.getFloat(1);
 
-            return rs.getFloat(1);
+            con.close();
+
+            return newFloat;
 
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -635,25 +675,28 @@ public class SQLManager extends GeneralSQL {
     public static float monthCheck(LocalDate start, LocalDate end, boolean specific) {
 
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = null;
-            
-            if(!specific){
-                
+
+            if (!specific) {
+
                 stmt = GeneralSQL.con.prepareStatement("SELECT SUM(Total) FROM Orders WHERE OrderDate BETWEEN \"" + start + "\" AND \"" + end + "\"");
-                
-            }else{
-            
+
+            } else {
+
                 stmt = GeneralSQL.con.prepareStatement("SELECT SUM(Total) FROM Orders WHERE UserID = " + Variables.customerID + " AND OrderDate BETWEEN \"" + start + "\" AND \"" + end + "\"");
-                
+
             }
             ResultSet rs = stmt.executeQuery();
 
             rs.next();
+            float newFloat = rs.getFloat(1);
 
-            return rs.getFloat(1);
+            con.close();
+
+            return newFloat;
 
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -667,25 +710,29 @@ public class SQLManager extends GeneralSQL {
     public static float yearCheck(LocalDate start, LocalDate end, boolean specific) {
 
         try {
-            
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = null;
-            
-            if(!specific){
-                
+
+            if (!specific) {
+
                 stmt = GeneralSQL.con.prepareStatement("SELECT SUM(Total) FROM Orders WHERE OrderDate BETWEEN \"" + start + "\" AND \"" + end + "\"");
-                
-            }else{
-            
+
+            } else {
+
                 stmt = GeneralSQL.con.prepareStatement("SELECT SUM(Total) FROM Orders WHERE UserID = " + Variables.customerID + " AND OrderDate BETWEEN \"" + start + "\" AND \"" + end + "\"");
-                
+
             }
             ResultSet rs = stmt.executeQuery();
 
             rs.next();
 
-            return rs.getFloat(1);
+            float newFloat = rs.getFloat(1);
+
+            con.close();
+
+            return newFloat;
 
         } catch (SQLException ex) {
             System.out.println(ex);
