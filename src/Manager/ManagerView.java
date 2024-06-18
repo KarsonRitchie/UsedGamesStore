@@ -100,6 +100,10 @@ public class ManagerView extends javax.swing.JFrame {
         inventoryErrors.add(editTitleError);
         inventoryErrors.add(editDescError);
         inventoryErrors.add(priceError);
+        
+        userDisplay.getVerticalScrollBar().setUnitIncrement(16);
+        itemDisplay.getVerticalScrollBar().setUnitIncrement(16);
+        shownDiscounts.getVerticalScrollBar().setUnitIncrement(16);
 
     }
 

@@ -1,0 +1,1 @@
+Master branch link (the branch of the apache netbeans project): https://github.com/TSTC-CPT/24SP-233x-KarsonRitchie/tree/master

@@ -60,6 +60,7 @@ public class StorePage extends javax.swing.JFrame {
         login = logon;
 
         cart = new CartPage(this, login);
+        itemDisplay.getVerticalScrollBar().setUnitIncrement(16);
 
         //make sure the filters are created when this is created
         //SQLStore.createFilterLists();
