@@ -435,17 +435,21 @@ public class Report {
             baseBody += "<td>" + sales.getString(2) + "</td>";
             baseBody += "<td>" + sales.getInt(3) + "</td>";
             baseBody += "<td>$" + String.format("%.2f", sales.getFloat(4)) + "</td>";
-            baseBody += "<td>" + sales.getDate(5) + "</td>";
+            baseBody += "<td>" + sales.getString(5) + "</td>";
 
             baseBody += "</tr>\n";
             System.out.println("Row made");
+            
+            System.out.println(sales.getString(1));
 
-            //check if its the last row
-            if (!sales.next()) {
-                
-                System.out.println("on last row");
+            
+            oldDate = currentDate;
+            
+            
 
-                if (oldDate != null && currentDate.isAfter(oldDate)) {
+        }
+        
+        if (oldDate != null && currentDate.isAfter(oldDate)) {
 
                     //when this is true we should run another query to get the daily earnings
                     Float total = SQLManager.dailyCheck(currentDate, specific);
@@ -554,14 +558,9 @@ public class Report {
                         startYear = currentDate.minusDays(currentDate.getDayOfYear() - 1);
 
                     }
-
-                }
-
-            }
-
-            oldDate = currentDate;
-
         }
+        
+        
 
     }
 

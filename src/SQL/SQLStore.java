@@ -72,6 +72,8 @@ public class SQLStore extends GeneralSQL {
 
         //Here we will try to check if we can take away from the databse and act acocrdingly
         try {
+            
+            GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT Quantity, Consoles.Console FROM TestGames3 "
                     + "JOIN Consoles ON TestGames3.ConsoleID = Consoles.ConsoleID "
@@ -83,6 +85,7 @@ public class SQLStore extends GeneralSQL {
             if (rs.getInt(1) < amountDesired) {
 
                 //return a flase statement that will help display
+                con.close();
                 return false;
 
             } else {
@@ -143,6 +146,7 @@ public class SQLStore extends GeneralSQL {
                     Lists.cart.add(item);
                 }
 
+                con.close();
                 return true;
 
             }

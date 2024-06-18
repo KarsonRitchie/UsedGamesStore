@@ -496,9 +496,11 @@ public class SQLManager extends GeneralSQL {
 
             rs.next();
 
+            int newInt = rs.getInt(1);
+            
             con.close();
 
-            return rs.getInt(1);
+            return newInt;
 
         } catch (SQLException ex) {
 
