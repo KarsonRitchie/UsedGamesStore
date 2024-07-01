@@ -38,6 +38,20 @@ public class Game {
     
     }
     
+    public Game(Game game){
+    
+        this.name = game.name;
+        this.price = game.price;
+        this.genre = game.genre;
+        this.system = game.system;
+        this.quantity = game.quantity;
+        this.gameID = game.gameID;
+        this.description = game.description;
+        this.restock = game.restock;
+        this.active = game.active;
+    
+    }
+    
     public void save(String name, float price, int quantity, String description, int restock, int active){
     
         this.name = name;
@@ -46,6 +60,12 @@ public class Game {
         this.description = description;
         this.restock = restock;
         this.active = active;
+        
+    }
+    
+    public void quantitySave(int quantity){
+    
+        this.quantity = quantity;
         
     }
     

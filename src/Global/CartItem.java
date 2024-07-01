@@ -29,15 +29,15 @@ public class CartItem {
     public float amountDiscounted = 0.00f;
     public int typeDiscount = 0;
 
-    public CartItem(int userID, int itemID, int quantity, float price, String system, int maxQuantity) {
+    public CartItem(int userID, int itemID, int quantity, int maxQuantity, float price, String system) {
 
         this.userID = userID;
         this.itemID = itemID;
         this.quantity = quantity;
+        this.maxQuantity = maxQuantity;
         this.price = price;
         total = quantity * price;
         this.system = system;
-        this.maxQuantity = maxQuantity;
         //this.description = description;
 
     }
@@ -56,7 +56,7 @@ public class CartItem {
     //a method to remove the item and add it back to stock
     public void remove(int index) {
 
-        //String status = SQLStore.removeFromCart(itemID, userID);
+        //SQLStore.removeFromCart(itemID, userID);
         Lists.cart.remove(index);
 
     }

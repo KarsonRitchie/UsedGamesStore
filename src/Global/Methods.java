@@ -533,6 +533,34 @@ public class Methods {
 //    return compiledErrors;
 //    }
     //This method will check for errors ina  given list and act accordingly
+    
+    public static ArrayList<String> checkLists(ArrayList<JList> lists) {
+
+        ArrayList<String> allErrors = new ArrayList<String>();
+
+        //we should make an integer to see how many lists are empty
+        //if all are empty then we need to return an error
+        int amountEmpty = 0;
+        
+        for(JList list: lists){
+            
+            if(list.getModel().getSize() == 0){
+            
+                amountEmpty++;
+                
+            }
+        
+        }
+        
+        if(amountEmpty == lists.size()){
+        
+            allErrors.add("At least one item must be added");
+            
+        }
+
+        return allErrors;
+    }
+    
     public static void checkForErrors(ArrayList<String> errors, JLabel errorMessage) {
 
         if (errors.size() > 0) {

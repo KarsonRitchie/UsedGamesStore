@@ -54,7 +54,7 @@ public class SQLStore extends GeneralSQL {
                 //System.out.println(rs.getString(1));
                 //System.out.println(rs.getString(2));
             }
-            
+
             con.close();
 
             //Now we can display the games
@@ -72,7 +72,8 @@ public class SQLStore extends GeneralSQL {
 
         //Here we will try to check if we can take away from the databse and act acocrdingly
         try {
-            
+            System.out.println("The desired amount is: " + amountDesired);
+
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT Quantity, Consoles.Console FROM TestGames3 "
@@ -97,55 +98,57 @@ public class SQLStore extends GeneralSQL {
                 //quantity should be changed when 
                 //now we will add it to the cart
                 //first check if its in the cart
-                /*
-               stmt = GeneralSQL.con.prepareStatement("SELECT * FROM Cart WHERE UserID = " + userID + " AND ItemID = " + gameID);
-               rs = stmt.executeQuery();
-               
-               if(rs.next()){
-               
+                //save the max quantity first
+                int max = rs.getInt(1);
+
+                stmt = GeneralSQL.con.prepareStatement("SELECT * FROM Cart WHERE UserID = " + userID + " AND ItemID = " + gameID);
+                rs = stmt.executeQuery();
+
+                if (rs.next()) {
+
                     stmt = GeneralSQL.con.prepareStatement("UPDATE Cart SET Quantity = " + (rs.getInt(3) + amountDesired) + " WHERE ItemID = " + gameID + " AND UserID = " + userID);
-                    stmt.execute();  
-               
-               }else{
-               
-                    stmt = GeneralSQL.con.prepareStatement("INSERT INTO Cart VALUES(" + userID + ", " + gameID + ", " + amountDesired + ", " + price + " )");
                     stmt.execute();
-                
-               }
-                
+
+                } else {
+
+                    stmt = GeneralSQL.con.prepareStatement("INSERT INTO Cart VALUES(" + userID + ", " + gameID + ", " + amountDesired + ", " + max + ", " + price + ", '" + console + "')");
+                    stmt.execute();
+
+                }
+
                 //now create the cart again
                 createCart(userID);
-                 */
+
                 //We will still use this method but we might not should make a cart table
                 //keep it for reference or jsut incase but for now just make the cart item here
                 //We need to check if the game already exists in the cart
-                CartItem item = new CartItem(userID, gameID, amountDesired, price, console, rs.getInt(1));
-
-                boolean exists = false;
-
-                for (CartItem tempItem : Lists.cart) {
-
-                    if (tempItem.itemID == gameID) {
-
-                        tempItem.updateQuantity(tempItem.quantity + amountDesired);
-
-                        if (tempItem.quantity > tempItem.maxQuantity) {
-
-                            tempItem.quantity = tempItem.maxQuantity;
-
-                        }
-
-                        exists = true;
-                        break;
-
-                    }
-
-                }
-
-                if (exists == false) {
-                    Lists.cart.add(item);
-                }
-
+//                CartItem item = new CartItem(userID, gameID, amountDesired, max, price, console);
+//
+//                boolean exists = false;
+//
+//                for (CartItem tempItem : Lists.cart) {
+//
+//                    if (tempItem.itemID == gameID) {
+//
+//                        tempItem.updateQuantity(tempItem.quantity + amountDesired);
+//
+//                        if (tempItem.quantity > tempItem.maxQuantity) {
+//
+//                            tempItem.quantity = tempItem.maxQuantity;
+//
+//                        }
+//
+//                        exists = true;
+//                        break;
+//
+//                    }
+//
+//                }
+//
+//                if (exists == false) {
+//                    Lists.cart.add(item);
+//                }
+//
                 con.close();
                 return true;
 
@@ -175,12 +178,13 @@ public class SQLStore extends GeneralSQL {
             while (rs.next()) {
 
                 //first create the cartItem
-                //CartItem item = new CartItem(userID, rs.getInt(2), rs.getInt(3), rs.getFloat(4));
-                //Lists.cart.add(item);
+                System.out.println(rs.getInt(3));
+                CartItem item = new CartItem(userID, rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getFloat(5), rs.getString(6));
+                Lists.cart.add(item);
             }
 
             con.close();
-            
+
         } catch (SQLException ex) {
 
             System.out.println(ex);
@@ -201,9 +205,9 @@ public class SQLStore extends GeneralSQL {
             if (rs.next()) {
 
                 String newString = rs.getString(1);
-                
+
                 con.close();
-                
+
                 return newString;
 
             } else {
@@ -227,8 +231,12 @@ public class SQLStore extends GeneralSQL {
             //PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT Quantity FROM TestGames2 WHERE GameID = " + itemID);
             //ResultSet rs = stmt.executeQuery();
 
+            GeneralSQL.getConnection();
+
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("DELETE FROM Cart WHERE ItemID = " + itemID + " AND UserID = " + userID);
             stmt.execute();
+
+            con.close();
 
             return "Success";
 
@@ -274,7 +282,7 @@ public class SQLStore extends GeneralSQL {
                 Lists.consoles.add(rs.getString(1));
 
             }
-            
+
             con.close();
 
         } catch (SQLException ex) {
@@ -373,7 +381,7 @@ public class SQLStore extends GeneralSQL {
                 discountInfo.add("Invalid Code");
 
             }
-            
+
             con.close();
 
         } catch (SQLException ex) {
@@ -389,11 +397,11 @@ public class SQLStore extends GeneralSQL {
 
     //We are getting ready to let the user checkout
     //these methods will be used for checking out
-    public static ArrayList<String> checkCart() {
+    public static ArrayList<CartItem> checkCart() {
 
         //we will loop through the items in the cart and compare them in a query
         //what we wull need to do is creat an array list of all the games that can not be ought at the current time
-        ArrayList<String> noBuy = new ArrayList<String>();
+        ArrayList<CartItem> noBuy = new ArrayList<CartItem>();
         ArrayList<Integer> indexes = new ArrayList<Integer>();
 
         //go ahead and make a prepared statement and rs variable
@@ -413,7 +421,7 @@ public class SQLStore extends GeneralSQL {
 
                 if (rs.getInt(1) < Lists.cart.get(x).quantity) {
 
-                    noBuy.add(Lists.cart.get(x).getProduct());
+                    noBuy.add(Lists.cart.get(x));
                     indexes.add(x);
 
                 }
@@ -429,13 +437,13 @@ public class SQLStore extends GeneralSQL {
             }
 
             con.close();
-            
+
             return noBuy;
 
         } catch (SQLException ex) {
 
             noBuy.clear();
-            noBuy.add("ERROR");
+            noBuy.add(new CartItem(0,0,0,0,0,"ERROR"));
             return noBuy;
 
         }
@@ -471,7 +479,7 @@ public class SQLStore extends GeneralSQL {
             Date currentDate = new Date();
 
             SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-            
+
             //now format the current date
             String newDate = dateFormatter.format(currentDate);
 
@@ -553,9 +561,12 @@ public class SQLStore extends GeneralSQL {
             makeReport(rs, discountID, discounted, tax, finalTotal, subtotal, discountString);
 
             //clear the cart
+            stmt = GeneralSQL.con.prepareStatement("DELETE FROM Cart WHERE UserID = " + Variables.customerID);
+            stmt.execute();
+            
+            con.close();
+            
             Lists.cart.clear();
-            
-            
 
         } catch (SQLException ex) {
 

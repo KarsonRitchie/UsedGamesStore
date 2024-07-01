@@ -48,6 +48,9 @@ public class SQLLogin extends GeneralSQL {
                 }else{
                 
                     Variables.currentUser = rs.getString(5);
+                    Variables.customerID = rs.getInt(1);
+                    
+                    SQLStore.createCart(Variables.userID);
                 
                 }
 

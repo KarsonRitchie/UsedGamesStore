@@ -4,6 +4,7 @@
  */
 package Manager;
 
+import Global.Game;
 import Global.Lists;
 import Manager.ManagerView;
 import SQL.SQLImages;
@@ -34,10 +35,13 @@ public class CreateGame extends javax.swing.JFrame {
      * Creates new form CreateGame
      */
     ManagerView manager = null;
+    AddInventoryPage addInv = null;
 
     //a list of jlabel elements
     ArrayList<JLabel> errorMessages = new ArrayList<JLabel>();
     private boolean gameUploaded = false;
+    
+    ArrayList<Game> games = new ArrayList<Game>();
 
     public CreateGame(ManagerView manager) {
         initComponents();
@@ -51,6 +55,12 @@ public class CreateGame extends javax.swing.JFrame {
         errorMessages.add(quantityError);
         errorMessages.add(priceError);
         errorMessages.add(gameExistsError);
+
+    }
+    
+    public void addInventoryPage(AddInventoryPage addInv) {
+        
+        this.addInv = addInv;
 
     }
 
@@ -644,10 +654,16 @@ public class CreateGame extends javax.swing.JFrame {
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
         this.dispose();
 
-        try {
+        if(fromInv == false){try {
             manager.open();
         } catch (ParseException ex) {
             Logger.getLogger(CreateGame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }else{
+        
+            fromInv = false;
+            addInv.reopen(games);
+            
         }
     }//GEN-LAST:event_returnButtonActionPerformed
 
@@ -834,6 +850,9 @@ public class CreateGame extends javax.swing.JFrame {
 
     Placeholder mainImage = new Placeholder();
     Placeholder thumbnailImage = new Placeholder();
+    
+    //a boolean to know if were opening from inventory page
+    boolean fromInv = false;
 
     public void open() {
 
@@ -917,6 +936,14 @@ public class CreateGame extends javax.swing.JFrame {
 
         this.setVisible(true);
 
+    }
+    
+    public void openInv(){
+    
+        fromInv = true;
+        games.clear();
+        open();
+    
     }
 
     public void disableItems() {
@@ -1133,6 +1160,15 @@ public class CreateGame extends javax.swing.JFrame {
                 gameSuccess.setVisible(true);
                 gameUploaded = true;
                 disableItems();
+                
+                //make sure to save the new game to the list of games if its from the inventory
+                if(fromInv == true){
+                
+                    Game newGame = new Game(titleField.getText(), Float.parseFloat(priceField.getText()), genreBox.getSelectedItem().toString(), systemBox.getSelectedItem().toString(), (int) quantityField.getValue(), gameID, descriptionField.getText(), (int) restockField.getValue(), 1);
+                    
+                    games.add(newGame);
+                    
+                }
 
             }else{
             

@@ -76,6 +76,9 @@ public class ManagerView extends javax.swing.JFrame {
 
         this.login = login;
         this.store = store;
+        
+        //make sure to add the addInv page to the game create page
+        gameCreate.addInventoryPage(addInv);
 
         //now add all error messages
         errorMessages.add(usernameError);
@@ -132,6 +135,9 @@ public class ManagerView extends javax.swing.JFrame {
     NotificationsView notifs = new NotificationsView(this);
     PastTransactions pastPurchases = new PastTransactions(this);
     CreateGame gameCreate = new CreateGame(this);
+    AddInventoryPage addInv = new AddInventoryPage(this, gameCreate);
+   
+    
 
     //DISCOUNTS
     //A couple booleans to help with searching discounts
@@ -222,6 +228,7 @@ public class ManagerView extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         salesReportButton = new javax.swing.JButton();
         helpButton = new javax.swing.JButton();
+        addInventoryButton = new javax.swing.JButton();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         inventoryFiltersPanel = new javax.swing.JPanel();
         consoleLabel = new javax.swing.JLabel();
@@ -589,6 +596,16 @@ public class ManagerView extends javax.swing.JFrame {
             }
         });
 
+        addInventoryButton.setBackground(new java.awt.Color(0, 48, 90));
+        addInventoryButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        addInventoryButton.setForeground(new java.awt.Color(255, 255, 255));
+        addInventoryButton.setText("Add Inventory");
+        addInventoryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addInventoryButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout controlPanelInventoryLayout = new javax.swing.GroupLayout(controlPanelInventory);
         controlPanelInventory.setLayout(controlPanelInventoryLayout);
         controlPanelInventoryLayout.setHorizontalGroup(
@@ -610,6 +627,7 @@ public class ManagerView extends javax.swing.JFrame {
                     .addComponent(controls1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addComponent(helpButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(addInventoryButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         controlPanelInventoryLayout.setVerticalGroup(
             controlPanelInventoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -631,6 +649,8 @@ public class ManagerView extends javax.swing.JFrame {
                 .addComponent(notifAmount)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(inventoryReportBttuon, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(addInventoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(salesReportPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -3345,12 +3365,15 @@ public class ManagerView extends javax.swing.JFrame {
 
     private void posButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_posButtonActionPerformed
 
+        Variables.customerID = displayedUsers.get(userTable.getSelectedRow()).userID;
         this.dispose();
 
         //before we open the POS system make sure we save the customer ID as well
         System.out.println(userTable.getSelectedRow());
-        Variables.customerID = displayedUsers.get(userTable.getSelectedRow()).userID;
-
+        //Variables.customerID = displayedUsers.get(userTable.getSelectedRow()).userID;
+        
+        System.out.println(Variables.customerID);
+        
         store.openPOS(this);
     }//GEN-LAST:event_posButtonActionPerformed
 
@@ -3743,6 +3766,12 @@ public class ManagerView extends javax.swing.JFrame {
             Logger.getLogger(StorePage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_helpButton2ActionPerformed
+
+    private void addInventoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addInventoryButtonActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        addInv.open();
+    }//GEN-LAST:event_addInventoryButtonActionPerformed
 
     /**
      * //@param args the command line arguments
@@ -4905,6 +4934,7 @@ public class ManagerView extends javax.swing.JFrame {
     private javax.swing.JCheckBox activeCheck;
     private javax.swing.JCheckBox activeDiscountCheck;
     private javax.swing.JButton addButton;
+    private javax.swing.JButton addInventoryButton;
     private javax.swing.JLabel addressError;
     private javax.swing.JLabel amountBuyingLabel;
     private javax.swing.JLabel amountEditError;

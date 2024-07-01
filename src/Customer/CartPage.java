@@ -688,6 +688,7 @@ public class CartPage extends javax.swing.JFrame {
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
 
         //We are goin to take the selected index and act accordingly
+        SQLStore.removeFromCart(Lists.cart.get(cartList.getSelectedIndex()).itemID, Lists.cart.get(cartList.getSelectedIndex()).userID);
         Lists.cart.get(cartList.getSelectedIndex()).remove(cartList.getSelectedIndex());
 
         resetCart();
@@ -753,7 +754,7 @@ public class CartPage extends javax.swing.JFrame {
                 //what we need to do first is call upon a method in the SQLStore class
                 //this method will check if all items are able to be bought at its current state
                 //This is an online storefront and the customers need to know if we could not meet their order
-                ArrayList<String> cantBuy = SQLStore.checkCart();
+                ArrayList<CartItem> cantBuy = SQLStore.checkCart();
                 purchaseError.setVisible(false);
 
                 if (cantBuy.size() == 0) {
@@ -790,7 +791,7 @@ public class CartPage extends javax.swing.JFrame {
 
                     purchaseError.setVisible(false);
 
-                } else if (cantBuy.get(0).equals("ERROR")) {
+                } else if (cantBuy.get(0).system.equals("ERROR")) {
 
                     //display an error message
                     purchaseError.setVisible(true);
@@ -803,10 +804,12 @@ public class CartPage extends javax.swing.JFrame {
                     //make sure to cleare previous entry
                     gamesNotBought.setText("");
 
-                    for (String item : cantBuy) {
+                    for (CartItem item : cantBuy) {
 
                         //add the game to the text box
-                        gamesNotBought.setText(gamesNotBought.getText() + item + "\n");
+                        //for each item we need to remove it from the cart
+                        SQLStore.removeFromCart(item.itemID, item.userID);
+                        gamesNotBought.setText(gamesNotBought.getText() + item.getProduct() + "\n");
                         cartRemoval.setSize(400, 500);
                         cartRemoval.setVisible(true);
 
@@ -854,6 +857,8 @@ public class CartPage extends javax.swing.JFrame {
             //If a user makes the amount 0 go and remove it for them
             if ((int) quantity.getValue() == 0) {
 
+                SQLStore.removeFromCart(Lists.cart.get(cartList.getSelectedIndex()).itemID, Lists.cart.get(cartList.getSelectedIndex()).userID);
+                
                 Lists.cart.get(cartList.getSelectedIndex()).remove(cartList.getSelectedIndex());
 
                 resetCart();
@@ -915,6 +920,14 @@ public class CartPage extends javax.swing.JFrame {
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        
+        //first we should go throught the cart list and completly erase them from the database
+        for(CartItem item: Lists.cart){
+        
+            SQLStore.removeFromCart(item.itemID, item.userID);
+        
+        }
+        
         Lists.cart.clear();
         resetCart();
     }//GEN-LAST:event_clearButtonActionPerformed

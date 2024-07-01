@@ -15,7 +15,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -529,6 +531,84 @@ public class SQLManager extends GeneralSQL {
 
         }
 
+    }
+    
+    public static boolean tradeReport(ArrayList<Game> addedGames, ArrayList<Game> newGames, float cost){
+    
+    
+         try {
+
+            GeneralSQL.getConnection();
+            ResultSet rs = null;
+
+            int idNum = 0;
+            
+            Date currentDate = new Date();
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            
+            //now format the current date
+            String newDate = dateFormatter.format(currentDate);
+
+            PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT TradeID FROM Trades");
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                idNum = rs.getInt(1);
+
+            }
+
+            stmt = GeneralSQL.con.prepareStatement("INSERT INTO Trades VALUES(" + (idNum + 1) + ", " + cost + ", '" + newDate + "')");
+
+            stmt.execute();
+            
+            //and then afterwards we need to insert the details of the trade
+            //first we get the games added to the inventory then do the games just added to the system
+            
+            //an imteger to keep track of how far we are in the current database to help with id
+            int rowAmount = 0;
+            int detailID = 0;
+            
+            stmt = GeneralSQL.con.prepareStatement("SELECT DetailsID FROM TradeDetails");
+            rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+
+                detailID = rs.getInt(1);
+
+            }
+            
+            for(Game game: addedGames){
+            
+                stmt = GeneralSQL.con.prepareStatement("INSERT INTO TradeDetails VALUES(" + (detailID + 1 + rowAmount) + ", " + (idNum + 1) + ", " + game.gameID + ", " + game.quantity + ")");
+                stmt.execute();
+                rowAmount++;
+                
+            }
+            
+            for(Game game: newGames){
+            
+                stmt = GeneralSQL.con.prepareStatement("INSERT INTO TradeDetails VALUES(" + (detailID + 1 + rowAmount) + ", " + (idNum + 1) + ", " + game.gameID + ", " + game.quantity + ")");
+                stmt.execute();
+                rowAmount++;
+                
+            }
+
+
+            con.close();
+
+            return true;
+
+        } catch (SQLException ex) {
+
+            System.out.println("Cant save trade");
+            System.out.println(ex);
+            return false;
+
+        }
+    
     }
 
     public static void inventoryReport() throws Exception {

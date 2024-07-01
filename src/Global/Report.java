@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -74,6 +75,13 @@ public class Report {
         }
         buildReport();
 
+    }
+    
+    public Report(String title){
+    
+        this.title = title;
+        setStyle();
+    
     }
 
     void setStyle() {
@@ -562,6 +570,65 @@ public class Report {
         
         
 
+    }
+    
+    public void tradeReport(ArrayList<Game> games, ArrayList<Game> newGames, float amount) throws Exception{
+    
+        header = "<div class = TableTitle>" + "Trade-In Report" + "</div><table><tr>\n";
+        
+        header += "<th>Title</th>";
+        header += "<th>Console</th>";
+        header += "<th>Total Added</th>";
+        
+        
+        //first thing we need to do is check if there is any games
+        if(games.size() > 0){
+        
+            baseBody += "<tr>";
+                baseBody += "<td></td>";
+                baseBody += "<td> Added Games </td>";
+                baseBody += "<td></td>";
+                baseBody += "</tr>\n";
+            
+            //now we set the base body
+            for(Game game: games){
+            
+                baseBody += "<tr>";
+                baseBody += "<td>" + game.name +"</td>";
+                baseBody += "<td>" + game.system +"</td>";
+                baseBody += "<td>" + game.quantity +"</td>";
+                baseBody += "</tr>\n";
+            }
+            
+        }
+        
+        if(newGames.size() > 0){
+        
+            baseBody += "<tr>";
+                baseBody += "<td></td>";
+                baseBody += "<td> New Games </td>";
+                baseBody += "<td></td>";
+                baseBody += "</tr>\n";
+            
+            for(Game game: newGames){
+            
+                baseBody += "<tr>";
+                baseBody += "<td>" + game.name +"</td>";
+                baseBody += "<td>" + game.system +"</td>";
+                baseBody += "<td>" + game.quantity +"</td>";
+                baseBody += "</tr>\n";
+            }
+            
+        }
+        baseBody += "<tr>";
+                baseBody += "<td></td>";
+                baseBody += "<td>Amount Spent:</td>";
+                baseBody += "<td>$"+ amount + "</td>";
+                baseBody += "</tr>\n";
+    
+        //now we build the report
+        buildReport();
+        
     }
 
     void buildReport() throws Exception {

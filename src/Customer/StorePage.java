@@ -19,6 +19,7 @@ import javax.swing.*;
 import Login.LogonPage;
 import Global.Variables;
 import Manager.ManagerView;
+import SQL.GeneralSQL;
 import com.mysql.cj.jdbc.Blob;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -763,7 +764,7 @@ public class StorePage extends javax.swing.JFrame {
             warning1.setVisible(false);
             warning2.setVisible(false);
 
-            if (!SQLStore.addCart(Lists.games.get(index).name, Lists.games.get(index).system, (int) amountBuying.getValue(), Lists.games.get(index).gameID, Variables.userID, Lists.games.get(index).price)) {
+            if (!SQLStore.addCart(Lists.games.get(index).name, Lists.games.get(index).system, (int) amountBuying.getValue(), Lists.games.get(index).gameID, Variables.customerID, Lists.games.get(index).price)) {
 
                 warning1.setVisible(true);
                 warning2.setVisible(true);
@@ -775,6 +776,21 @@ public class StorePage extends javax.swing.JFrame {
             //now redisplay the data
             //SQLStore.loadGames();
             //displayGame(Variables.chosenGame);
+        }else{
+        
+            System.out.println(index);
+            warning1.setVisible(false);
+            warning2.setVisible(false);
+
+            if (!SQLStore.addCart(Lists.games.get(index).name, Lists.games.get(index).system, 1, Lists.games.get(index).gameID, Variables.customerID, Lists.games.get(index).price)) {
+
+                warning1.setVisible(true);
+                warning2.setVisible(true);
+
+            }
+
+            cartAmount.setText("In Cart: " + Lists.cart.size());
+        
         }
 
 
@@ -1094,7 +1110,9 @@ public class StorePage extends javax.swing.JFrame {
     
         //When the form is displayed, start loading the items
         createFilters();
-        SQLStore.loadGames();
+        GeneralSQL.getConnection();
+        SQLStore.createCart(Variables.customerID);
+        SQLStore.loadGames(); 
 
         //After that is done, then create the items that will display the games information
         //Call upon a method we make here
