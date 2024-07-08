@@ -510,7 +510,17 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
             if (wasFound == false) {
                 addedGames.add(tempGame);
-                addedGames.getLast().quantity = (int) quantityAdded.getValue();
+                
+                for(int x = 0; x < addedGames.size(); x++){
+                
+                    if(x == addedGames.size() - 1){
+                    
+                        addedGames.get(x).quantity = (int) quantityAdded.getValue();
+                        
+                    }
+                    
+                }
+                //addedGames.quantity = (int) quantityAdded.getValue();
                 System.out.println((int) quantityAdded.getValue());
             }
 
