@@ -8,6 +8,7 @@ import Global.Game;
 import Global.Lists;
 import Global.Methods;
 import Global.Report;
+import Login.LogonPage;
 import SQL.SQLManager;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
      */
     ManagerView manager = null;
     CreateGame gameCreate = null;
+    LogonPage login = null;
 
     //an arraylist for errors
     ArrayList<String> invErrors = new ArrayList<String>();
@@ -48,6 +50,12 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
         errorLabels.add(inventoryError);
         errorLabels.add(amountError);
+
+    }
+    
+    public void addLoginPage(LogonPage login) {
+        
+        this.login = login;
 
     }
 
@@ -470,6 +478,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
         this.dispose();
+        login.run();
 
 //        Lists.cart.clear();
 //
