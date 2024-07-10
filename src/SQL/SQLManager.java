@@ -515,6 +515,8 @@ public class SQLManager extends GeneralSQL {
     public static boolean deleteGame(int gameID) {
 
         try {
+            
+            GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("DELETE FROM TestGames3 WHERE GameID = " + gameID);
             stmt.execute();
