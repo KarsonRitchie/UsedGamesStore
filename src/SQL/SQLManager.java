@@ -101,7 +101,7 @@ public class SQLManager extends GeneralSQL {
                     + "City = '" + user.city + "', "
                     + "State = '" + user.state + "', "
                     + "Zipcode = '" + user.zip + "', "
-                    + "PhoneNumber = '" + user.phoneNum + "', "
+                    + "Phone = '" + user.phoneNum + "', "
                     + "Email = '" + user.userEmail + "', "
                     + "Enabled = '" + user.enabled + "' "
                     + "WHERE UserID = " + user.userID);

@@ -62,6 +62,8 @@ public class StorePage extends javax.swing.JFrame {
 
         cart = new CartPage(this, login);
         itemDisplay.getVerticalScrollBar().setUnitIncrement(16);
+        consoleFilters.getVerticalScrollBar().setUnitIncrement(8);
+        genreFilters.getVerticalScrollBar().setUnitIncrement(8);
 
         //make sure the filters are created when this is created
         //SQLStore.createFilterLists();
@@ -128,6 +130,7 @@ public class StorePage extends javax.swing.JFrame {
         warning1 = new javax.swing.JLabel();
         warning2 = new javax.swing.JLabel();
         gameDescription = new javax.swing.JTextArea();
+        soldOut = new javax.swing.JLabel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
         filtersPanel = new javax.swing.JPanel();
         consoleLabel = new javax.swing.JLabel();
@@ -380,6 +383,12 @@ public class StorePage extends javax.swing.JFrame {
         gameDescription.setToolTipText("");
         gameDescription.setWrapStyleWord(true);
 
+        soldOut.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        soldOut.setForeground(java.awt.Color.red);
+        soldOut.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        soldOut.setText("This product is sold out");
+        soldOut.setToolTipText("");
+
         javax.swing.GroupLayout gamePanelLayout = new javax.swing.GroupLayout(gamePanel);
         gamePanel.setLayout(gamePanelLayout);
         gamePanelLayout.setHorizontalGroup(
@@ -401,7 +410,8 @@ public class StorePage extends javax.swing.JFrame {
                             .addComponent(returnButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(totalLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(warning1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(warning2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(warning2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(soldOut, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(gamePanelLayout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(gameDescription)))
@@ -415,7 +425,7 @@ public class StorePage extends javax.swing.JFrame {
                 .addComponent(infoContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(gameDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(quanity, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -431,6 +441,8 @@ public class StorePage extends javax.swing.JFrame {
                 .addComponent(warning1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(warning2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(soldOut)
                 .addGap(18, 18, 18)
                 .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -763,6 +775,7 @@ public class StorePage extends javax.swing.JFrame {
             System.out.println(index);
             warning1.setVisible(false);
             warning2.setVisible(false);
+            soldOut.setVisible(false);
 
             if (!SQLStore.addCart(Lists.games.get(index).name, Lists.games.get(index).system, (int) amountBuying.getValue(), Lists.games.get(index).gameID, Variables.customerID, Lists.games.get(index).price)) {
 
@@ -776,8 +789,8 @@ public class StorePage extends javax.swing.JFrame {
             //now redisplay the data
             //SQLStore.loadGames();
             //displayGame(Variables.chosenGame);
-        }else{
-        
+        } else if(Lists.games.get(index).quantity != 0 && (int) amountBuying.getValue() == 0){
+
             System.out.println(index);
             warning1.setVisible(false);
             warning2.setVisible(false);
@@ -790,7 +803,11 @@ public class StorePage extends javax.swing.JFrame {
             }
 
             cartAmount.setText("In Cart: " + Lists.cart.size());
+
+        }else{
         
+           soldOut.setVisible(true); 
+            
         }
 
 
@@ -803,21 +820,21 @@ public class StorePage extends javax.swing.JFrame {
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
         this.dispose();
-        
+
         Lists.cart.clear();
 
-        if(Variables.currentLevel.equals("Customer")){
-            
+        if (Variables.currentLevel.equals("Customer")) {
+
             login.run();
-            
-        }else{
-        
+
+        } else {
+
             try {
                 manager.open();
             } catch (ParseException ex) {
                 Logger.getLogger(StorePage.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
 
     }//GEN-LAST:event_logOutButtonActionPerformed
@@ -1026,6 +1043,8 @@ public class StorePage extends javax.swing.JFrame {
 
         //When the form is displayed, start loading the items
         createFilters();
+        GeneralSQL.getConnection();
+        SQLStore.createCart(Variables.customerID);
         SQLStore.loadGames();
 
         //After that is done, then create the items that will display the games information
@@ -1105,14 +1124,14 @@ public class StorePage extends javax.swing.JFrame {
         this.setVisible(true);
 
     }
-    
-    public void openPOS(ManagerView manager){
-    
+
+    public void openPOS(ManagerView manager) {
+
         //When the form is displayed, start loading the items
         createFilters();
         GeneralSQL.getConnection();
         SQLStore.createCart(Variables.customerID);
-        SQLStore.loadGames(); 
+        SQLStore.loadGames();
 
         //After that is done, then create the items that will display the games information
         //Call upon a method we make here
@@ -1146,196 +1165,53 @@ public class StorePage extends javax.swing.JFrame {
         controls3.setVisible(false);
 
         searchBar.setText("");
-        
+
         //also make sure the manager object is set here
         //this is so we can go back to the manager page with no issue
         this.manager = manager;
 
         this.setVisible(true);
+
+    }
     
+    //a way to return from cart as a manager and still have log out be return
+    //if needs be it can be used for toher things to we need to have when returning as a manager
+    public void managerReturn(){
+    
+        logOutButton.setText("Return");
+        
     }
 
     public void displayGames(String search) {
+        Thread gameDisplaying = new Thread(() -> {
+            gamesDisplayed.clear();
+            selectedGame = 0;
 
-        gamesDisplayed.clear();
-        selectedGame = 0;
+            //It is very simple what we will do here
+            //create these panels as sort of like items on as tore page for each game in the lsit
+            //We need to clear the original panel first so we can run this different times
+            itemContainer.removeAll();
 
-        //It is very simple what we will do here
-        //create these panels as sort of like items on as tore page for each game in the lsit
-        //We need to clear the original panel first so we can run this different times
-        itemContainer.removeAll();
+            //also set it back to the default size
+            //itemContainer.setPreferredSize(PREVIOUS_SIZE);
+            //We will need to create variables in order to seperate the items
+            int addX = 0;
+            int addY = 0;
 
-        //also set it back to the default size
-        //itemContainer.setPreferredSize(PREVIOUS_SIZE);
-        //We will need to create variables in order to seperate the items
-        int addX = 0;
-        int addY = 0;
+            //also reset the size of the container
+            itemContainer.setPreferredSize(originalSize);
 
-        //also reset the size of the container
-        itemContainer.setPreferredSize(originalSize);
+            //Now check the search
+            if (search.equals("ALL")) {
 
-        //Now check the search
-        if (search.equals("ALL")) {
+                int gamesShown = 0;
 
-            int gamesShown = 0;
+                for (int x = 0; x < Lists.games.size(); x++) {
 
-            for (int x = 0; x < Lists.games.size(); x++) {
-
-                //First create a new game display object
-                //Before we do we need to check if the filters are satisfied
-                //We need to do another for loop
-                //we will make variables that need to be checked to proceed with creating the object
-                boolean consoleSearchable = false;
-                boolean genreSearchable = false;
-
-                for (int y = 0; y < consoleFiltersList.size(); y++) {
-
-                    if (consoleFiltersList.get(y).getText().equals(Lists.games.get(x).system)) {
-
-                        //Now check if its being searched for or not
-                        if (consoleFiltersList.get(y).isSelected()) {
-
-                            consoleSearchable = true;
-                            y = consoleFiltersList.size();
-
-                        } else {
-
-                            consoleSearchable = false;
-                            y = consoleFiltersList.size();
-
-                        }
-
-                    }
-
-                }
-
-                for (int z = 0; z < genreFiltersList.size(); z++) {
-
-                    if (genreFiltersList.get(z).getText().equals(Lists.games.get(x).genre)) {
-
-                        //Now check if its being searched for or not
-                        if (genreFiltersList.get(z).isSelected()) {
-
-                            genreSearchable = true;
-                            z = consoleFiltersList.size();
-
-                        } else {
-
-                            consoleSearchable = false;
-                            z = consoleFiltersList.size();
-
-                        }
-
-                    }
-
-                }
-
-                if (consoleSearchable && genreSearchable && Lists.games.get(x).active == 1) {
-                    GameDisplay gameItem = new GameDisplay();
-                    System.out.println(x);
-
-                    gameItem.gameTitle.setText(Lists.games.get(x).name);
-                    gameItem.gamePrice.setText("$" + String.format("%.2f", Lists.games.get(x).price));
-                    gameItem.systemLabel.setText(Lists.games.get(x).system);
-                    gameItem.quantityLabel.setText(Lists.games.get(x).quantity + " Left");
-                    gameItem.genreLabel.setText(Lists.games.get(x).genre);
-
-                    //System.out.println(System.getProperty("user.dir") + "\\ThumbnailPlaceholder.png");
-                    //ImageIcon icon = new ImageIcon(System.getProperty("user.dir") + "\\src\\ThumbnailPlaceholder.png");
-                    //gameItem.image.setIcon(icon);
-                    //We should also edit the image
-                    for (Object[] desiredImage : Lists.images) {
-
-                        //check if we get an image
-                        if ((int) desiredImage[0] == Lists.games.get(x).gameID && (int) desiredImage[1] == 0) {
-
-                            byte[] imgBlob = (byte[]) desiredImage[2];
-                            //byte[] b = imgBlob.getBytes(1, (int) imgBlob.length());
-                            
-                            ImageIcon newImage = new ImageIcon(imgBlob);
-                            //byte[] b = imgBlob.getBytes(1, (int) imgBlob.length());
-                            Image tempImage = newImage.getImage();
-                            gameItem.image.setIcon(new ImageIcon(tempImage.getScaledInstance(226, 126, 0)));
-
-                        }
-
-                    }
-
-                    //Make sure you give the index as well
-                    //This is so we can use it to display things in the context panel
-                    gameItem.indexHeld = x;
-
-                    //a little print statement for testing
-                    System.out.println(gameItem.gameTitle.getText());
-
-                    //Check if were on an even number
-                    //Any factor of two will be start of the next row
-                    if (gamesShown % 3 == 0) {
-
-                        //Set the x back to default
-                        addX = 10;
-
-                        //now chaqnge the y value
-                        addY += 370;
-
-                        Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getPreferredSize().height + 370);
-
-                        itemContainer.setPreferredSize(newSize);
-                        itemContainer.repaint();
-                        itemDisplay.repaint();
-                        System.out.println(x + "2");
-
-                    }
-
-//                if (x % 4 == 0) {
-//
-//                    
-//                    Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getPreferredSize().height + 370);
-//
-//                    itemContainer.setPreferredSize(newSize);
-//                    itemContainer.repaint();
-//                    itemDisplay.repaint();
-//
-//                }
-                    //Now edit the display when we put the 4th item on
-                    //this is so we dont overshow the display
-                    gameItem.setBounds(itemContainer.getX() + addX, 0 - 380 + addY, 226, 350);
-
-                    System.out.println(Lists.games.get(x).name);
-
-                    addX += 250;
-
-                    //And now add the game display item to the item container
-                    itemContainer.add(gameItem);
-
-                    gameItem.setVisible(true);
-
-                    itemContainer.repaint();
-                    itemDisplay.repaint();
-
-                    gamesShown++;
-
-                    gamesDisplayed.add(gameItem);
-
-                }
-            }
-        } else {
-
-            //since were working for a search we need to use a counter variable to count how many games we put up
-            int gamesShown = 0;
-
-            //lets create a pattern object
-            Pattern gamePattern = Pattern.compile(search + "+");
-
-            //Now repeat the same thing but this time use the funtion and/or filters
-            for (int x = 0; x < Lists.games.size(); x++) {
-
-                //one thing we will do differently is check if the criteria is met
-                //Make a matcher object
-                Matcher gameMatch = gamePattern.matcher(Lists.games.get(x).name.toLowerCase());
-
-                if (gameMatch.find()) {
-
+                    //First create a new game display object
+                    //Before we do we need to check if the filters are satisfied
+                    //We need to do another for loop
+                    //we will make variables that need to be checked to proceed with creating the object
                     boolean consoleSearchable = false;
                     boolean genreSearchable = false;
 
@@ -1382,8 +1258,8 @@ public class StorePage extends javax.swing.JFrame {
                     }
 
                     if (consoleSearchable && genreSearchable && Lists.games.get(x).active == 1) {
-
                         GameDisplay gameItem = new GameDisplay();
+                        System.out.println(x);
 
                         gameItem.gameTitle.setText(Lists.games.get(x).name);
                         gameItem.gamePrice.setText("$" + String.format("%.2f", Lists.games.get(x).price));
@@ -1391,10 +1267,10 @@ public class StorePage extends javax.swing.JFrame {
                         gameItem.quantityLabel.setText(Lists.games.get(x).quantity + " Left");
                         gameItem.genreLabel.setText(Lists.games.get(x).genre);
 
+                        //System.out.println(System.getProperty("user.dir") + "\\ThumbnailPlaceholder.png");
                         //ImageIcon icon = new ImageIcon(System.getProperty("user.dir") + "\\src\\ThumbnailPlaceholder.png");
                         //gameItem.image.setIcon(icon);
-                        //Make sure you give the index as well
-                        //This is so we can use it to display things in the context panel
+                        //We should also edit the image
                         for (Object[] desiredImage : Lists.images) {
 
                             //check if we get an image
@@ -1402,8 +1278,9 @@ public class StorePage extends javax.swing.JFrame {
 
                                 byte[] imgBlob = (byte[]) desiredImage[2];
                                 //byte[] b = imgBlob.getBytes(1, (int) imgBlob.length());
-                                
+
                                 ImageIcon newImage = new ImageIcon(imgBlob);
+                                //byte[] b = imgBlob.getBytes(1, (int) imgBlob.length());
                                 Image tempImage = newImage.getImage();
                                 gameItem.image.setIcon(new ImageIcon(tempImage.getScaledInstance(226, 126, 0)));
 
@@ -1411,6 +1288,8 @@ public class StorePage extends javax.swing.JFrame {
 
                         }
 
+                        //Make sure you give the index as well
+                        //This is so we can use it to display things in the context panel
                         gameItem.indexHeld = x;
 
                         //a little print statement for testing
@@ -1426,18 +1305,30 @@ public class StorePage extends javax.swing.JFrame {
                             //now chaqnge the y value
                             addY += 370;
 
-                            //Make the item container bigger in height to fit more items
-                            //First make a new dimension to store it
-                            Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getHeight() + addY);
+                            Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getPreferredSize().height + 370);
 
                             itemContainer.setPreferredSize(newSize);
                             itemContainer.repaint();
                             itemDisplay.repaint();
-                            System.out.println("Is running");
+                            System.out.println(x + "2");
 
                         }
 
+//                if (x % 4 == 0) {
+//
+//                    
+//                    Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getPreferredSize().height + 370);
+//
+//                    itemContainer.setPreferredSize(newSize);
+//                    itemContainer.repaint();
+//                    itemDisplay.repaint();
+//
+//                }
+                        //Now edit the display when we put the 4th item on
+                        //this is so we dont overshow the display
                         gameItem.setBounds(itemContainer.getX() + addX, 0 - 380 + addY, 226, 350);
+
+                        System.out.println(Lists.games.get(x).name);
 
                         addX += 250;
 
@@ -1448,20 +1339,161 @@ public class StorePage extends javax.swing.JFrame {
 
                         itemContainer.repaint();
                         itemDisplay.repaint();
+                        itemDisplay.revalidate();
 
-                        gamesShown += 1;
+                        gamesShown++;
 
                         gamesDisplayed.add(gameItem);
+
                     }
                 }
+            } else {
 
+                //since were working for a search we need to use a counter variable to count how many games we put up
+                int gamesShown = 0;
+
+                //lets create a pattern object
+                Pattern gamePattern = Pattern.compile(search + "+");
+
+                //Now repeat the same thing but this time use the funtion and/or filters
+                for (int x = 0; x < Lists.games.size(); x++) {
+
+                    //one thing we will do differently is check if the criteria is met
+                    //Make a matcher object
+                    Matcher gameMatch = gamePattern.matcher(Lists.games.get(x).name.toLowerCase());
+
+                    if (gameMatch.find()) {
+
+                        boolean consoleSearchable = false;
+                        boolean genreSearchable = false;
+
+                        for (int y = 0; y < consoleFiltersList.size(); y++) {
+
+                            if (consoleFiltersList.get(y).getText().equals(Lists.games.get(x).system)) {
+
+                                //Now check if its being searched for or not
+                                if (consoleFiltersList.get(y).isSelected()) {
+
+                                    consoleSearchable = true;
+                                    y = consoleFiltersList.size();
+
+                                } else {
+
+                                    consoleSearchable = false;
+                                    y = consoleFiltersList.size();
+
+                                }
+
+                            }
+
+                        }
+
+                        for (int z = 0; z < genreFiltersList.size(); z++) {
+
+                            if (genreFiltersList.get(z).getText().equals(Lists.games.get(x).genre)) {
+
+                                //Now check if its being searched for or not
+                                if (genreFiltersList.get(z).isSelected()) {
+
+                                    genreSearchable = true;
+                                    z = consoleFiltersList.size();
+
+                                } else {
+
+                                    consoleSearchable = false;
+                                    z = consoleFiltersList.size();
+
+                                }
+
+                            }
+
+                        }
+
+                        if (consoleSearchable && genreSearchable && Lists.games.get(x).active == 1) {
+
+                            GameDisplay gameItem = new GameDisplay();
+
+                            gameItem.gameTitle.setText(Lists.games.get(x).name);
+                            gameItem.gamePrice.setText("$" + String.format("%.2f", Lists.games.get(x).price));
+                            gameItem.systemLabel.setText(Lists.games.get(x).system);
+                            gameItem.quantityLabel.setText(Lists.games.get(x).quantity + " Left");
+                            gameItem.genreLabel.setText(Lists.games.get(x).genre);
+
+                            //ImageIcon icon = new ImageIcon(System.getProperty("user.dir") + "\\src\\ThumbnailPlaceholder.png");
+                            //gameItem.image.setIcon(icon);
+                            //Make sure you give the index as well
+                            //This is so we can use it to display things in the context panel
+                            for (Object[] desiredImage : Lists.images) {
+
+                                //check if we get an image
+                                if ((int) desiredImage[0] == Lists.games.get(x).gameID && (int) desiredImage[1] == 0) {
+
+                                    byte[] imgBlob = (byte[]) desiredImage[2];
+                                    //byte[] b = imgBlob.getBytes(1, (int) imgBlob.length());
+
+                                    ImageIcon newImage = new ImageIcon(imgBlob);
+                                    Image tempImage = newImage.getImage();
+                                    gameItem.image.setIcon(new ImageIcon(tempImage.getScaledInstance(226, 126, 0)));
+
+                                }
+
+                            }
+
+                            gameItem.indexHeld = x;
+
+                            //a little print statement for testing
+                            System.out.println(gameItem.gameTitle.getText());
+
+                            //Check if were on an even number
+                            //Any factor of two will be start of the next row
+                            if (gamesShown % 3 == 0) {
+
+                                //Set the x back to default
+                                addX = 10;
+
+                                //now chaqnge the y value
+                                addY += 370;
+
+                                //Make the item container bigger in height to fit more items
+                                //First make a new dimension to store it
+                                Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getHeight() + addY);
+
+                                itemContainer.setPreferredSize(newSize);
+                                itemContainer.repaint();
+                                itemDisplay.repaint();
+                                System.out.println("Is running");
+
+                            }
+
+                            gameItem.setBounds(itemContainer.getX() + addX, 0 - 380 + addY, 226, 350);
+
+                            addX += 250;
+
+                            //And now add the game display item to the item container
+                            itemContainer.add(gameItem);
+
+                            gameItem.setVisible(true);
+
+                            itemContainer.repaint();
+                            itemDisplay.repaint();
+                            itemDisplay.revalidate();
+
+                            gamesShown += 1;
+
+                            gamesDisplayed.add(gameItem);
+                        }
+                    }
+
+                }
             }
-        }
 
-        //Now we will reset the search panel
-        itemDisplay.revalidate();
-        
-        gamePanel.setVisible(false);
+            //Now we will reset the search panel
+            itemDisplay.revalidate();
+
+            gamePanel.setVisible(false);
+        });
+
+        gameDisplaying.start();
 
     }
 
@@ -1489,7 +1521,7 @@ public class StorePage extends javax.swing.JFrame {
             //image.setText("");
             //image.setIcon(icon);
             boolean hasImage = false;
-            
+
             for (Object[] desiredImage : Lists.images) {
 
                 //check if we get an image
@@ -1497,7 +1529,7 @@ public class StorePage extends javax.swing.JFrame {
 
                     byte[] imgBlob = (byte[]) desiredImage[2];
                     //byte[] b = imgBlob.getBytes(1, (int) imgBlob.length());
-                    
+
                     ImageIcon newImage = new ImageIcon(imgBlob);
                     Image tempImage = newImage.getImage();
                     image.setIcon(new ImageIcon(tempImage.getScaledInstance(256, 126, 0)));
@@ -1506,15 +1538,16 @@ public class StorePage extends javax.swing.JFrame {
                 }
 
             }
-            
-            if(!hasImage){
-            
+
+            if (!hasImage) {
+
                 //set the default image
                 image.setIcon((Icon) Lists.images.get(0)[2]);
             }
 
             warning1.setVisible(false);
             warning2.setVisible(false);
+            soldOut.setVisible(false);
 
         }
 
@@ -1539,10 +1572,10 @@ public class StorePage extends javax.swing.JFrame {
             consoleFiltersList.add(newFilter);
 
             newFilter.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                filterChanged(evt);
-            }
-        });
+                public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                    filterChanged(evt);
+                }
+            });
 
         }
 
@@ -1560,10 +1593,10 @@ public class StorePage extends javax.swing.JFrame {
             genreFiltersList.add(newFilter);
 
             newFilter.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                filterChanged(evt);
-            }
-        });
+                public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                    filterChanged(evt);
+                }
+            });
 
         }
 
@@ -1636,6 +1669,7 @@ public class StorePage extends javax.swing.JFrame {
     private javax.swing.JTextField searchBar;
     private javax.swing.JButton searchButton;
     private javax.swing.JPanel searchPanel;
+    private static javax.swing.JLabel soldOut;
     private javax.swing.JLabel totalLabel;
     private static javax.swing.JLabel warning1;
     private static javax.swing.JLabel warning2;

@@ -76,7 +76,7 @@ public class ManagerView extends javax.swing.JFrame {
 
         this.login = login;
         this.store = store;
-        
+
         //make sure to add the addInv page to the game create page
         gameCreate.addInventoryPage(addInv);
         addInv.addLoginPage(login);
@@ -104,10 +104,12 @@ public class ManagerView extends javax.swing.JFrame {
         inventoryErrors.add(editTitleError);
         inventoryErrors.add(editDescError);
         inventoryErrors.add(priceError);
-        
+
         userDisplay.getVerticalScrollBar().setUnitIncrement(16);
         itemDisplay.getVerticalScrollBar().setUnitIncrement(16);
         shownDiscounts.getVerticalScrollBar().setUnitIncrement(16);
+        consoleFilters.getVerticalScrollBar().setUnitIncrement(8);
+        genreFilters.getVerticalScrollBar().setUnitIncrement(8);
 
     }
 
@@ -137,8 +139,6 @@ public class ManagerView extends javax.swing.JFrame {
     PastTransactions pastPurchases = new PastTransactions(this);
     CreateGame gameCreate = new CreateGame(this);
     AddInventoryPage addInv = new AddInventoryPage(this, gameCreate);
-   
-    
 
     //DISCOUNTS
     //A couple booleans to help with searching discounts
@@ -2876,6 +2876,15 @@ public class ManagerView extends javax.swing.JFrame {
 
                 successLabel.setVisible(true);
 
+                //refresh the table
+                try {
+                    SQLManager.loadDiscounts();
+                } catch (ParseException ex) {
+                    Logger.getLogger(ManagerView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                setDiscountsTable();
+
             } else {
 
                 discountErrorLabel1.setVisible(true);
@@ -3372,9 +3381,9 @@ public class ManagerView extends javax.swing.JFrame {
         //before we open the POS system make sure we save the customer ID as well
         System.out.println(userTable.getSelectedRow());
         //Variables.customerID = displayedUsers.get(userTable.getSelectedRow()).userID;
-        
+
         System.out.println(Variables.customerID);
-        
+
         store.openPOS(this);
     }//GEN-LAST:event_posButtonActionPerformed
 
@@ -4319,202 +4328,35 @@ public class ManagerView extends javax.swing.JFrame {
     //we are starting off by copying and pasting some inventory functions
     public void displayGames(String search) {
 
-        gamesDisplayed.clear();
-        selectedGame = 0;
-
-        //It is very simple what we will do here
-        //create these panels as sort of like items on as tore page for each game in the lsit
-        //We need to clear the original panel first so we can run this different times
-        itemContainer.removeAll();
-
-        //also set it back to the default size
-        //itemContainer.setPreferredSize(PREVIOUS_SIZE);
-        //We will need to create variables in order to seperate the items
-        int addX = 0;
-        int addY = 0;
-
-        //also reset the size of the container
-        itemContainer.setPreferredSize(originalSize);
-
-        //Now check the search
-        if (search.equals("ALL")) {
-
-            int gamesShown = 0;
-
-            for (int x = 0; x < Lists.games.size(); x++) {
-
-                //First create a new game display object
-                //Before we do we need to check if the filters are satisfied
-                //We need to do another for loop
-                //we will make variables that need to be checked to proceed with creating the object
-                boolean consoleSearchable = false;
-                boolean genreSearchable = false;
-                boolean statusSearchable = false;
-
-                for (int y = 0; y < consoleFiltersList.size(); y++) {
-
-                    if (consoleFiltersList.get(y).getText().equals(Lists.games.get(x).system)) {
-
-                        //Now check if its being searched for or not
-                        if (consoleFiltersList.get(y).isSelected()) {
-
-                            consoleSearchable = true;
-                            y = consoleFiltersList.size();
-
-                        } else {
-
-                            consoleSearchable = false;
-                            y = consoleFiltersList.size();
-
-                        }
-
-                    }
-
-                }
-
-                for (int z = 0; z < genreFiltersList.size(); z++) {
-
-                    if (genreFiltersList.get(z).getText().equals(Lists.games.get(x).genre)) {
-
-                        //Now check if its being searched for or not
-                        if (genreFiltersList.get(z).isSelected()) {
-
-                            genreSearchable = true;
-                            z = consoleFiltersList.size();
-
-                        } else {
-
-                            consoleSearchable = false;
-                            z = consoleFiltersList.size();
-
-                        }
-
-                    }
-
-                }
-
-                if (Lists.games.get(x).active == 1) {
-
-                    statusSearchable = true;
-
-                } else {
-
-                    if (disabledGameCheck) {
-
-                        statusSearchable = true;
-
-                    } else {
-
-                        statusSearchable = false;
-
-                    }
-
-                }
-
-                if (consoleSearchable && genreSearchable && statusSearchable) {
-                    GameDisplay gameItem = new GameDisplay();
-                    System.out.println(x);
-
-                    gameItem.gameTitle.setText(Lists.games.get(x).name);
-                    gameItem.gamePrice.setText("$" + String.format("%.2f", Lists.games.get(x).price));
-                    gameItem.systemLabel.setText(Lists.games.get(x).system);
-                    gameItem.quantityLabel.setText(Lists.games.get(x).quantity + " Left");
-                    gameItem.genreLabel.setText(Lists.games.get(x).genre);
-
-                    //System.out.println(System.getProperty("user.dir") + "\\ThumbnailPlaceholder.png");
-                    //ImageIcon icon = new ImageIcon(System.getProperty("user.dir") + "\\src\\ThumbnailPlaceholder.png");
-                    //gameItem.image.setIcon(icon);
-                    //Make sure you give the index as well
-                    //This is so we can use it to display things in the context panel
-                    for (Object[] desiredImage : Lists.images) {
-
-                        //check if we get an image
-                        if ((int) desiredImage[0] == Lists.games.get(x).gameID && (int) desiredImage[1] == 0) {
-
-
-                            byte[] imgBlob = (byte[]) desiredImage[2];
-                            //byte[] b = imgBlob.getBytes(1, (int) imgBlob.length());
-                            ImageIcon newImage = new ImageIcon(imgBlob);
-                            Image tempImage = newImage.getImage();
-                            gameItem.image.setIcon(new ImageIcon(tempImage.getScaledInstance(226, 126, 0)));
-
-                        }
-
-                    }
-
-                    gameItem.indexHeld = x;
-
-                    //a little print statement for testing
-                    System.out.println(gameItem.gameTitle.getText());
-
-                    //Check if were on an even number
-                    //Any factor of two will be start of the next row
-                    if (gamesShown % 3 == 0) {
-
-                        //Set the x back to default
-                        addX = 10;
-
-                        //now chaqnge the y value
-                        addY += 370;
-
-                        Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getPreferredSize().height + 370);
-
-                        itemContainer.setPreferredSize(newSize);
-                        itemContainer.repaint();
-                        itemDisplay.repaint();
-                        System.out.println(x + "2");
-
-                    }
-
-//                if (x % 4 == 0) {
-//
-//                    
-//                    Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getPreferredSize().height + 370);
-//
-//                    itemContainer.setPreferredSize(newSize);
-//                    itemContainer.repaint();
-//                    itemDisplay.repaint();
-//
-//                }
-                    //Now edit the display when we put the 4th item on
-                    //this is so we dont overshow the display
-                    gameItem.setBounds(itemContainer.getX() + addX, 0 - 380 + addY, 226, 350);
-
-                    System.out.println(Lists.games.get(x).name);
-
-                    addX += 250;
-
-                    //And now add the game display item to the item container
-                    itemContainer.add(gameItem);
-
-                    gameItem.setVisible(true);
-
-                    itemContainer.repaint();
-                    itemDisplay.repaint();
-
-                    gamesShown++;
-
-                    gamesDisplayed.add(gameItem);
-
-                }
-            }
-        } else {
-
-            //since were working for a search we need to use a counter variable to count how many games we put up
-            int gamesShown = 0;
-
-            //lets create a pattern object
-            Pattern gamePattern = Pattern.compile(search + "+");
-
-            //Now repeat the same thing but this time use the funtion and/or filters
-            for (int x = 0; x < Lists.games.size(); x++) {
-
-                //one thing we will do differently is check if the criteria is met
-                //Make a matcher object
-                Matcher gameMatch = gamePattern.matcher(Lists.games.get(x).name.toLowerCase());
-
-                if (gameMatch.find()) {
-
+        Thread gameDisplaying = new Thread(() -> {
+            gamesDisplayed.clear();
+            selectedGame = 0;
+
+            //It is very simple what we will do here
+            //create these panels as sort of like items on as tore page for each game in the lsit
+            //We need to clear the original panel first so we can run this different times
+            itemContainer.removeAll();
+
+            //also set it back to the default size
+            //itemContainer.setPreferredSize(PREVIOUS_SIZE);
+            //We will need to create variables in order to seperate the items
+            int addX = 0;
+            int addY = 0;
+
+            //also reset the size of the container
+            itemContainer.setPreferredSize(originalSize);
+
+            //Now check the search
+            if (search.equals("ALL")) {
+
+                int gamesShown = 0;
+
+                for (int x = 0; x < Lists.games.size(); x++) {
+
+                    //First create a new game display object
+                    //Before we do we need to check if the filters are satisfied
+                    //We need to do another for loop
+                    //we will make variables that need to be checked to proceed with creating the object
                     boolean consoleSearchable = false;
                     boolean genreSearchable = false;
                     boolean statusSearchable = false;
@@ -4580,8 +4422,8 @@ public class ManagerView extends javax.swing.JFrame {
                     }
 
                     if (consoleSearchable && genreSearchable && statusSearchable) {
-
                         GameDisplay gameItem = new GameDisplay();
+                        System.out.println(x);
 
                         gameItem.gameTitle.setText(Lists.games.get(x).name);
                         gameItem.gamePrice.setText("$" + String.format("%.2f", Lists.games.get(x).price));
@@ -4589,6 +4431,7 @@ public class ManagerView extends javax.swing.JFrame {
                         gameItem.quantityLabel.setText(Lists.games.get(x).quantity + " Left");
                         gameItem.genreLabel.setText(Lists.games.get(x).genre);
 
+                        //System.out.println(System.getProperty("user.dir") + "\\ThumbnailPlaceholder.png");
                         //ImageIcon icon = new ImageIcon(System.getProperty("user.dir") + "\\src\\ThumbnailPlaceholder.png");
                         //gameItem.image.setIcon(icon);
                         //Make sure you give the index as well
@@ -4598,10 +4441,8 @@ public class ManagerView extends javax.swing.JFrame {
                             //check if we get an image
                             if ((int) desiredImage[0] == Lists.games.get(x).gameID && (int) desiredImage[1] == 0) {
 
-
                                 byte[] imgBlob = (byte[]) desiredImage[2];
                                 //byte[] b = imgBlob.getBytes(1, (int) imgBlob.length());
-                                
                                 ImageIcon newImage = new ImageIcon(imgBlob);
                                 Image tempImage = newImage.getImage();
                                 gameItem.image.setIcon(new ImageIcon(tempImage.getScaledInstance(226, 126, 0)));
@@ -4625,18 +4466,30 @@ public class ManagerView extends javax.swing.JFrame {
                             //now chaqnge the y value
                             addY += 370;
 
-                            //Make the item container bigger in height to fit more items
-                            //First make a new dimension to store it
-                            Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getHeight() + addY);
+                            Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getPreferredSize().height + 370);
 
                             itemContainer.setPreferredSize(newSize);
                             itemContainer.repaint();
                             itemDisplay.repaint();
-                            System.out.println("Is running");
+                            System.out.println(x + "2");
 
                         }
 
+//                if (x % 4 == 0) {
+//
+//                    
+//                    Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getPreferredSize().height + 370);
+//
+//                    itemContainer.setPreferredSize(newSize);
+//                    itemContainer.repaint();
+//                    itemDisplay.repaint();
+//
+//                }
+                        //Now edit the display when we put the 4th item on
+                        //this is so we dont overshow the display
                         gameItem.setBounds(itemContainer.getX() + addX, 0 - 380 + addY, 226, 350);
+
+                        System.out.println(Lists.games.get(x).name);
 
                         addX += 250;
 
@@ -4647,22 +4500,182 @@ public class ManagerView extends javax.swing.JFrame {
 
                         itemContainer.repaint();
                         itemDisplay.repaint();
+                        itemDisplay.revalidate();
 
-                        gamesShown += 1;
+                        gamesShown++;
 
                         gamesDisplayed.add(gameItem);
+
                     }
                 }
+            } else {
 
+                //since were working for a search we need to use a counter variable to count how many games we put up
+                int gamesShown = 0;
+
+                //lets create a pattern object
+                Pattern gamePattern = Pattern.compile(search + "+");
+
+                //Now repeat the same thing but this time use the funtion and/or filters
+                for (int x = 0; x < Lists.games.size(); x++) {
+
+                    //one thing we will do differently is check if the criteria is met
+                    //Make a matcher object
+                    Matcher gameMatch = gamePattern.matcher(Lists.games.get(x).name.toLowerCase());
+
+                    if (gameMatch.find()) {
+
+                        boolean consoleSearchable = false;
+                        boolean genreSearchable = false;
+                        boolean statusSearchable = false;
+
+                        for (int y = 0; y < consoleFiltersList.size(); y++) {
+
+                            if (consoleFiltersList.get(y).getText().equals(Lists.games.get(x).system)) {
+
+                                //Now check if its being searched for or not
+                                if (consoleFiltersList.get(y).isSelected()) {
+
+                                    consoleSearchable = true;
+                                    y = consoleFiltersList.size();
+
+                                } else {
+
+                                    consoleSearchable = false;
+                                    y = consoleFiltersList.size();
+
+                                }
+
+                            }
+
+                        }
+
+                        for (int z = 0; z < genreFiltersList.size(); z++) {
+
+                            if (genreFiltersList.get(z).getText().equals(Lists.games.get(x).genre)) {
+
+                                //Now check if its being searched for or not
+                                if (genreFiltersList.get(z).isSelected()) {
+
+                                    genreSearchable = true;
+                                    z = consoleFiltersList.size();
+
+                                } else {
+
+                                    consoleSearchable = false;
+                                    z = consoleFiltersList.size();
+
+                                }
+
+                            }
+
+                        }
+
+                        if (Lists.games.get(x).active == 1) {
+
+                            statusSearchable = true;
+
+                        } else {
+
+                            if (disabledGameCheck) {
+
+                                statusSearchable = true;
+
+                            } else {
+
+                                statusSearchable = false;
+
+                            }
+
+                        }
+
+                        if (consoleSearchable && genreSearchable && statusSearchable) {
+
+                            GameDisplay gameItem = new GameDisplay();
+
+                            gameItem.gameTitle.setText(Lists.games.get(x).name);
+                            gameItem.gamePrice.setText("$" + String.format("%.2f", Lists.games.get(x).price));
+                            gameItem.systemLabel.setText(Lists.games.get(x).system);
+                            gameItem.quantityLabel.setText(Lists.games.get(x).quantity + " Left");
+                            gameItem.genreLabel.setText(Lists.games.get(x).genre);
+
+                            //ImageIcon icon = new ImageIcon(System.getProperty("user.dir") + "\\src\\ThumbnailPlaceholder.png");
+                            //gameItem.image.setIcon(icon);
+                            //Make sure you give the index as well
+                            //This is so we can use it to display things in the context panel
+                            for (Object[] desiredImage : Lists.images) {
+
+                                //check if we get an image
+                                if ((int) desiredImage[0] == Lists.games.get(x).gameID && (int) desiredImage[1] == 0) {
+
+                                    byte[] imgBlob = (byte[]) desiredImage[2];
+                                    //byte[] b = imgBlob.getBytes(1, (int) imgBlob.length());
+
+                                    ImageIcon newImage = new ImageIcon(imgBlob);
+                                    Image tempImage = newImage.getImage();
+                                    gameItem.image.setIcon(new ImageIcon(tempImage.getScaledInstance(226, 126, 0)));
+
+                                }
+
+                            }
+
+                            gameItem.indexHeld = x;
+
+                            //a little print statement for testing
+                            System.out.println(gameItem.gameTitle.getText());
+
+                            //Check if were on an even number
+                            //Any factor of two will be start of the next row
+                            if (gamesShown % 3 == 0) {
+
+                                //Set the x back to default
+                                addX = 10;
+
+                                //now chaqnge the y value
+                                addY += 370;
+
+                                //Make the item container bigger in height to fit more items
+                                //First make a new dimension to store it
+                                Dimension newSize = new Dimension(itemContainer.getWidth(), itemContainer.getHeight() + addY);
+
+                                itemContainer.setPreferredSize(newSize);
+                                itemContainer.repaint();
+                                itemDisplay.repaint();
+                                System.out.println("Is running");
+
+                            }
+
+                            gameItem.setBounds(itemContainer.getX() + addX, 0 - 380 + addY, 226, 350);
+
+                            addX += 250;
+
+                            //And now add the game display item to the item container
+                            itemContainer.add(gameItem);
+
+                            gameItem.setVisible(true);
+
+                            itemContainer.repaint();
+                            itemDisplay.repaint();
+                            itemDisplay.revalidate();
+
+                            gamesShown += 1;
+
+                            gamesDisplayed.add(gameItem);
+                        }
+                    }
+
+                }
             }
-        }
 
-        //Now we will reset the search panel
-        itemDisplay.revalidate();
+            //Now we will reset the search panel
+            itemDisplay.revalidate();
 
-        createNotificationsCount();
+            createNotificationsCount();
 
-        gamePanel.setVisible(false);
+            gamePanel.setVisible(false);
+        });
+
+        gameDisplaying.start();
 
     }
 
@@ -4708,10 +4721,9 @@ public class ManagerView extends javax.swing.JFrame {
                 //check if we get an image
                 if ((int) desiredImage[0] == Lists.games.get(x).gameID && (int) desiredImage[1] == 1) {
 
-
                     byte[] imgBlob = (byte[]) desiredImage[2];
                     //byte[] b = imgBlob.getBytes(1, (int) imgBlob.length());
-                    
+
                     ImageIcon newImage = new ImageIcon(imgBlob);
                     Image tempImage = newImage.getImage();
                     image.setIcon(new ImageIcon(tempImage.getScaledInstance(256, 126, 0)));

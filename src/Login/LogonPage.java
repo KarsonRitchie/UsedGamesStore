@@ -10,9 +10,11 @@ import java.awt.Color;
 
 //Import the packages for the other pages here
 import Customer.StorePage;
+import Global.Lists;
 import Global.Variables;
 import Manager.ManagerView;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -96,9 +98,15 @@ public class LogonPage extends javax.swing.JFrame {
         loginButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         loginButton.setForeground(new java.awt.Color(255, 255, 255));
         loginButton.setText("Login");
-        loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loginButtonMouseClicked(evt);
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginButtonActionPerformed(evt);
+            }
+        });
+
+        usernameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                usernameFieldKeyPressed(evt);
             }
         });
 
@@ -108,6 +116,11 @@ public class LogonPage extends javax.swing.JFrame {
 
         passwordField.setToolTipText("");
         passwordField.setEchoChar('*');
+        passwordField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                passwordFieldKeyPressed(evt);
+            }
+        });
 
         passwordLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         passwordLabel.setLabelFor(passwordField);
@@ -271,7 +284,7 @@ public class LogonPage extends javax.swing.JFrame {
     //Create any global variables here
     CreateAccountPage accountPage = new CreateAccountPage(this);
     ForgotPasswordPage passwordPage = new ForgotPasswordPage(this);
-    
+
     //Here we will create the other pages here as well
     //Dont worry about every single one, like this login page, the main or first pgaes in each package will create the other pages if there are any needed
     StorePage store = new StorePage(this);
@@ -290,8 +303,76 @@ public class LogonPage extends javax.swing.JFrame {
         passwordPage.open();
     }//GEN-LAST:event_forgetPasswordLabelMouseClicked
 
-    private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseClicked
+    private void showLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showLabelMouseEntered
 
+        //When the mouse enters show the password
+        passwordField.setEchoChar((char) 0);
+
+    }//GEN-LAST:event_showLabelMouseEntered
+
+    private void showLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showLabelMouseExited
+        passwordField.setEchoChar('*');
+    }//GEN-LAST:event_showLabelMouseExited
+
+    private void guestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestButtonActionPerformed
+        store.openGuest();
+
+        Variables.currentLevel = "Customer";
+
+        this.dispose();
+    }//GEN-LAST:event_guestButtonActionPerformed
+
+    private void usernameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameFieldKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            passwordField.requestFocus();
+
+        }
+    }//GEN-LAST:event_usernameFieldKeyPressed
+
+    private void passwordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFieldKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+
+            //First get the password
+            String password = Methods.getPassword(passwordField.getPassword());
+
+            //Take the information in the fields and login
+            String level = SQLLogin.checkCredentials(usernameField.getText(), password);
+
+            //Now we do appropiate actions based on waht is returned
+            //First check if None wasnt returned, which means no user in this case
+            if (level.equals("None")) {
+
+                statusLabel.setText("Either user does not exist or password is incorrect");
+                statusLabel.setForeground(Color.red);
+                statusLabel.setVisible(true);
+
+            } else if (level.equals("ERROR")) {
+
+                statusLabel.setText("An error occured, please try again");
+                statusLabel.setForeground(Color.red);
+                statusLabel.setVisible(true);
+
+            } else if (level.equals("Customer")) {
+
+                store.open();
+                this.dispose();
+
+            } else if (level.equals("Manager")) {
+
+                try {
+                    managerPage.open();
+                } catch (ParseException ex) {
+                    Logger.getLogger(LogonPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
+                this.dispose();
+
+            }
+
+        }
+    }//GEN-LAST:event_passwordFieldKeyPressed
+
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         //First get the password
         String password = Methods.getPassword(passwordField.getPassword());
 
@@ -327,28 +408,7 @@ public class LogonPage extends javax.swing.JFrame {
             this.dispose();
 
         }
-
-
-    }//GEN-LAST:event_loginButtonMouseClicked
-
-    private void showLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showLabelMouseEntered
-
-        //When the mouse enters show the password
-        passwordField.setEchoChar((char) 0);
-
-    }//GEN-LAST:event_showLabelMouseEntered
-
-    private void showLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showLabelMouseExited
-        passwordField.setEchoChar('*');
-    }//GEN-LAST:event_showLabelMouseExited
-
-    private void guestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestButtonActionPerformed
-        store.openGuest();
-        
-        Variables.currentLevel = "Customer";
-        
-        this.dispose();
-    }//GEN-LAST:event_guestButtonActionPerformed
+    }//GEN-LAST:event_loginButtonActionPerformed
 
     /**
      * //@param args the command line arguments
@@ -384,7 +444,6 @@ public class LogonPage extends javax.swing.JFrame {
 //            }
 //        });
 //    }
-
     public void setup() {
 
         //Setup the other frames and panels here
@@ -394,23 +453,29 @@ public class LogonPage extends javax.swing.JFrame {
 
         usernameField.setText("");
         passwordField.setText("");
-        
+
         statusLabel.setVisible(false);
-        
+
         //Change the current Page variable
         Methods.currentPage = "Login";
+
+        //lets clear some uneccessary lists to save memory
+        Lists.games.clear();
+        Lists.users.clear();
+        Lists.discounts.clear();
+        Lists.cart.clear();
 
         this.setVisible(true);
 
     }
-    
+
     //a method tos et the status text incase were coming from another page
-    public void setStatus(String text){
-    
+    public void setStatus(String text) {
+
         statusLabel.setForeground(Color.green);
         statusLabel.setText(text);
         statusLabel.setVisible(true);
-    
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

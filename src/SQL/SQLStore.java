@@ -106,7 +106,18 @@ public class SQLStore extends GeneralSQL {
 
                 if (rs.next()) {
 
-                    stmt = GeneralSQL.con.prepareStatement("UPDATE Cart SET Quantity = " + (rs.getInt(3) + amountDesired) + " WHERE ItemID = " + gameID + " AND UserID = " + userID);
+                    //first we need to make sure we dont go past the cap
+                    if (rs.getInt(4) < (rs.getInt(3) + amountDesired)) {
+
+                        amountDesired = rs.getInt(4);
+
+                    } else {
+
+                        amountDesired = rs.getInt(3) + amountDesired;
+
+                    }
+
+                    stmt = GeneralSQL.con.prepareStatement("UPDATE Cart SET Quantity = " + amountDesired + " WHERE ItemID = " + gameID + " AND UserID = " + userID);
                     stmt.execute();
 
                 } else {
@@ -159,6 +170,24 @@ public class SQLStore extends GeneralSQL {
             System.out.println(ex);
             return false;
 
+        }
+
+    }
+
+    public static void editCart(int userID, int gameID, int amountDesired) {
+
+        PreparedStatement stmt;
+        try {
+            GeneralSQL.getConnection();
+            
+            stmt = GeneralSQL.con.prepareStatement("UPDATE Cart SET Quantity = " + amountDesired + " WHERE ItemID = " + gameID + " AND UserID = " + userID);
+            stmt.execute();
+
+            createCart(userID);
+            con.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLStore.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -443,7 +472,7 @@ public class SQLStore extends GeneralSQL {
         } catch (SQLException ex) {
 
             noBuy.clear();
-            noBuy.add(new CartItem(0,0,0,0,0,"ERROR"));
+            noBuy.add(new CartItem(0, 0, 0, 0, 0, "ERROR"));
             return noBuy;
 
         }
@@ -547,6 +576,8 @@ public class SQLStore extends GeneralSQL {
                 //now remove the necessary stock
                 stmt = GeneralSQL.con.prepareStatement("UPDATE TestGames3 SET Quantity = Quantity - " + item.quantity + " WHERE GameID = " + item.itemID);
                 stmt.execute();
+                
+                idNum++;
 
             }
 
@@ -563,9 +594,9 @@ public class SQLStore extends GeneralSQL {
             //clear the cart
             stmt = GeneralSQL.con.prepareStatement("DELETE FROM Cart WHERE UserID = " + Variables.customerID);
             stmt.execute();
-            
+
             con.close();
-            
+
             Lists.cart.clear();
 
         } catch (SQLException ex) {
