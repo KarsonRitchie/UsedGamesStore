@@ -362,6 +362,7 @@ public class LogonPage extends javax.swing.JFrame {
 
                 try {
                     managerPage.open();
+                    System.out.println("New");
                 } catch (ParseException ex) {
                     Logger.getLogger(LogonPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 }
