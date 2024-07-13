@@ -40,7 +40,7 @@ public class CreateGame extends javax.swing.JFrame {
     //a list of jlabel elements
     ArrayList<JLabel> errorMessages = new ArrayList<JLabel>();
     private boolean gameUploaded = false;
-    
+
     ArrayList<Game> games = new ArrayList<Game>();
 
     public CreateGame(ManagerView manager) {
@@ -57,9 +57,9 @@ public class CreateGame extends javax.swing.JFrame {
         errorMessages.add(gameExistsError);
 
     }
-    
+
     public void addInventoryPage(AddInventoryPage addInv) {
-        
+
         this.addInv = addInv;
 
     }
@@ -126,6 +126,11 @@ public class CreateGame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/UsedGamesLogo.png")).getImage());
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         gameCreation.setBackground(new java.awt.Color(65, 146, 217));
 
@@ -646,7 +651,7 @@ public class CreateGame extends javax.swing.JFrame {
             titleError.setVisible(true);
 
         }
-        
+
         gameExistsError.setVisible(false);
 
     }//GEN-LAST:event_titleFieldKeyReleased
@@ -654,16 +659,17 @@ public class CreateGame extends javax.swing.JFrame {
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
         this.dispose();
 
-        if(fromInv == false){try {
-            manager.open();
-        } catch (ParseException ex) {
-            Logger.getLogger(CreateGame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        }else{
-        
+        if (fromInv == false) {
+            try {
+                manager.open();
+            } catch (ParseException ex) {
+                Logger.getLogger(CreateGame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+
             fromInv = false;
             addInv.reopen(games);
-            
+
         }
     }//GEN-LAST:event_returnButtonActionPerformed
 
@@ -700,7 +706,7 @@ public class CreateGame extends javax.swing.JFrame {
             sysGenErrorLabel.setVisible(false);
 
         }
-        
+
         gameExistsError.setVisible(false);
     }//GEN-LAST:event_systemBoxItemStateChanged
 
@@ -806,6 +812,18 @@ public class CreateGame extends javax.swing.JFrame {
         open();
     }//GEN-LAST:event_newGameButtonActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if(fromInv == true){
+        
+            for(Game game : games){
+            
+                SQLManager.deleteGame(game.gameID);
+            
+            }
+            
+        }
+    }//GEN-LAST:event_formWindowClosing
+
     /**
      * @param args the command line arguments
      */
@@ -850,7 +868,7 @@ public class CreateGame extends javax.swing.JFrame {
 
     Placeholder mainImage = new Placeholder();
     Placeholder thumbnailImage = new Placeholder();
-    
+
     //a boolean to know if were opening from inventory page
     boolean fromInv = false;
 
@@ -918,7 +936,7 @@ public class CreateGame extends javax.swing.JFrame {
         thumbnailError.setVisible(false);
         mainImageError.setVisible(false);
         gameError.setVisible(false);
-        
+
         imageSuccess.setVisible(false);
         gameSuccess.setVisible(false);
 
@@ -929,7 +947,7 @@ public class CreateGame extends javax.swing.JFrame {
 
         mainImage.bList.clear();
         thumbnailImage.bList.clear();
-        
+
         //make the thumbnail and main image placeholders again
         gameDisplay.image.setIcon((Icon) Lists.images.get(1)[2]);
         image.setIcon((Icon) Lists.images.get(0)[2]);
@@ -937,13 +955,13 @@ public class CreateGame extends javax.swing.JFrame {
         this.setVisible(true);
 
     }
-    
-    public void openInv(){
-    
+
+    public void openInv() {
+
         fromInv = true;
         games.clear();
         open();
-    
+
     }
 
     public void disableItems() {
@@ -999,12 +1017,12 @@ public class CreateGame extends javax.swing.JFrame {
 
                 gameDisplay.image.setIcon(new ImageIcon(tempIcon.getScaledInstance(226, 126, 0)));
                 thumbnailImage.needsUploading = true;
-                
+
                 if (gameUploaded) {
 
                     saveImageButton.setEnabled(true);
                 }
-                
+
                 imageSuccess.setVisible(false);
 
             } else {
@@ -1020,12 +1038,12 @@ public class CreateGame extends javax.swing.JFrame {
 
                 image.setIcon(new ImageIcon(tempIcon.getScaledInstance(256, 126, 0)));
                 mainImage.needsUploading = true;
-                
+
                 if (gameUploaded) {
 
                     saveImageButton.setEnabled(true);
                 }
-                
+
                 imageSuccess.setVisible(false);
 
             }
@@ -1045,11 +1063,10 @@ public class CreateGame extends javax.swing.JFrame {
         //but we are only going to take out the data changing
         //methods could be possible like with how we created accounts but with it ebing limited to only this one view id say keep it as is
         //and it may make working with data changing much more complex since we want to keep things consistent and work with previews
-        
         gameExistsError.setVisible(false);
         //set this to invisible whenever we try to upload it again
         //also for when title and system cahnges just so it doesnt keep bothering a user trying to fix it
-        
+
         if (!titleField.getText().isBlank()) {
 
             titleError.setVisible(false);
@@ -1103,28 +1120,28 @@ public class CreateGame extends javax.swing.JFrame {
         //lets see if any are visible
         //create a boolean
         boolean hasError = false;
-        
+
         //after the booleans hs been created I want to check one thing
         //I want to check if it exists
         //if it does we will check if the the jlabel is vivsbile to say theres an error
         ///however, if we cant connect to the database anyway then I wll make sure has error is set to true
         String status = SQLManager.checkGame(titleField.getText(), systemBox.getSelectedItem().toString());
 
-        if(status.equals("No")){
-        
+        if (status.equals("No")) {
+
             gameExistsError.setVisible(false);
-            
-        }else if(status.equals("Exists")){
-        
+
+        } else if (status.equals("Exists")) {
+
             gameExistsError.setVisible(true);
-            
-        }else{
-        
+
+        } else {
+
             hasError = true;
             gameError.setVisible(true);
-            
+
         }
-        
+
         for (JLabel errorLabel : errorMessages) {
 
             if (errorLabel.isVisible()) {
@@ -1138,42 +1155,67 @@ public class CreateGame extends javax.swing.JFrame {
         if (!hasError) {
 
             System.out.println(genreBox.getSelectedItem().toString());
-            
-            
+
             //now we can save it
-            if (SQLManager.addGame(titleField.getText(), Float.parseFloat(priceField.getText()), genreBox.getSelectedItem().toString(), systemBox.getSelectedItem().toString(), (int) quantityField.getValue(), descriptionField.getText(), (int) restockField.getValue(), 1)) {
+            if (fromInv == true) {
 
-                //now if we will upload the images as need be
-                //we will check if it has an image to upload first
-                //the best thing to do is call a method so we can recall it if the images are not successful
-                //before that lets try to get the game id as well
-                gameID = SQLManager.recieveID(titleField.getText(), systemBox.getSelectedItem().toString());
+                if (SQLManager.addGame(titleField.getText(), Float.parseFloat(priceField.getText()), genreBox.getSelectedItem().toString(), systemBox.getSelectedItem().toString(), (int) quantityField.getValue(), descriptionField.getText(), (int) restockField.getValue(), 0)) {
 
-                if (gameID != 0) {
+                    //now if we will upload the images as need be
+                    //we will check if it has an image to upload first
+                    //the best thing to do is call a method so we can recall it if the images are not successful
+                    //before that lets try to get the game id as well
+                    gameID = SQLManager.recieveID(titleField.getText(), systemBox.getSelectedItem().toString());
 
-                    uploadImages();
+                    if (gameID != 0) {
 
-                }
+                        uploadImages();
 
-                //make sure we know the game is uploaded
-                gameError.setVisible(false);
-                gameSuccess.setVisible(true);
-                gameUploaded = true;
-                disableItems();
-                
-                //make sure to save the new game to the list of games if its from the inventory
-                if(fromInv == true){
-                
+                    }
+
+                    //make sure we know the game is uploaded
+                    gameError.setVisible(false);
+                    gameSuccess.setVisible(true);
+                    gameUploaded = true;
+                    disableItems();
+
+                    //make sure to save the new game to the list of games if its from the inventory
                     Game newGame = new Game(titleField.getText(), Float.parseFloat(priceField.getText()), genreBox.getSelectedItem().toString(), systemBox.getSelectedItem().toString(), (int) quantityField.getValue(), gameID, descriptionField.getText(), (int) restockField.getValue(), 1);
-                    
+
                     games.add(newGame);
-                    
+
+                } else {
+
+                    gameError.setVisible(true);
+
                 }
 
-            }else{
-            
-                gameError.setVisible(true);
-            
+            } else {
+                if (SQLManager.addGame(titleField.getText(), Float.parseFloat(priceField.getText()), genreBox.getSelectedItem().toString(), systemBox.getSelectedItem().toString(), (int) quantityField.getValue(), descriptionField.getText(), (int) restockField.getValue(), 1)) {
+
+                    //now if we will upload the images as need be
+                    //we will check if it has an image to upload first
+                    //the best thing to do is call a method so we can recall it if the images are not successful
+                    //before that lets try to get the game id as well
+                    gameID = SQLManager.recieveID(titleField.getText(), systemBox.getSelectedItem().toString());
+
+                    if (gameID != 0) {
+
+                        uploadImages();
+
+                    }
+
+                    //make sure we know the game is uploaded
+                    gameError.setVisible(false);
+                    gameSuccess.setVisible(true);
+                    gameUploaded = true;
+                    disableItems();
+
+                } else {
+
+                    gameError.setVisible(true);
+
+                }
             }
         }
 
@@ -1234,7 +1276,7 @@ public class CreateGame extends javax.swing.JFrame {
 
             //upload the main imagel to the database
             if (SQLImages.uploadImage(gameID, 1, mainImage.bList.get(0))) {
-                byte[] imgBlob = (byte[]) SQLImages.retrieveImage(gameID, 0);
+                byte[] imgBlob = (byte[]) SQLImages.retrieveImage(gameID, 1);
                 for (Object[] imageInfo : Lists.images) {
 
                     if ((int) imageInfo[0] == gameID) {
@@ -1269,16 +1311,16 @@ public class CreateGame extends javax.swing.JFrame {
             }
 
         }
-        
-        if(!mainImageError.isVisible() && !thumbnailError.isVisible()){
-        
+
+        if (!mainImageError.isVisible() && !thumbnailError.isVisible()) {
+
             imageSuccess.setVisible(true);
             saveImageButton.setEnabled(false);
-            
-        }else{
-        
+
+        } else {
+
             saveImageButton.setEnabled(true);
-            
+
         }
 
     }

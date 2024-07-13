@@ -4,11 +4,19 @@
  */
 package Manager;
 
+import Customer.StorePage;
 import Global.Game;
 import Global.Lists;
 import Global.Methods;
 import Global.Report;
+import Login.LogonPage;
 import SQL.SQLManager;
+import SQL.SQLStore;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -28,6 +36,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
      */
     ManagerView manager = null;
     CreateGame gameCreate = null;
+    LogonPage login = null;
 
     //an arraylist for errors
     ArrayList<String> invErrors = new ArrayList<String>();
@@ -51,6 +60,12 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     }
 
+    public void addLoginPage(LogonPage login) {
+
+        this.login = login;
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -65,6 +80,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
         quitButton = new javax.swing.JButton();
         logOutButton = new javax.swing.JButton();
         returnButton = new javax.swing.JButton();
+        helpButton = new javax.swing.JButton();
         contentPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         gamesList = new javax.swing.JList<>();
@@ -94,8 +110,15 @@ public class AddInventoryPage extends javax.swing.JFrame {
         newInstruction1 = new javax.swing.JLabel();
         newInstruction2 = new javax.swing.JLabel();
         newInstruction3 = new javax.swing.JLabel();
+        moneyLabel = new javax.swing.JLabel();
+        instructionLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         controlPanel.setBackground(new java.awt.Color(65, 146, 217));
         controlPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -140,6 +163,16 @@ public class AddInventoryPage extends javax.swing.JFrame {
             }
         });
 
+        helpButton.setBackground(new java.awt.Color(0, 48, 90));
+        helpButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        helpButton.setForeground(new java.awt.Color(255, 255, 255));
+        helpButton.setText("Help");
+        helpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
         controlPanel.setLayout(controlPanelLayout);
         controlPanelLayout.setHorizontalGroup(
@@ -148,17 +181,24 @@ public class AddInventoryPage extends javax.swing.JFrame {
             .addComponent(quitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(returnButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(helpButton, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE))
         );
         controlPanelLayout.setVerticalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
                 .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 488, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 513, Short.MAX_VALUE)
                 .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(quitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(controlPanelLayout.createSequentialGroup()
+                    .addGap(64, 64, 64)
+                    .addComponent(helpButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(613, Short.MAX_VALUE)))
         );
 
         contentPanel.setBackground(new java.awt.Color(65, 146, 217));
@@ -192,6 +232,11 @@ public class AddInventoryPage extends javax.swing.JFrame {
             }
         });
 
+        amountField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                amountFieldActionPerformed(evt);
+            }
+        });
         amountField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 amountFieldKeyReleased(evt);
@@ -224,7 +269,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
         updateButton.setBackground(new java.awt.Color(0, 48, 90));
         updateButton.setForeground(new java.awt.Color(255, 255, 255));
-        updateButton.setText("Update");
+        updateButton.setText(" Update Quantity");
         updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateButtonActionPerformed(evt);
@@ -251,7 +296,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
         updateButton1.setBackground(new java.awt.Color(0, 48, 90));
         updateButton1.setForeground(new java.awt.Color(255, 255, 255));
-        updateButton1.setText("Update");
+        updateButton1.setText("Update Quantity");
         updateButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateButton1ActionPerformed(evt);
@@ -292,6 +337,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
         amountLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         amountLabel.setText("Amount");
 
+        addedLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         addedLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         addedLabel.setText("Existing Games");
 
@@ -309,62 +355,82 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
         newInstruction2.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         newInstruction2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        newInstruction2.setText("changed inventory will change even without submission");
+        newInstruction2.setText("They remain temporary until submitted");
 
         newInstruction3.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         newInstruction3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        newInstruction3.setText("so use the controls on the right with caution");
+        newInstruction3.setText("Removing them will delete them");
+
+        moneyLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        moneyLabel.setText("$");
+
+        instructionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        instructionLabel.setText("Click on the desired list items to change to use the controls on the right of the lists");
 
         javax.swing.GroupLayout contentPanelLayout = new javax.swing.GroupLayout(contentPanel);
         contentPanel.setLayout(contentPanelLayout);
         contentPanelLayout.setHorizontalGroup(
             contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(contentPanelLayout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(inventoryError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(amountError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(databaseError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contentPanelLayout.createSequentialGroup()
+                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(contentPanelLayout.createSequentialGroup()
-                        .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(amountLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(amountField, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(contentPanelLayout.createSequentialGroup()
-                                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(contentPanelLayout.createSequentialGroup()
-                                            .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
-                                                .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(gameAdding, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(quantityAdded))
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                                                .addComponent(newQuantity)
-                                                .addComponent(updateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(clearButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                                        .addGroup(contentPanelLayout.createSequentialGroup()
-                                            .addComponent(addedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(125, 125, 125)))
-                                    .addGroup(contentPanelLayout.createSequentialGroup()
-                                        .addComponent(exisitngNote, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(125, 125, 125)))
-                                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(newLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(newButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane2)
-                                    .addComponent(newInstruction1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(newInstruction2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(newInstruction3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addContainerGap()
+                        .addComponent(databaseError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(contentPanelLayout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(inventoryError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(contentPanelLayout.createSequentialGroup()
+                        .addGap(17, 17, 17)
                         .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(submitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(removeButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-                            .addComponent(newQuantity1)
-                            .addComponent(updateButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(clearButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(contentPanelLayout.createSequentialGroup()
+                                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(contentPanelLayout.createSequentialGroup()
+                                        .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(contentPanelLayout.createSequentialGroup()
+                                                    .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+                                                        .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(gameAdding, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(quantityAdded))
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(newQuantity)
+                                                        .addComponent(updateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(clearButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                                                .addGroup(contentPanelLayout.createSequentialGroup()
+                                                    .addComponent(addedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addGap(125, 125, 125)))
+                                            .addGroup(contentPanelLayout.createSequentialGroup()
+                                                .addComponent(exisitngNote, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(125, 125, 125)))
+                                        .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(newLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(newButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jScrollPane2)
+                                            .addComponent(newInstruction1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(newInstruction2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addGroup(contentPanelLayout.createSequentialGroup()
+                                                .addGap(6, 6, 6)
+                                                .addComponent(newInstruction3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addGroup(contentPanelLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(moneyLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(amountError, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(amountLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(amountField, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(removeButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(newQuantity1)
+                                    .addComponent(updateButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(clearButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 866, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(instructionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         contentPanelLayout.setVerticalGroup(
@@ -372,11 +438,11 @@ public class AddInventoryPage extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, contentPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(inventoryError)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(amountError)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(databaseError)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(instructionLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addedLabel)
                     .addComponent(newLabel))
@@ -389,7 +455,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
                     .addComponent(gameAdding, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(newInstruction2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(quantityAdded, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(newInstruction3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -420,13 +486,16 @@ public class AddInventoryPage extends javax.swing.JFrame {
                                 .addComponent(updateButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(clearButton1)))))
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(amountError)
+                .addGap(11, 11, 11)
                 .addComponent(amountLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(amountField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(submitButton))
-                .addGap(22, 22, 22))
+                    .addComponent(moneyLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(submitButton))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -441,7 +510,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(879, Short.MAX_VALUE)))
+                    .addContainerGap(903, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -460,16 +529,33 @@ public class AddInventoryPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        //Refresh the whole page
+       //refresh the existing games list
+       SQLStore.loadGames();
+       refreshGames();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
         //Quit the program
+
+        for (Game game : newGames) {
+
+            SQLManager.deleteGame(game.gameID);
+
+        }
+
         System.exit(0);
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
+        for (Game game : newGames) {
+
+            SQLManager.deleteGame(game.gameID);
+
+        }
+
         this.dispose();
+
+        login.run();
 
 //        Lists.cart.clear();
 //
@@ -510,7 +596,17 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
             if (wasFound == false) {
                 addedGames.add(tempGame);
-                addedGames.getLast().quantity = (int) quantityAdded.getValue();
+
+                for (int x = 0; x < addedGames.size(); x++) {
+
+                    if (x == addedGames.size() - 1) {
+
+                        addedGames.get(x).quantity = (int) quantityAdded.getValue();
+
+                    }
+
+                }
+                //addedGames.quantity = (int) quantityAdded.getValue();
                 System.out.println((int) quantityAdded.getValue());
             }
 
@@ -570,8 +666,11 @@ public class AddInventoryPage extends javax.swing.JFrame {
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        addedGames.remove(gamesList.getSelectedIndex());
-        refreshList();
+
+        if (gamesList.getSelectedIndex() > -1) {
+            addedGames.remove(gamesList.getSelectedIndex());
+            refreshList();
+        }
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void newQuantityStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_newQuantityStateChanged
@@ -608,8 +707,11 @@ public class AddInventoryPage extends javax.swing.JFrame {
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void removeButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButton1ActionPerformed
-        newGames.remove(newGamesList.getSelectedIndex());
-        refreshNewList();
+        if (newGamesList.getSelectedIndex() > -1) {
+            SQLManager.deleteGame(newGames.get(newGamesList.getSelectedIndex()).gameID);
+            newGames.remove(newGamesList.getSelectedIndex());
+            refreshNewList();
+        }
     }//GEN-LAST:event_removeButton1ActionPerformed
 
     private void newQuantity1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_newQuantity1StateChanged
@@ -626,6 +728,8 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
             if ((int) newQuantity1.getValue() == 0) {
 
+                SQLManager.deleteGame(newGames.get(newGamesList.getSelectedIndex()).gameID);
+
                 newGames.remove(newGamesList.getSelectedIndex());
 
             } else {
@@ -641,6 +745,13 @@ public class AddInventoryPage extends javax.swing.JFrame {
     }//GEN-LAST:event_updateButton1ActionPerformed
 
     private void clearButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButton1ActionPerformed
+
+        for (Game game : newGames) {
+
+            SQLManager.deleteGame(game.gameID);
+
+        }
+
         newGames.clear();
         refreshNewList();
     }//GEN-LAST:event_clearButton1ActionPerformed
@@ -652,12 +763,50 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
         this.dispose();
+
+        //first we need to delete all the games since they were not submitted
+        //do that for everytime we close out of the form from this window
+        //or clear the list
+        for (Game game : newGames) {
+
+            SQLManager.deleteGame(game.gameID);
+
+        }
+
         try {
             manager.open();
         } catch (ParseException ex) {
             Logger.getLogger(AddInventoryPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_returnButtonActionPerformed
+
+    private void amountFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_amountFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_amountFieldActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        for (Game game : newGames) {
+
+            SQLManager.deleteGame(game.gameID);
+
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
+        try {
+            //Open up a pdf for a help file
+            URL helpURL = new URL("https://drive.google.com/file/d/1sU2e3NVp0FgIMs4cGXtmyWZ9uKSMoKV6/view?usp=sharing");
+            try {
+                Desktop.getDesktop().browse(helpURL.toURI());
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(StorePage.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(StorePage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(StorePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_helpButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -709,6 +858,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
         databaseError.setVisible(false);
 
         quantityAdded.setValue(1);
+        amountField.setText("");
 
         //to be safe im going to have different refresh items in different functions so we refresh only whats necessary at the moment
         refreshGames();
@@ -716,6 +866,9 @@ public class AddInventoryPage extends javax.swing.JFrame {
         //clear the lists on a full open
         addedGames.clear();
         newGames.clear();
+        
+        newQuantity.setValue((int) 0);
+        newQuantity1.setValue((int) 0);
 
         refreshList();
         refreshNewList();
@@ -747,6 +900,12 @@ public class AddInventoryPage extends javax.swing.JFrame {
         }
 
         newGamesList.setModel(itemList);
+        
+        newQuantity.setValue((int) 0);
+        newQuantity1.setValue((int) 0);
+        
+        refreshList();
+        refreshNewList();
 
         this.setVisible(true);
 
@@ -761,10 +920,30 @@ public class AddInventoryPage extends javax.swing.JFrame {
         //add a default
         gameAdding.addItem("N/A");
 
+        boolean isNew = false;
+
         for (Game game : Lists.games) {
 
-            String newGame = game.name + " (" + game.system + ")";
-            gameAdding.addItem(newGame);
+            //when a new game is found we need to check if it is a game in the newGamesList
+            for (Game newGame : newGames) {
+
+                if (newGame.gameID == game.gameID) {
+
+                    isNew = true;
+
+                }
+
+            }
+
+            if (!isNew) {
+                String newGame = game.name + " (" + game.system + ")";
+                gameAdding.addItem(newGame);
+            } else {
+
+                //reset back to default false state
+                isNew = false;
+
+            }
 
         }
 
@@ -852,6 +1031,13 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
                 }
 
+                for (Game game : newGames) {
+
+                    game.active = 1;
+                    game.databaseSave();
+
+                }
+
                 //now we save it to the database
                 if (SQLManager.tradeReport(addedGames, newGames, Float.parseFloat(amountField.getText()))) {
 
@@ -894,10 +1080,13 @@ public class AddInventoryPage extends javax.swing.JFrame {
     private javax.swing.JLabel exisitngNote;
     private javax.swing.JComboBox<String> gameAdding;
     private javax.swing.JList<String> gamesList;
+    private javax.swing.JButton helpButton;
+    private javax.swing.JLabel instructionLabel;
     private javax.swing.JLabel inventoryError;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton logOutButton;
+    private javax.swing.JLabel moneyLabel;
     private javax.swing.JButton newButton;
     private javax.swing.JList<String> newGamesList;
     private javax.swing.JLabel newInstruction1;

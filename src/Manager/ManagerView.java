@@ -79,6 +79,7 @@ public class ManagerView extends javax.swing.JFrame {
         
         //make sure to add the addInv page to the game create page
         gameCreate.addInventoryPage(addInv);
+        addInv.addLoginPage(login);
 
         //now add all error messages
         errorMessages.add(usernameError);
