@@ -724,6 +724,7 @@ public class StorePage extends javax.swing.JFrame {
         SQLStore.loadGames();
         searchGames();
         displayGame(Variables.chosenGame);
+        long endTime = System.nanoTime();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
@@ -1122,6 +1123,8 @@ public class StorePage extends javax.swing.JFrame {
         controls3.setVisible(false);
 
         this.setVisible(true);
+        
+        long endTime = System.nanoTime();
 
     }
 

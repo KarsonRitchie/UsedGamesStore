@@ -3822,17 +3822,6 @@ public class ManagerView extends javax.swing.JFrame {
         //Whenever it opens we need to get users
         //Id say users is something we shouldnt load at first because it may not be needed at all
         //unlike games which will be available in multiple views
-        SQLManager.loadUsers();
-
-        //now set the tables
-        setUserTables();
-
-        selectedUser.setVisible(false);
-
-        //DISCOUNTS
-        SQLManager.loadDiscounts();
-
-        setDiscountsTable();
 
         //INVENTORY
         disabledGamesCheck.setSelected(true);
@@ -3845,57 +3834,79 @@ public class ManagerView extends javax.swing.JFrame {
         //Change the current page variable
         Methods.currentPage = "Manager";
 
-        gamePanel.setVisible(false);
-        inventoryFiltersPanel.setVisible(false);
-        selectedUser.setVisible(false);
-        selectedDiscount.setVisible(false);
-        createDiscounts.setVisible(false);
-
-        //also edit notifications
-        createNotificationsCount();
-
         //lets also set the discounts game box
-        gameBox.removeAllItems();
+        Thread displayData = new Thread(() -> {
 
-        gameBox.addItem("N/A");
+            SQLManager.loadUsers();
 
-        for (Game game : Lists.games) {
+            gamePanel.setVisible(false);
+            inventoryFiltersPanel.setVisible(false);
+            selectedUser.setVisible(false);
+            selectedDiscount.setVisible(false);
+            createDiscounts.setVisible(false);
 
-            //make a boolean
-            boolean doesExist = false;
+            //also edit notifications
+            createNotificationsCount();
 
-            for (int x = 0; x < gameBox.getItemCount(); x++) {
+            try {
+                //now set the tables
 
-                if (game.name.equals(gameBox.getItemAt(x))) {
+                //DISCOUNTS
+                SQLManager.loadDiscounts();
+            } catch (ParseException ex) {
+                Logger.getLogger(ManagerView.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-                    doesExist = true;
+            setUserTables();
+
+            selectedUser.setVisible(false);
+
+            setDiscountsTable();
+
+            gameBox.removeAllItems();
+
+            gameBox.addItem("N/A");
+
+            for (Game game : Lists.games) {
+
+                //make a boolean
+                boolean doesExist = false;
+
+                for (int x = 0; x < gameBox.getItemCount(); x++) {
+
+                    if (game.name.equals(gameBox.getItemAt(x))) {
+
+                        doesExist = true;
+
+                    }
+
+                }
+
+                if (doesExist == false) {
+
+                    gameBox.addItem(game.name);
 
                 }
 
             }
 
-            if (doesExist == false) {
+            levelChosen.setText("Level: Cart");
 
-                gameBox.addItem(game.name);
+            discountLevel = "Cart";
 
-            }
+            //also set the dates back to default
+            minYear.setSelectedIndex(0);
+            maxYear.setSelectedIndex(0);
 
-        }
+            minMonth.setSelectedIndex(1);
+            minMonth.setSelectedIndex(0);
+            maxMonth.setSelectedIndex(1);
+            maxMonth.setSelectedIndex(0);
 
-        levelChosen.setText("Level: Cart");
+            passwordField.setEchoChar('*');
+        });
 
-        discountLevel = "Cart";
-
-        //also set the dates back to default
-        minYear.setSelectedIndex(0);
-        maxYear.setSelectedIndex(0);
-
-        minMonth.setSelectedIndex(1);
-        minMonth.setSelectedIndex(0);
-        maxMonth.setSelectedIndex(1);
-        maxMonth.setSelectedIndex(0);
-
-        passwordField.setEchoChar('*');
+        displayData.start();
         //this is just to make the state change and we call the ecent to edit the days
         //therefore its back to defauult even if opened for the first time
 
@@ -4423,7 +4434,7 @@ public class ManagerView extends javax.swing.JFrame {
 
                     if (consoleSearchable && genreSearchable && statusSearchable) {
                         GameDisplay gameItem = new GameDisplay();
-                        System.out.println(x);
+                        //System.out.println(x);
 
                         gameItem.gameTitle.setText(Lists.games.get(x).name);
                         gameItem.gamePrice.setText("$" + String.format("%.2f", Lists.games.get(x).price));
@@ -4454,8 +4465,7 @@ public class ManagerView extends javax.swing.JFrame {
                         gameItem.indexHeld = x;
 
                         //a little print statement for testing
-                        System.out.println(gameItem.gameTitle.getText());
-
+                        //System.out.println(gameItem.gameTitle.getText());
                         //Check if were on an even number
                         //Any factor of two will be start of the next row
                         if (gamesShown % 3 == 0) {
@@ -4471,7 +4481,7 @@ public class ManagerView extends javax.swing.JFrame {
                             itemContainer.setPreferredSize(newSize);
                             itemContainer.repaint();
                             itemDisplay.repaint();
-                            System.out.println(x + "2");
+                            //System.out.println(x + "2");
 
                         }
 
@@ -4489,8 +4499,7 @@ public class ManagerView extends javax.swing.JFrame {
                         //this is so we dont overshow the display
                         gameItem.setBounds(itemContainer.getX() + addX, 0 - 380 + addY, 226, 350);
 
-                        System.out.println(Lists.games.get(x).name);
-
+                        //System.out.println(Lists.games.get(x).name);
                         addX += 250;
 
                         //And now add the game display item to the item container
@@ -4622,8 +4631,7 @@ public class ManagerView extends javax.swing.JFrame {
                             gameItem.indexHeld = x;
 
                             //a little print statement for testing
-                            System.out.println(gameItem.gameTitle.getText());
-
+                            //System.out.println(gameItem.gameTitle.getText());
                             //Check if were on an even number
                             //Any factor of two will be start of the next row
                             if (gamesShown % 3 == 0) {
