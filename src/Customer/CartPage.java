@@ -666,7 +666,18 @@ public class CartPage extends javax.swing.JFrame {
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
         this.dispose();
-        store.open();
+        
+        if (Variables.currentLevel.equals("Customer")) {
+
+            store.open();
+
+        } else {
+
+            store.open();
+            store.managerReturn();
+
+        }
+        
     }//GEN-LAST:event_returnButtonActionPerformed
 
     private void cartListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_cartListValueChanged
@@ -866,6 +877,7 @@ public class CartPage extends javax.swing.JFrame {
             } else {
 
                 //now we just update the quantity
+                SQLStore.editCart(Variables.customerID, Lists.games.get(cartList.getSelectedIndex()).gameID, (int) quantity.getValue());
                 Lists.cart.get(cartList.getSelectedIndex()).updateQuantity((int) quantity.getValue());
 
                 resetCart();

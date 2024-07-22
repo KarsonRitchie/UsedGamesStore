@@ -144,6 +144,8 @@ public class CreateAccountPage extends javax.swing.JFrame {
         phoneErrorMessage = new javax.swing.JLabel();
         stateErrorMessage = new javax.swing.JLabel();
         managerCheck = new javax.swing.JCheckBox();
+        resetButton = new javax.swing.JButton();
+        successStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Account Creation");
@@ -458,6 +460,22 @@ public class CreateAccountPage extends javax.swing.JFrame {
         managerCheck.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         managerCheck.setText("Is Manager");
 
+        resetButton.setBackground(new java.awt.Color(0, 48, 90));
+        resetButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        resetButton.setForeground(new java.awt.Color(255, 255, 255));
+        resetButton.setText("Reset Page");
+        resetButton.setPreferredSize(new java.awt.Dimension(457, 23));
+        resetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetButtonActionPerformed(evt);
+            }
+        });
+
+        successStatus.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        successStatus.setForeground(new java.awt.Color(0, 255, 0));
+        successStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        successStatus.setText("User created successfully");
+
         container.setLayer(returnButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
         container.setLayer(emailLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
         container.setLayer(phoneField, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -500,6 +518,8 @@ public class CreateAccountPage extends javax.swing.JFrame {
         container.setLayer(phoneErrorMessage, javax.swing.JLayeredPane.DEFAULT_LAYER);
         container.setLayer(stateErrorMessage, javax.swing.JLayeredPane.DEFAULT_LAYER);
         container.setLayer(managerCheck, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        container.setLayer(resetButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        container.setLayer(successStatus, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout containerLayout = new javax.swing.GroupLayout(container);
         container.setLayout(containerLayout);
@@ -567,7 +587,8 @@ public class CreateAccountPage extends javax.swing.JFrame {
                                             .addComponent(zipErrorMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(stateErrorMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(cityErrorMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(resetButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addGap(0, 0, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, containerLayout.createSequentialGroup()
@@ -584,7 +605,8 @@ public class CreateAccountPage extends javax.swing.JFrame {
                         .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(usernameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(usernameField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(successStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         containerLayout.setVerticalGroup(
@@ -598,6 +620,8 @@ public class CreateAccountPage extends javax.swing.JFrame {
                 .addComponent(instructions2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(errorStatus)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(successStatus)
                 .addGap(5, 5, 5)
                 .addComponent(usernameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -670,6 +694,8 @@ public class CreateAccountPage extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(accountCreateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(resetButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(returnButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(securityQuestionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -705,7 +731,7 @@ public class CreateAccountPage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(createAccountPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 6, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -819,6 +845,10 @@ public class CreateAccountPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_returnButtonActionPerformed
 
+    private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+        open();
+    }//GEN-LAST:event_resetButtonActionPerformed
+
     /**
      * //@param args the command line arguments
      */
@@ -855,6 +885,8 @@ public class CreateAccountPage extends javax.swing.JFrame {
 //    }
 
     public void verifyInformation() throws ParseException {
+        
+        successStatus.setVisible(false);
         
         //Now we just we repeat the val;idation steps
         usernameErrors = Methods.checkUsername(usernameField.getText(), true, false);
@@ -932,12 +964,21 @@ public class CreateAccountPage extends javax.swing.JFrame {
                     a1.getText(), a2.getText(), a3.getText(), level).equals("Account Created")){
             
                 errorStatus.setVisible(false);
-                managerPage.open();
-                this.dispose();
+                
+//                managerPage.open();
+//                this.dispose();
+
+                //Instead of removing the page do something similair to the add games page
+                //Just reset the page
+                //since we dont have somethinmg like images we may need to change, we can just reset the page
+                open();
+                //also make sure to let the user know things went through successfully
+                successStatus.setVisible(true);
                 
             }else{
             
                 errorStatus.setVisible(true);
+                successStatus.setVisible(false);
             
             }
 
@@ -1011,6 +1052,7 @@ public class CreateAccountPage extends javax.swing.JFrame {
         
         //Make the error status invisible to
         errorStatus.setVisible(false);
+        successStatus.setVisible(false);
 
         //Now set it visible
         this.setVisible(true);
@@ -1059,12 +1101,14 @@ public class CreateAccountPage extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> q2;
     private javax.swing.JComboBox<String> q3;
     private javax.swing.JLabel questionErrorMessage;
+    private javax.swing.JButton resetButton;
     private javax.swing.JButton returnButton;
     private javax.swing.JPanel securityQuestionPanel;
     private javax.swing.JLabel showLabel;
     private javax.swing.JComboBox<String> stateBox;
     private javax.swing.JLabel stateErrorMessage;
     private javax.swing.JLabel stateLabel;
+    private javax.swing.JLabel successStatus;
     private javax.swing.JLabel title;
     private javax.swing.JLabel usernameErrorMessage;
     private javax.swing.JTextField usernameField;

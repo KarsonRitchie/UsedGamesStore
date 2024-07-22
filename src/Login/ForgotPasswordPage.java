@@ -64,6 +64,7 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
         instructions = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         passwordErrorMessage = new javax.swing.JLabel();
+        resetButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Change Password");
@@ -205,6 +206,16 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
         passwordErrorMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         passwordErrorMessage.setText("jLabel2");
 
+        resetButton.setBackground(new java.awt.Color(0, 48, 90));
+        resetButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        resetButton.setForeground(new java.awt.Color(255, 255, 255));
+        resetButton.setText("Reset Page");
+        resetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetButtonActionPerformed(evt);
+            }
+        });
+
         container.setLayer(titleLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
         container.setLayer(sequrityQuestionPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
         container.setLayer(changeButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -219,6 +230,7 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
         container.setLayer(instructions, javax.swing.JLayeredPane.DEFAULT_LAYER);
         container.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         container.setLayer(passwordErrorMessage, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        container.setLayer(resetButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout containerLayout = new javax.swing.GroupLayout(container);
         container.setLayout(containerLayout);
@@ -236,7 +248,8 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(showLabel)
                         .addGap(13, 13, 13))
-                    .addComponent(passwordErrorMessage, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(passwordErrorMessage, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(resetButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(containerLayout.createSequentialGroup()
@@ -260,7 +273,7 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
             .addGroup(containerLayout.createSequentialGroup()
                 .addGap(80, 80, 80)
                 .addComponent(usernameLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 441, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 445, Short.MAX_VALUE)
                 .addComponent(passwordErrorMessage)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -270,7 +283,9 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
                 .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(changeButton)
-                .addGap(44, 44, 44))
+                .addGap(21, 21, 21)
+                .addComponent(resetButton)
+                .addGap(39, 39, 39))
             .addGroup(containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(containerLayout.createSequentialGroup()
                     .addContainerGap()
@@ -321,7 +336,7 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 6, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(backgroundPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -365,6 +380,11 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
         this.dispose();
         tempLogin.run();
     }//GEN-LAST:event_returnButtonActionPerformed
+
+    private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+        // TODO add your handling code here:
+        open();
+    }//GEN-LAST:event_resetButtonActionPerformed
 
     /**
      * //@param args the command line arguments
@@ -555,6 +575,7 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
     private javax.swing.JTextField q1;
     private javax.swing.JTextField q2;
     private javax.swing.JTextField q3;
+    private javax.swing.JButton resetButton;
     private javax.swing.JButton returnButton;
     private javax.swing.JPanel sequrityQuestionPanel;
     private javax.swing.JLabel showLabel;
