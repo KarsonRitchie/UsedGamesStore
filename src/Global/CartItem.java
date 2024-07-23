@@ -8,11 +8,14 @@ import SQL.SQLStore;
 
 /**
  *
- * @author karso
+ * @author karson
+ * 
+ * A class meant to hold info on an item in the cart
+ * 
  */
 public class CartItem {
 
-    //here some variables to hold
+    //here some variables to hold information we need for specific cart items
     public int userID = 0;
     public int itemID = 0;
     public int quantity = 0;
@@ -42,7 +45,12 @@ public class CartItem {
 
     }
 
-    //a method to get the item name
+    /**
+     * 
+     * uses the ID of the item to get the name of the item from the database
+     * 
+     * @return the name of the item
+     */
     public String getProduct() {
 
         //all we will do is call an sql store method
@@ -53,14 +61,27 @@ public class CartItem {
 
     }
 
-    //a method to remove the item and add it back to stock
+   /**
+    * removes the CartItem object of the index given from the cart list
+    * 
+    * @param index
+    * The index of the CartItem in the cart list you wish to remove
+    */
     public void remove(int index) {
 
         //SQLStore.removeFromCart(itemID, userID);
+        
+        //Remove from the list
         Lists.cart.remove(index);
 
     }
 
+    /**
+     * 
+     * updates the specific CartItem object's quantity
+     * 
+     * @param quantity 
+     */
     public void updateQuantity(int quantity) {
 
         //what we need to do is update the quantity and the price as well
@@ -74,6 +95,9 @@ public class CartItem {
         }
     }
 
+    /**
+     * Removes discount pricing off the specific CartItem object
+     */
     public void removeDiscount() {
 
         discountActive = false;
@@ -81,6 +105,14 @@ public class CartItem {
 
     }
 
+    /**
+     * Adds discount pricing off the specific CartItem object
+     * 
+     * @param discountAmount
+     * The amount discounted (either .## for percent or a raw number for non percent discounts)
+     * @param discountType
+     * The type of discount (0 is percent and 1 is cash)
+     */
     public void addDiscount(float discountAmount, int discountType) {
 
         discountActive = true;

@@ -20,7 +20,9 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A page that shows a specified users past transactions
  */
 public class PastTransactions extends javax.swing.JFrame {
 
@@ -321,6 +323,8 @@ public class PastTransactions extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        
+        //Recreate the orders
         createOrders();
 
         if (!Lists.orders.isEmpty()) {
@@ -343,6 +347,8 @@ public class PastTransactions extends javax.swing.JFrame {
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
+        
+        //Dispose of this page and move back to the managers page
         this.dispose();
 
         try {
@@ -365,6 +371,7 @@ public class PastTransactions extends javax.swing.JFrame {
 
         }
 
+        //Display the order of the index given
         displayOrder(index);
 
     }//GEN-LAST:event_nextButtonActionPerformed
@@ -382,11 +389,12 @@ public class PastTransactions extends javax.swing.JFrame {
 
         }
 
+        //Display the order of the index given
         displayOrder(index);
     }//GEN-LAST:event_previousButtonActionPerformed
 
     private void minMonthItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_minMonthItemStateChanged
-        //Now we remove the days
+        //whenever month is changed, change the days
 
         newDate.set(newDate.MONTH, minMonth.getSelectedIndex() + 1);
         newDate.set(newDate.DAY_OF_MONTH, 1);
@@ -398,7 +406,7 @@ public class PastTransactions extends javax.swing.JFrame {
 
         for (int x = 0; x < 32; x++) {
 
-            //Same principle as the months
+            //Keep going until we go to the next month
             newDate.roll(newDate.DAY_OF_MONTH, 1);
 
             if (newDate.get(newDate.DAY_OF_MONTH) == 1) {
@@ -411,6 +419,8 @@ public class PastTransactions extends javax.swing.JFrame {
     }//GEN-LAST:event_minMonthItemStateChanged
 
     private void maxMonthItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_maxMonthItemStateChanged
+        
+        //Same principle as above but now were dealing with the max month
         newDate.set(newDate.MONTH, maxMonth.getSelectedIndex() + 1);
         newDate.set(newDate.DAY_OF_MONTH, 1);
         newDate.set(newDate.YEAR, Integer.parseInt(maxYear.getSelectedItem().toString()));
@@ -420,8 +430,7 @@ public class PastTransactions extends javax.swing.JFrame {
         maxDay.addItem("" + newDate.get(newDate.DAY_OF_MONTH));
 
         for (int x = 0; x < 32; x++) {
-
-            //Same principle as the months
+            
             newDate.roll(newDate.DAY_OF_MONTH, 1);
 
             if (newDate.get(newDate.DAY_OF_MONTH) == 1) {
@@ -463,9 +472,6 @@ public class PastTransactions extends javax.swing.JFrame {
 
     }//GEN-LAST:event_salesReportButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -497,6 +503,10 @@ public class PastTransactions extends javax.swing.JFrame {
 //            }
 //        });
 //    }
+    
+    /**
+     * Opens the form
+     */
     public void open() {
 
         //so we call on some methods and just set it visible
@@ -527,12 +537,22 @@ public class PastTransactions extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Retrieves the orders from the database
+     */
     public void createOrders() {
 
         SQLManager.retrieveOrders(Variables.customerID);
 
     }
 
+    /**
+     * Displays the order
+     * 
+     * @param index
+     * The index to access of the orders list
+     * 
+     */
     public void displayOrder(int index) {
 
         orderNum.setText("Order Number " + (index + 1));
@@ -602,6 +622,9 @@ public class PastTransactions extends javax.swing.JFrame {
 
     }
 
+    /**
+     * This is to change the display if no orders have been made
+     */
     public void displayEmpty() {
 
         orderNum.setText("Order Number 0");

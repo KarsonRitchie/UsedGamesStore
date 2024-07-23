@@ -27,7 +27,9 @@ import javax.swing.JList;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A page for editing inventory and adding new games from a trade in and create a report over it
  */
 public class AddInventoryPage extends javax.swing.JFrame {
 
@@ -52,9 +54,11 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
         this.gameCreate = gameCreate;
 
+        //add the lists
         lists.add(gamesList);
         lists.add(newGamesList);
 
+        //Add the errors
         errorLabels.add(inventoryError);
         errorLabels.add(amountError);
 
@@ -62,6 +66,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     public void addLoginPage(LogonPage login) {
 
+        //Add the login page to help return to it if needed
         this.login = login;
 
     }
@@ -537,6 +542,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
     private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
         //Quit the program
 
+        //Also delete the games so they will not be permanent in the database
         for (Game game : newGames) {
 
             SQLManager.deleteGame(game.gameID);
@@ -547,11 +553,15 @@ public class AddInventoryPage extends javax.swing.JFrame {
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
+        
+        //Before logging out delete the games so they are not permanently in the databse
         for (Game game : newGames) {
 
             SQLManager.deleteGame(game.gameID);
 
         }
+        
+        //Do what you normally would do. Dispose of the page and open login again
 
         this.dispose();
 
@@ -582,6 +592,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
             Game tempGame = new Game(Lists.games.get(gameAdding.getSelectedIndex() - 1));
             boolean wasFound = false;
 
+            //Update the games quantity if found
             for (int x = 0; x < addedGames.size(); x++) {
 
                 if (addedGames.get(x).gameID == tempGame.gameID) {
@@ -594,6 +605,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
             }
 
+            //If it was not found add it to the list
             if (wasFound == false) {
                 addedGames.add(tempGame);
 
@@ -612,6 +624,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
         }
 
+        //Refresh the list
         refreshList();
     }//GEN-LAST:event_addButtonActionPerformed
 
@@ -635,6 +648,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         // TODO add your handling code here:
 
+        //validate the form
         validateForm();
 
         //we need to update the quanities of the games that already existed in the system
@@ -667,6 +681,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
 
+        //Removc the game from the list
         if (gamesList.getSelectedIndex() > -1) {
             addedGames.remove(gamesList.getSelectedIndex());
             refreshList();
@@ -683,6 +698,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
 
+        //Update the quantity of the selected game. If 0 remove it
         if (gamesList.getSelectedIndex() != -1) {
 
             if ((int) newQuantity.getValue() == 0) {
@@ -702,11 +718,15 @@ public class AddInventoryPage extends javax.swing.JFrame {
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        
+        //Clear the added games list
         addedGames.clear();
         refreshList();
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void removeButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButton1ActionPerformed
+       
+        //Since this is the new games list, this will nmot only remove it from the list but also delete the game
         if (newGamesList.getSelectedIndex() > -1) {
             SQLManager.deleteGame(newGames.get(newGamesList.getSelectedIndex()).gameID);
             newGames.remove(newGamesList.getSelectedIndex());
@@ -724,6 +744,8 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     private void updateButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButton1ActionPerformed
         // TODO add your handling code here:
+        
+        //Chane the quantity of the game. If 0 remove it.
         if (newGamesList.getSelectedIndex() != -1) {
 
             if ((int) newQuantity1.getValue() == 0) {
@@ -746,6 +768,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     private void clearButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButton1ActionPerformed
 
+        //Clear the list and remove them from the database
         for (Game game : newGames) {
 
             SQLManager.deleteGame(game.gameID);
@@ -785,6 +808,8 @@ public class AddInventoryPage extends javax.swing.JFrame {
     }//GEN-LAST:event_amountFieldActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        
+        //Make sure all the new games are deleted since they were not saved
         for (Game game : newGames) {
 
             SQLManager.deleteGame(game.gameID);
@@ -808,9 +833,6 @@ public class AddInventoryPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_helpButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -851,6 +873,9 @@ public class AddInventoryPage extends javax.swing.JFrame {
     //an array list for the lists to check for validation
     ArrayList<JList> lists = new ArrayList<JList>();
 
+    /**
+     * Opens the form
+     */
     public void open() {
 
         inventoryError.setVisible(false);
@@ -877,6 +902,12 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Reopens the form from the add games page so its not a full restart
+     * 
+     * @param games
+     * The list of created games
+     */
     public void reopen(ArrayList<Game> games) {
 
         inventoryError.setVisible(false);
@@ -904,6 +935,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
         newQuantity.setValue((int) 0);
         newQuantity1.setValue((int) 0);
         
+        //refresh the lists
         refreshList();
         refreshNewList();
 
@@ -911,6 +943,9 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     }
 
+    /**
+     * This is only ran to referrsh the drop box that is listing the games that are already in the system
+     */
     public void refreshGames() {
 
         //we need to access the list of games
@@ -949,8 +984,12 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Refreshes the added games list
+     */
     public void refreshList() {
 
+        //Make a new model and set it
         DefaultListModel itemList = new DefaultListModel();
 
         for (Game game : addedGames) {
@@ -964,8 +1003,13 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Refreshes the new games list
+     * 
+     */
     public void refreshNewList() {
 
+        //Make a new model and set it
         DefaultListModel itemList = new DefaultListModel();
 
         for (Game game : newGames) {
@@ -979,7 +1023,9 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     }
 
-    //a function to validate the form
+    /**
+     * A method to validate the form
+     */
     public void validateForm() {
 
         //we should make sure the errors are set to invisible with a resubmit

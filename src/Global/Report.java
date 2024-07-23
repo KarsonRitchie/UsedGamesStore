@@ -24,18 +24,27 @@ import javax.swing.filechooser.FileSystemView;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class used to make html reports
  */
 public class Report {
 
+    //Variables to help us create the reports
+    
+    //result sets
     ResultSet rs;
     ResultSetMetaData md;
+    
+    //body objects to format the report
     String baseIntro = "<!doctype html><html><body>";
     String title = "";
     String baseBody = "";
     String baseClose = "</table></body></html>";
     String header = "";
     String style = "";
+    
+    //pricing information
     int discountID = 0;
     float discounted = 0.00f;
     float tax = 0.00f;
@@ -83,7 +92,10 @@ public class Report {
         setStyle();
     
     }
-
+    
+    /**
+     * Sets the style of the html report
+     */
     void setStyle() {
 
         style = "\n<style> table{"
@@ -104,6 +116,10 @@ public class Report {
                 + "</style>\n";
     }
 
+    /**
+     * if the report is a receipt, this method should be used to set the header
+     * @throws Exception 
+     */
     void setReceiptHeader() throws Exception {
         header = "<div class = TableTitle>" + "Receipt" + "</div><table><tr>\n";
         header += "<div><th>Customer: " + Variables.currentUser + "</div></th><th></th><th></th><th></th><tr>\n";
@@ -116,7 +132,12 @@ public class Report {
         header += "</tr>\n";
     }
 
-    //for sales reports
+    /**
+     * A method to make reports for overall sales of the store or customer
+     * @param specific
+     * True if it is a specific customer, False if not
+     * @throws Exception 
+     */
     void setSalesHeader(boolean specific) throws Exception {
         header = "<div class = TableTitle>" + "Sales Report" + "</div><table><tr>\n";
         if (specific) {
@@ -135,6 +156,10 @@ public class Report {
         header += "</tr>\n";
     }
     
+    /**
+     * if the report is an inventory report, this method should be used to set the header
+     * @throws Exception 
+     */
     void setInventoryHeader() throws Exception {
         header = "<div class = TableTitle>" + "Inventory Report" + "</div><table><tr>\n";
 
@@ -147,7 +172,10 @@ public class Report {
         header += "</tr>\n";
     }
 
-    // adds rows of table data
+    /**
+     * Fills the table of the report with the appropiate data if the report is a receipt
+     * @throws Exception 
+     */
     void fillTable() throws Exception {
 
         while (rs.next()) {
@@ -165,7 +193,7 @@ public class Report {
             baseBody += "</tr>\n";
         }
 
-        //and then we add a the final parts of the receipt
+        //and then we add the final parts of the receipt
         baseBody += "<tr>";
         baseBody += "<td></td>";
         baseBody += "<td></td>";
@@ -227,6 +255,14 @@ public class Report {
 
     }
 
+    /**
+     * 
+     * Uses the SQL result set to display the inventory in the report correctly
+     * 
+     * @param inventory
+     * A result set of the inventory
+     * @throws SQLException 
+     */
     void fillInventoryTable(ResultSet inventory) throws SQLException {
 
         while (inventory.next()) {
@@ -274,6 +310,17 @@ public class Report {
 
     }
 
+    /**
+     * A method to fill the report table with correct information if the report is a sales report. It even does methods to display the
+     * correct date and even give totals on a daily, weekly, monthly, and even yearly basis.
+     * 
+     * @param sales
+     * A result set of the orders made
+     * @param specific
+     * True if for a specific customer, False if not.
+     * @throws SQLException
+     * @throws ParseException 
+     */
     void salesReport(ResultSet sales, boolean specific) throws SQLException, ParseException {
 
         LocalDate currentDate = null;
@@ -337,7 +384,7 @@ public class Report {
 
                 baseBody += "</tr>\n";
 
-                //Now we will check for weekly and monthlu earnings from the starting point if possible
+                //Now we will check for weekly and monthly earnings from the starting point if possible
                 if (startWeek.plusDays(6).equals(currentDate) || startWeek.plusDays(6).isBefore(currentDate)) {
 
                     //we now display earnings we got in a week from the starting point
@@ -631,6 +678,10 @@ public class Report {
         
     }
 
+    /**
+     * A method to build the report made no matter what report it is. It saves it to a file and opens it on the default browser of the user.
+     * @throws Exception 
+     */
     void buildReport() throws Exception {
         String time = Calendar.getInstance(Locale.getDefault()).getTime().toString();
         time = time.substring(3, 19);

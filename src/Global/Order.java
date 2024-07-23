@@ -9,7 +9,9 @@ import java.util.Date;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class for order objects to store information of a customers orders and use that information
  */
 public class Order {
 
@@ -39,6 +41,18 @@ public class Order {
 
     };
     
+    /**
+     * A method to get information over a game bought
+     * 
+     * @param gameTitle
+     * Title
+     * @param price
+     * Price for 1 copy of specific game
+     * @param quantity
+     * Amount Bought
+     * @param total
+     * Total spent
+     */
     public void addGame(String gameTitle, float price, int quantity, float total) {
 
         ArrayList<String> game = new ArrayList<String>();
@@ -54,6 +68,9 @@ public class Order {
 
     }
 
+    /**
+     * A method used to finalize the price data for the entire order instead of just one game.
+     */
     public void finalizeData() {
 
         //the first thing we should do is get the discount info
@@ -69,6 +86,7 @@ public class Order {
                         
                         discountLevel = 0;
                         
+                        //Depending on the type the discount amount should be handled differently
                         if (discount.discountType == 0) {
 
                             discountAmount = String.format("%.0f", discount.discountAmount * 100) + "%";

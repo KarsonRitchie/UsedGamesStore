@@ -21,7 +21,9 @@ import javax.swing.ImageIcon;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * This is the page for logging in as a user, or accessing the create account page or reset password page.
  */
 public class LogonPage extends javax.swing.JFrame {
 
@@ -281,22 +283,25 @@ public class LogonPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    //Create any global variables here
+    //These two are meant to be the two other Login package views.
     CreateAccountPage accountPage = new CreateAccountPage(this);
     ForgotPasswordPage passwordPage = new ForgotPasswordPage(this);
 
     //Here we will create the other pages here as well
-    //Dont worry about every single one, like this login page, the main or first pgaes in each package will create the other pages if there are any needed
+    //Dont worry about every single one, like this login page, the main or first pages in each package will create the other pages if there are any needed
     StorePage store = new StorePage(this);
     ManagerView managerPage = new ManagerView(this, store);
 
     private void createAccountLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createAccountLabelMouseClicked
+        
+        //go to the create account page and set this pages visibility
         accountPage.open();
         this.setVisible(false);
     }//GEN-LAST:event_createAccountLabelMouseClicked
 
     private void forgetPasswordLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_forgetPasswordLabelMouseClicked
 
+        //Set the visibility of this page and go to the reset password page
         this.setVisible(false);
 
         //Instead of just making it visible we will run a function to make it start over again
@@ -311,10 +316,13 @@ public class LogonPage extends javax.swing.JFrame {
     }//GEN-LAST:event_showLabelMouseEntered
 
     private void showLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showLabelMouseExited
+        //When the mouse exits, hide the password
         passwordField.setEchoChar('*');
     }//GEN-LAST:event_showLabelMouseExited
 
     private void guestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestButtonActionPerformed
+        
+        //Open the store as a guest and dispose of this page
         store.openGuest();
 
         Variables.currentLevel = "Customer";
@@ -323,6 +331,8 @@ public class LogonPage extends javax.swing.JFrame {
     }//GEN-LAST:event_guestButtonActionPerformed
 
     private void usernameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameFieldKeyPressed
+        
+        //If enter is pressed go to the password field
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 
             passwordField.requestFocus();
@@ -331,6 +341,8 @@ public class LogonPage extends javax.swing.JFrame {
     }//GEN-LAST:event_usernameFieldKeyPressed
 
     private void passwordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFieldKeyPressed
+        
+        //If enter is pressed attempt to log in
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 
             //First get the password
@@ -353,11 +365,13 @@ public class LogonPage extends javax.swing.JFrame {
                 statusLabel.setForeground(Color.red);
                 statusLabel.setVisible(true);
 
+                //Open customer view
             } else if (level.equals("Customer")) {
 
                 store.open();
                 this.dispose();
 
+                //Open manager view
             } else if (level.equals("Manager")) {
 
                 try {
@@ -393,11 +407,13 @@ public class LogonPage extends javax.swing.JFrame {
             statusLabel.setForeground(Color.red);
             statusLabel.setVisible(true);
 
+            //Open Customer view
         } else if(level.equals("Customer")){
         
             store.open();
             this.dispose();
         
+            //Open manager view
         } else if(level.equals("Manager")) {
 
             try {
@@ -410,9 +426,6 @@ public class LogonPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_loginButtonActionPerformed
 
-    /**
-     * //@param args the command line arguments
-     */
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -444,13 +457,17 @@ public class LogonPage extends javax.swing.JFrame {
 //            }
 //        });
 //    }
-    public void setup() {
+//    public void setup() {
+//
+//        //Setup the other frames and panels here
+//    }
 
-        //Setup the other frames and panels here
-    }
-
+    /**
+     * This is to open the login page
+     */
     public void run() {
 
+        //Set the fields to a default state
         usernameField.setText("");
         passwordField.setText("");
 
@@ -469,7 +486,12 @@ public class LogonPage extends javax.swing.JFrame {
 
     }
 
-    //a method tos et the status text incase were coming from another page
+    /**
+     * This sets a status text (both its text and visibility) to update the user on certain actions if they are forced back here from another page.
+     * 
+     * @param text
+     * This is a string that will become the text shown in the status message
+     */
     public void setStatus(String text) {
 
         statusLabel.setForeground(Color.green);

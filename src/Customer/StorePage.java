@@ -20,7 +20,7 @@ import Login.LogonPage;
 import Global.Variables;
 import Manager.ManagerView;
 import SQL.GeneralSQL;
-import com.mysql.cj.jdbc.Blob;
+//import com.mysql.cj.jdbc.Blob;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Image;
@@ -43,14 +43,17 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class that acts as a store page, form and all.
  */
 public class StorePage extends javax.swing.JFrame {
 
-    //Create a logon page object here
+    //Create a login, cart, and manager page object here
     LogonPage login = null;
     CartPage cart = null;
     ManagerView manager = null;
+    //This is to make going back to other pages a breeze
 
     /**
      * Creates new form StorePage
@@ -61,6 +64,8 @@ public class StorePage extends javax.swing.JFrame {
         login = logon;
 
         cart = new CartPage(this, login);
+        
+        //Set vertical scroll bar speeds
         itemDisplay.getVerticalScrollBar().setUnitIncrement(16);
         consoleFilters.getVerticalScrollBar().setUnitIncrement(8);
         genreFilters.getVerticalScrollBar().setUnitIncrement(8);
@@ -69,7 +74,7 @@ public class StorePage extends javax.swing.JFrame {
         //SQLStore.createFilterLists();
     }
 
-    //An integer to hold the quantity
+    //An integer to hold the index
     static int index = 0;
 
     //a constant to hold the previous size for the item container
@@ -760,7 +765,7 @@ public class StorePage extends javax.swing.JFrame {
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
 
-        //use a method
+        //use the search games method
         searchGames();
 
     }//GEN-LAST:event_searchButtonActionPerformed
@@ -778,6 +783,7 @@ public class StorePage extends javax.swing.JFrame {
             warning2.setVisible(false);
             soldOut.setVisible(false);
 
+            //Add it to cart and check if it works
             if (!SQLStore.addCart(Lists.games.get(index).name, Lists.games.get(index).system, (int) amountBuying.getValue(), Lists.games.get(index).gameID, Variables.customerID, Lists.games.get(index).price)) {
 
                 warning1.setVisible(true);
@@ -796,6 +802,7 @@ public class StorePage extends javax.swing.JFrame {
             warning1.setVisible(false);
             warning2.setVisible(false);
 
+            //Add it to cart and check if it works
             if (!SQLStore.addCart(Lists.games.get(index).name, Lists.games.get(index).system, 1, Lists.games.get(index).gameID, Variables.customerID, Lists.games.get(index).price)) {
 
                 warning1.setVisible(true);
@@ -815,15 +822,19 @@ public class StorePage extends javax.swing.JFrame {
     }//GEN-LAST:event_buyButtonActionPerformed
 
     private void cartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cartButtonActionPerformed
+        //Dispose of this page and open the cart page
         this.dispose();
         cart.open();
     }//GEN-LAST:event_cartButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
+        
+        //Dispose of this page and clear the cart
         this.dispose();
 
         Lists.cart.clear();
 
+        //open the login page if its a customer. Open the manager page if its a manager
         if (Variables.currentLevel.equals("Customer")) {
 
             login.run();
@@ -841,6 +852,8 @@ public class StorePage extends javax.swing.JFrame {
     }//GEN-LAST:event_logOutButtonActionPerformed
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
+        
+        //Set the game display to be invisible again
         gamePanel.setVisible(false);
         Variables.chosenGame = -1;
 
@@ -881,6 +894,7 @@ public class StorePage extends javax.swing.JFrame {
 
     private void genreAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genreAllActionPerformed
 
+        //Go through the entire list and check all to yes
         for (int x = 0; x < genreFiltersList.size(); x++) {
 
             genreFiltersList.get(x).setSelected(true);
@@ -904,8 +918,14 @@ public class StorePage extends javax.swing.JFrame {
 
     private void itemDisplayKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemDisplayKeyPressed
 
+        //This is to help with using keyboard controls to browse
+        
+        //Always get the previous index before trying to process the direction
         previousIndex = selectedGame;
 
+        //Use the WASD keys to highlight the proper games
+        //Think of it like moving in a game
+        //W is up, S is down, A is left and D is right
         if (evt.getKeyCode() == KeyEvent.VK_W) {
 
             selectedGame -= 3;
@@ -960,6 +980,7 @@ public class StorePage extends javax.swing.JFrame {
 
         }
 
+        //If space is pressed display the game
         if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
 
             displayGame(gamesDisplayed.get(selectedGame).indexHeld);
@@ -969,6 +990,8 @@ public class StorePage extends javax.swing.JFrame {
     }//GEN-LAST:event_itemDisplayKeyPressed
 
     private void itemDisplayFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_itemDisplayFocusLost
+        
+        //Stop the control usage for broawsing games if the focus is lost on the item display
         gamesDisplayed.get(selectedGame).revert();
 
         controlsLabel.setVisible(false);
@@ -981,6 +1004,7 @@ public class StorePage extends javax.swing.JFrame {
     private void itemDisplayFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_itemDisplayFocusGained
         // TODO add your handling code here:
 
+        //Start control usage when the item display gains focus
         gamesDisplayed.get(selectedGame).highlight();
 
         controlsLabel.setVisible(true);
@@ -989,6 +1013,7 @@ public class StorePage extends javax.swing.JFrame {
         controls3.setVisible(true);
     }//GEN-LAST:event_itemDisplayFocusGained
 
+    //Brings you to a help pdf
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
         try {
             //Open up a pdf for a help file
@@ -1005,9 +1030,7 @@ public class StorePage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_helpButtonActionPerformed
 
-    /**
-     * //@param args the command line arguments
-     */
+    
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1039,7 +1062,10 @@ public class StorePage extends javax.swing.JFrame {
 //            }
 //        });
 //    }
-    //a method to open up the page
+    /**
+     * Called when a user logs in
+     * 
+     */
     public void open() {
 
         //When the form is displayed, start loading the items
@@ -1085,6 +1111,11 @@ public class StorePage extends javax.swing.JFrame {
 
     }
 
+    /**
+     * 
+     * Opens the store page for guests
+     * 
+     */
     public void openGuest() {
 
         //When the form is displayed, start loading the items
@@ -1123,11 +1154,14 @@ public class StorePage extends javax.swing.JFrame {
         controls3.setVisible(false);
 
         this.setVisible(true);
-        
-        long endTime = System.nanoTime();
 
     }
 
+    /**
+     * Opens the store page as a manager. This is only accessible as a manager and acts as a POS page
+     * @param manager
+     * The manager page/view that was used to access the store as a manager
+     */
     public void openPOS(ManagerView manager) {
 
         //When the form is displayed, start loading the items
@@ -1177,21 +1211,30 @@ public class StorePage extends javax.swing.JFrame {
 
     }
     
-    //a way to return from cart as a manager and still have log out be return
-    //if needs be it can be used for toher things to we need to have when returning as a manager
+    /**
+     * A simple method only called when a manager comes back from the cart page. 
+     * It is only used to display the proper functionality of the log out or return button
+     */
     public void managerReturn(){
     
         logOutButton.setText("Return");
         
     }
 
+    /**
+     * A method that displays the games in a list like fashion like other online storefronts. It 
+     * allows users to browse through the items with ease.
+     * 
+     * @param search
+     * This is the string from the search bar that helps filter out items. If none is given then it will display all items.
+     */
     public void displayGames(String search) {
         Thread gameDisplaying = new Thread(() -> {
             gamesDisplayed.clear();
             selectedGame = 0;
 
             //It is very simple what we will do here
-            //create these panels as sort of like items on as tore page for each game in the lsit
+            //create these panels as sort of like items on a store page for each game in the lsit
             //We need to clear the original panel first so we can run this different times
             itemContainer.removeAll();
 
@@ -1340,6 +1383,7 @@ public class StorePage extends javax.swing.JFrame {
 
                         gameItem.setVisible(true);
 
+                        //Revalidate or repaint the displays
                         itemContainer.repaint();
                         itemDisplay.repaint();
                         itemDisplay.revalidate();
@@ -1352,7 +1396,8 @@ public class StorePage extends javax.swing.JFrame {
                 }
             } else {
 
-                //since were working for a search we need to use a counter variable to count how many games we put up
+                //Do the same as above but this time we are working witha search
+                
                 int gamesShown = 0;
 
                 //lets create a pattern object
@@ -1477,6 +1522,7 @@ public class StorePage extends javax.swing.JFrame {
 
                             gameItem.setVisible(true);
 
+                            //Repaint or revalidate the displays
                             itemContainer.repaint();
                             itemDisplay.repaint();
                             itemDisplay.revalidate();
@@ -1496,10 +1542,17 @@ public class StorePage extends javax.swing.JFrame {
             gamePanel.setVisible(false);
         });
 
+        //Start the thread
         gameDisplaying.start();
 
     }
 
+    /**
+     * When a game is selected, this runs to show more information over the chosen game and allows users to add the game to their cart.
+     * 
+     * @param x
+     * This parameter is the index of the chosen game. It allows the method to find the specific game in the list.
+     */
     public static void displayGame(int x) {
 
         //Make the item display show
@@ -1510,6 +1563,7 @@ public class StorePage extends javax.swing.JFrame {
             //set the index to
             index = x;
 
+            //Set the ui text
             gameTitle.setText(Lists.games.get(index).name);
             gameSystem.setText(Lists.games.get(index).system);
             gameGenre.setText(Lists.games.get(index).genre);
@@ -1525,6 +1579,7 @@ public class StorePage extends javax.swing.JFrame {
             //image.setIcon(icon);
             boolean hasImage = false;
 
+            //Load the image
             for (Object[] desiredImage : Lists.images) {
 
                 //check if we get an image
@@ -1556,9 +1611,12 @@ public class StorePage extends javax.swing.JFrame {
 
     }
 
-    //we need to create filters with this method
+    /**
+     * This method only runs to create filters to make searching so much easier
+     */
     public void createFilters() {
 
+        //First the console filters are made
         Dimension filterPanelPreffered = new Dimension(191, Lists.consoles.size() * 30);
 
         consoleFiltersPanel.setPreferredSize(filterPanelPreffered);
@@ -1574,6 +1632,7 @@ public class StorePage extends javax.swing.JFrame {
             //and now add the new filter to the console
             consoleFiltersList.add(newFilter);
 
+            //everytime a new filter is made, give it the proper filter changed event
             newFilter.addItemListener(new java.awt.event.ItemListener() {
                 public void itemStateChanged(java.awt.event.ItemEvent evt) {
                     filterChanged(evt);
@@ -1582,6 +1641,7 @@ public class StorePage extends javax.swing.JFrame {
 
         }
 
+        //And then the genre filters are made
         filterPanelPreffered = new Dimension(191, Lists.genres.size() * 30);
         genreFiltersPanel.setPreferredSize(filterPanelPreffered);
 
@@ -1595,6 +1655,7 @@ public class StorePage extends javax.swing.JFrame {
 
             genreFiltersList.add(newFilter);
 
+            //everytime a new filter is made, give it the proper filter changed event
             newFilter.addItemListener(new java.awt.event.ItemListener() {
                 public void itemStateChanged(java.awt.event.ItemEvent evt) {
                     filterChanged(evt);
@@ -1605,15 +1666,24 @@ public class StorePage extends javax.swing.JFrame {
 
     }
 
-    //everytime a filter is changed run this method
+    /**
+     * This is a method triggered by checking off filters to change the search in real time.
+     * @param e 
+     * This is the event that will trigger the method.
+     */
     public void filterChanged(ItemEvent e) {
 
+        //Redo the search
         searchGames();
 
     }
 
+    /**
+     * This method is only used to get the search bar string in order to display the games.
+     */
     public void searchGames() {
 
+        //Check the string from the search bar and if its blank, display all, if not use the string to filter out items
         if (searchBar.getText().isBlank()) {
 
             displayGames("ALL");

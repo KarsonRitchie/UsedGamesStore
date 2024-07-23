@@ -14,7 +14,9 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * This is a form that shows managers what has went below restock threshold or needs restocking
  */
 public class NotificationsView extends javax.swing.JFrame {
 
@@ -138,6 +140,8 @@ public class NotificationsView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        
+        //Recreated the notification table
         createNotifTable();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
@@ -156,9 +160,6 @@ public class NotificationsView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_returnButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -190,6 +191,10 @@ public class NotificationsView extends javax.swing.JFrame {
 //            }
 //        });
 //    }
+    
+    /**
+     * Opens the form
+     */
     public void open() {
 
         //so we call on some methods and just set it visible
@@ -200,8 +205,12 @@ public class NotificationsView extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Creates the notification table
+     */
     public void createNotifTable() {
         
+        //Reload the games
         SQLStore.loadGames();
 
         DefaultTableModel notifs = new DefaultTableModel() {
@@ -220,6 +229,7 @@ public class NotificationsView extends javax.swing.JFrame {
         boolean notify = false;
         String message = "";
 
+        //Go through the list and check if there are any games that need restocked or are below the restock threshold
         for (Game game : Lists.games) {
 
             //we need to check if we are searching for this level
@@ -271,6 +281,7 @@ public class NotificationsView extends javax.swing.JFrame {
 
         }
 
+        //Set the model
         notificationsTable.setModel(notifs);
 
     }

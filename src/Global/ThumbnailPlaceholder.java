@@ -6,7 +6,9 @@ package Global;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * Only meant to hold a placeholder thumbnail image to use throughout the program.
  */
 public class ThumbnailPlaceholder extends javax.swing.JFrame {
 

@@ -10,7 +10,9 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class meant for establishing a connection to the SQL database
  */
 //This class will be used as a superclass
 //It will have a default query run for any random queries we may need either for testing or in use but doesnt need its own method
@@ -24,7 +26,10 @@ public abstract class GeneralSQL {
 
     static Connection con = null;
 
-    //Create a method to start the connection
+    /**
+     * This gets the connection when the app first starts
+     * @throws ClassNotFoundException 
+     */
     public static void startConnection() throws ClassNotFoundException {
         try {
 
@@ -60,7 +65,9 @@ public abstract class GeneralSQL {
         }
     }
     
-    //This will be running in the background to constantly check the connection
+    /**
+     * This gets the connection anytime the program needs to
+     */
     public static void getConnection() {
         try {
 

@@ -13,7 +13,9 @@ import javax.swing.*;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * This page is used to help users reset their passwords
  */
 public class ForgotPasswordPage extends javax.swing.JFrame {
 
@@ -352,10 +354,13 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
     }//GEN-LAST:event_passwordFieldMouseEntered
 
     private void showLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showLabelMouseEntered
+        //Show password when mouse entered
         passwordField.setEchoChar((char) 0);
     }//GEN-LAST:event_showLabelMouseEntered
 
+    //These next few are used for validation
     private void showLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showLabelMouseExited
+        //Hide the password when the mouse exits
         passwordField.setEchoChar('*');
     }//GEN-LAST:event_showLabelMouseExited
 
@@ -372,17 +377,21 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
     private void changeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeButtonActionPerformed
         //The password is attempting to be changed
 
-        //Just run a function we made
+        //Just run a function we made to check the answers
         checkAnswers();
     }//GEN-LAST:event_changeButtonActionPerformed
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
+        
+        //Dispose of this page and open login again
         this.dispose();
         tempLogin.run();
     }//GEN-LAST:event_returnButtonActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         // TODO add your handling code here:
+        
+        //reopen the page to reset it back to a fresh state
         open();
     }//GEN-LAST:event_resetButtonActionPerformed
 
@@ -421,6 +430,9 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
 //        });
 //    }
 
+    /**
+     * This is to check the username given and if it was found, display the proper questions.
+     */
     public void checkUsername() {
 
         //First we will run a query that checks for the existence of the username
@@ -465,8 +477,9 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
         }
     }
 
-    //We need to let the user know if they got their questions right or wrong
-    //if they are right the password will be changed successfully
+    /**
+     * This checks the answer and also password and if both are correct and valid then the password will be changed
+     */
     public void checkAnswers() {
 
         //First we get the password
@@ -480,6 +493,7 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
             String passwordStatus = SQLLogin.changePassword(password, usernameField.getText(), a1.getText(), a2.getText(), a3.getText());
 
             //Use the new boolean to act accordingly
+            //If password is changed return to the login page and use the setStatus to let the user know
             if (passwordStatus.equals("Changed")) {
 
                 statusTextQuestions.setVisible(false);
@@ -504,10 +518,19 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
 
     }
 
+    /**
+     * This is ran to check the password's validation.
+     * 
+     * @param tempPassword
+     * A string of the password to check for validation.
+     * 
+     * @return True if password is valid. False if not.
+     */
     private boolean validatePassword(String tempPassword) {
 
         boolean valid;
 
+        //Check if the password is valid
         passwordErrors = Methods.checkPassword(Methods.getPassword(passwordField.getPassword()));
 
         Methods.checkForErrors(passwordErrors, passwordErrorMessage);

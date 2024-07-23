@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"gamestoreant","c":"GameStoreAnt","l":"GameStoreAnt()","u":"%3Cinit%3E()"},{"p":"gamestoreant","c":"GameStoreAnt","l":"isAdmin()"},{"p":"gamestoreant","c":"GameStoreAnt","l":"main(String[])","u":"main(java.lang.String[])"}];updateSearchResults();

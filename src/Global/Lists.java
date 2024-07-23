@@ -16,20 +16,28 @@ import java.util.*;
 //Import games so we can make an array list off of them
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class only meant to host lists that will be used throughout the program
  */
 public class Lists {
     
     //This is a global class that will host lists
     
-    //The first list to make is of games
+    //A list of games
     public static ArrayList<Game> games = new ArrayList<Game>();
+    
+    //A list for a cart
     public static ArrayList<CartItem> cart = new ArrayList<CartItem>();
+    
+    //These next two are lists of consoles and genres to help with filters
     public static ArrayList<String> consoles = new ArrayList<String>();
     public static ArrayList<String> genres = new ArrayList<String>();
     
+    //A list for users
     public static ArrayList<User> users = new ArrayList<User>();
     
+    //A list for discounts
     public static ArrayList<Discount> discounts = new ArrayList<Discount>();
     
     //this list will be for images

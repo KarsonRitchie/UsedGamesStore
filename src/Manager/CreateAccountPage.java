@@ -18,7 +18,8 @@ import javax.swing.*;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * A page to create accounts as a manager
  */
 public class CreateAccountPage extends javax.swing.JFrame {
 
@@ -737,6 +738,9 @@ public class CreateAccountPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //A lot of this works like it did on the previous create user page
+    //Refer to that for reference if needs be.
+    //A lot of it is just copy and paste anyway
     private void line2FieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_line2FieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_line2FieldActionPerformed
@@ -846,12 +850,12 @@ public class CreateAccountPage extends javax.swing.JFrame {
     }//GEN-LAST:event_returnButtonActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+        
+        //Unlike the previouis create account page there is this reset button
+        //All it does is reopen the page to refresh it
         open();
     }//GEN-LAST:event_resetButtonActionPerformed
 
-    /**
-     * //@param args the command line arguments
-     */
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -884,6 +888,10 @@ public class CreateAccountPage extends javax.swing.JFrame {
 //        });
 //    }
 
+    /**
+     * A method to verify the information and create a user if it is valid
+     * @throws ParseException 
+     */
     public void verifyInformation() throws ParseException {
         
         successStatus.setVisible(false);
@@ -970,7 +978,7 @@ public class CreateAccountPage extends javax.swing.JFrame {
 
                 //Instead of removing the page do something similair to the add games page
                 //Just reset the page
-                //since we dont have somethinmg like images we may need to change, we can just reset the page
+                //since we dont have something like images we may need to change, we can just reset the page
                 open();
                 //also make sure to let the user know things went through successfully
                 successStatus.setVisible(true);
@@ -986,6 +994,9 @@ public class CreateAccountPage extends javax.swing.JFrame {
 
     }
 
+    /**
+     * A method to create the questions set for security questions
+     */
     public void createQuestions() {
 
         //Lets add the questions in the certain lists we need them
@@ -1011,7 +1022,9 @@ public class CreateAccountPage extends javax.swing.JFrame {
         q3.addItem(TempSet.get(2));
     }
 
-    //A method to open the page and start it anew
+    /**
+     * A method to open the page
+     */
     public void open() {
 
         //Any item box doesnt need to be erased, just set thier indexes back to to their default

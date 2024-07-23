@@ -14,7 +14,9 @@ import javax.swing.*;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A page made for creating accounts
  */
 public class CreateAccountPage extends javax.swing.JFrame {
 
@@ -695,18 +697,24 @@ public class CreateAccountPage extends javax.swing.JFrame {
     }//GEN-LAST:event_line2FieldActionPerformed
 
     private void showLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showLabelMouseEntered
+        //Show password when mouse entered
         passwordField.setEchoChar((char) 0);
     }//GEN-LAST:event_showLabelMouseEntered
 
     private void showLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showLabelMouseExited
+        
+        //Hide the password when mouse exits
         passwordField.setEchoChar('*');
     }//GEN-LAST:event_showLabelMouseExited
 
     private void accountCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accountCreateButtonActionPerformed
-       verifyInformation();
+       
+        //Verify all the fields and try to create account
+        verifyInformation();
 
     }//GEN-LAST:event_accountCreateButtonActionPerformed
 
+    //The next few are for input validation
     private void usernameFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameFieldKeyReleased
         //This and other fields wqe will be checked by a global method
         usernameErrors = Methods.checkUsername(usernameField.getText(), false, false);
@@ -786,6 +794,7 @@ public class CreateAccountPage extends javax.swing.JFrame {
     }//GEN-LAST:event_questionsChanged
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
+        //Dispose of this page and run the login again
         this.dispose();
         login.run();
     }//GEN-LAST:event_returnButtonActionPerformed
@@ -825,6 +834,9 @@ public class CreateAccountPage extends javax.swing.JFrame {
 //        });
 //    }
 
+    /**
+     * A method to check all of the fields and create the account if none are invalid
+     */
     public void verifyInformation() {
         
         //Now we just we repeat the val;idation steps
@@ -890,6 +902,9 @@ public class CreateAccountPage extends javax.swing.JFrame {
                     a1.getText(), a2.getText(), a3.getText(), "Customer").equals("Account Created")){
             
                 errorStatus.setVisible(false);
+                
+                //set the status to let the user know the account was created and return to the login page
+                //Also dispose of this page
                 login.run();
                 login.setStatus("Account successfully created");
                 this.dispose();
@@ -904,6 +919,9 @@ public class CreateAccountPage extends javax.swing.JFrame {
 
     }
 
+    /**
+     * A method ran to extract security questions from the database and put them in sets for the user to choose from
+     */
     public void createQuestions() {
 
         //Lets add the questions in the certain lists we need them
@@ -929,7 +947,9 @@ public class CreateAccountPage extends javax.swing.JFrame {
         q3.addItem(TempSet.get(2));
     }
 
-    //A method to open the page and start it anew
+    /**
+     * A method that opens the create account page
+     */
     public void open() {
 
         //Any item box doesnt need to be erased, just set thier indexes back to to their default

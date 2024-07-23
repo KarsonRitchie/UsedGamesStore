@@ -13,7 +13,9 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class for methods relating to SQL that concern images
  */
 public class SQLImages extends GeneralSQL {
 
@@ -21,7 +23,20 @@ public class SQLImages extends GeneralSQL {
     //static Blob imgBlob = null;
     static byte[] imgBlob = null;
 
-    //first we want to do an upload feature
+    /**
+     * Uploads image to the database
+     * 
+     * @param gameID
+     * The ID of the game in the database
+     * 
+     * @param imageType
+     * The image type (0 for thumbnail, 1 for main image)
+     * 
+     * @param b
+     * The byte array
+     * 
+     * @return True if image was uploaded successfully. False if not.
+     */
     public static boolean uploadImage(int gameID, int imageType, byte[] b) {
 
         try {
@@ -30,7 +45,7 @@ public class SQLImages extends GeneralSQL {
             //First we need to connect to the database
             //con = DriverManager.getConnection(mySQLURL, userName, password);
 
-            //the first thing we should do is check if an image is already in the place we are uploading
+            //then we should do is check if an image is already in the place we are uploading
             //if it is we will rewrite it
             PreparedStatement ps = con.prepareStatement("SELECT GameID, ImageType FROM Images WHERE GameID = " + gameID + " AND ImageType = " + imageType);
             System.out.println(ps);
@@ -47,6 +62,7 @@ public class SQLImages extends GeneralSQL {
                     System.out.println("updating image");
                 }
                 
+                //Close connection
                 con.close();
                 
                 return true;
@@ -74,6 +90,7 @@ public class SQLImages extends GeneralSQL {
 
                 System.out.println("Saving image");
                 
+                //Close connection
                 con.close();
                 
                 return true;
@@ -89,16 +106,22 @@ public class SQLImages extends GeneralSQL {
 
     }
 
+    /**
+     * This is to load the images from the database
+     */
     public static void loadImages() {
 
         //here we will load images from a database to a dictionary
         try {
             
+            //Connect to the database first
             GeneralSQL.getConnection();
 
+            //Retrieve images
             PreparedStatement ps = con.prepareStatement("SELECT GameID, ImageType, Image FROM Images");
             ResultSet rs = ps.executeQuery();
 
+            //Then we go through the result set in order to upload each image to a dictionary in the program
             while (rs.next()) {
 
                 imgBlob = rs.getBytes(3);
@@ -111,6 +134,7 @@ public class SQLImages extends GeneralSQL {
 
             }
 
+            //Close connection
             con.close();
         } catch (Exception ex) {
 
@@ -121,20 +145,33 @@ public class SQLImages extends GeneralSQL {
 
     }
 
+    /**
+     * A method to fetch a more specific image
+     * 
+     * @param gameID
+     * ID of the game associated with the image
+     * 
+     * @param imageType
+     * The image type (0 for thumbnail, 1 for main image)
+     * @return 
+     */
     public static byte[] retrieveImage(int gameID, int imageType) {
 
         PreparedStatement ps;
         
         try {
             
+            //Connect to database
             GeneralSQL.getConnection();
             
+            //retrieve specified image
             ps = con.prepareStatement("SELECT Image FROM Images WHERE GameID = " + gameID + " AND ImageType = " + imageType);
             ResultSet rs = ps.executeQuery();
             rs.next();
             
             byte[] b = rs.getBytes(1);
             
+            //Close connection
             con.close();
             
             return b;

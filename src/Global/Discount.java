@@ -11,7 +11,10 @@ import java.util.Date;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class to create a discount with its associated information
+ * 
  */
 public class Discount {
     
@@ -47,7 +50,19 @@ public class Discount {
         
     }
     
-    //the save methods
+    /**
+     * 
+     * A method to save an edited discount
+     * 
+     * @param code
+     * The discount code
+     * @param active
+     * wether it is active or not
+     * @param description
+     * Discounts description
+     * @param discountAmount
+     * The discount amount
+     */
     public void save(String code, boolean active, String description, String discountAmount){
     
         discountCode = code;
@@ -63,6 +78,7 @@ public class Discount {
         
         }
         
+        //Discount amount will be handled differently depending on its type
         if(discountType == 0){
         
             this.discountAmount = Float.parseFloat(discountAmount) / 100;
@@ -75,6 +91,12 @@ public class Discount {
         
     }
     
+    /**
+     * 
+     * saves the discount information to the database
+     * 
+     * @return true if saved false if saving failed
+     */
     public boolean databaseSave(){
     
     
@@ -82,6 +104,14 @@ public class Discount {
         
     }
     
+    /**
+     * 
+     * deletes the discount
+     * 
+     * @deprecated
+     * @return true if deletion was successful
+     */
+    @Deprecated
     public boolean delete(){
     
         //first we should check if we can delete it from the database

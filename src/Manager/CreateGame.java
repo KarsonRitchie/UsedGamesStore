@@ -9,7 +9,7 @@ import Global.Lists;
 import Manager.ManagerView;
 import SQL.SQLImages;
 import SQL.SQLManager;
-import com.mysql.cj.jdbc.Blob;
+//import com.mysql.cj.jdbc.Blob;
 import java.awt.Image;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -27,7 +27,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * A page to create games
  */
 public class CreateGame extends javax.swing.JFrame {
 
@@ -60,10 +61,12 @@ public class CreateGame extends javax.swing.JFrame {
 
     public void addInventoryPage(AddInventoryPage addInv) {
 
+        //Adds the add inventory page
         this.addInv = addInv;
 
     }
 
+    //A variable to hold the game ID
     int gameID = 0;
 
     /**
@@ -638,6 +641,7 @@ public class CreateGame extends javax.swing.JFrame {
     private void titleFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_titleFieldKeyReleased
 
         //update the title in previews in real time
+        //Also validates the title
         if (!titleField.getText().isBlank()) {
 
             gameTitle.setText(titleField.getText());
@@ -657,8 +661,11 @@ public class CreateGame extends javax.swing.JFrame {
     }//GEN-LAST:event_titleFieldKeyReleased
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
+        
+        //Dispose of this page
         this.dispose();
 
+        //If not from add inventory page then just reopen the manager page. If so, then reopen that page and use the games list you created
         if (fromInv == false) {
             try {
                 manager.open();
@@ -673,6 +680,8 @@ public class CreateGame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_returnButtonActionPerformed
 
+    //The next few are for input validation
+    //Make sure you are updating the preview in real time as well
     private void descriptionFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionFieldKeyReleased
         if (!descriptionField.getText().isBlank()) {
 
@@ -784,6 +793,7 @@ public class CreateGame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_priceFieldKeyReleased
 
+    //The next two uploads images of certain types depending on what button is pressed
     private void thumbnailButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thumbnailButtonActionPerformed
         uploadImage(0);
     }//GEN-LAST:event_thumbnailButtonActionPerformed
@@ -805,14 +815,20 @@ public class CreateGame extends javax.swing.JFrame {
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void saveImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveImageButtonActionPerformed
+        
+        //uplaod the images
         uploadImages();
     }//GEN-LAST:event_saveImageButtonActionPerformed
 
     private void newGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGameButtonActionPerformed
+        
+        //Reopen the page to set it back to default
         open();
     }//GEN-LAST:event_newGameButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        
+        //as the form is closing delete the games in the list if from add inventory
         if(fromInv == true){
         
             for(Game game : games){
@@ -824,9 +840,6 @@ public class CreateGame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowClosing
 
-    /**
-     * @param args the command line arguments
-     */
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -858,6 +871,10 @@ public class CreateGame extends javax.swing.JFrame {
 //            }
 //        });
 //    }
+    
+    /**
+     * Just a class as a placeholder
+     */
     public class Placeholder {
 
         int imageType = 0;
@@ -866,15 +883,20 @@ public class CreateGame extends javax.swing.JFrame {
 
     }
 
+    //Image placeholders
     Placeholder mainImage = new Placeholder();
     Placeholder thumbnailImage = new Placeholder();
 
     //a boolean to know if were opening from inventory page
     boolean fromInv = false;
 
+    /**
+     * Opens the form
+     */
     public void open() {
 
         //first create the system and genre list
+        //Also set the ui elements to be enabled to
         gameUploaded = false;
 
         titleField.setEnabled(true);
@@ -956,6 +978,9 @@ public class CreateGame extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Only ran from the AddInventory page. Meant to change some functionality of the page to better suit the add inventory page.
+     */
     public void openInv() {
 
         fromInv = true;
@@ -964,6 +989,10 @@ public class CreateGame extends javax.swing.JFrame {
 
     }
 
+    /**
+     * This disables all items except uploading pictures. 
+     * This is to save pictures seperatly and resave them if there is trouble uploading them.
+     */
     public void disableItems() {
 
         //when a game is uploaded we want to disable a lot of the fields
@@ -980,6 +1009,12 @@ public class CreateGame extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Uploads an image
+     * 
+     * @param imageType
+     * The image type (0 is thumbnail, 1 is main image)
+     */
     public void uploadImage(int imageType) {
 
         FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("Image Files", "png", "jpg");
@@ -1057,6 +1092,9 @@ public class CreateGame extends javax.swing.JFrame {
 
     }
 
+    /**
+     * This method validates the game and if its valid upload it to the database
+     */
     public void validateGame() {
 
         //we are going to take all the validation we did before
@@ -1221,6 +1259,9 @@ public class CreateGame extends javax.swing.JFrame {
 
     }
 
+    /**
+     * This uploads both images to the database
+     */
     public void uploadImages() {
 
         //first we check what we need to upload
@@ -1250,6 +1291,7 @@ public class CreateGame extends javax.swing.JFrame {
 
                 }
 
+                //Delete the previous one if needed
                 if (deleteImage) {
 
                     Lists.images.remove(imageIndex);
@@ -1274,7 +1316,7 @@ public class CreateGame extends javax.swing.JFrame {
             boolean deleteImage = false;
             int imageIndex = 0;
 
-            //upload the main imagel to the database
+            //upload the main image to the database
             if (SQLImages.uploadImage(gameID, 1, mainImage.bList.get(0))) {
                 byte[] imgBlob = (byte[]) SQLImages.retrieveImage(gameID, 1);
                 for (Object[] imageInfo : Lists.images) {
@@ -1293,6 +1335,7 @@ public class CreateGame extends javax.swing.JFrame {
 
                 }
 
+                //Delete the previous one if needed
                 if (deleteImage) {
 
                     Lists.images.remove(imageIndex);

@@ -28,12 +28,15 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * The main  method of the Used Games program. Runs whenever its opened and starts the program
  */
 public class GameStoreAnt {
-
+    
     /**
-     * @param args the command line arguments
+     * Checks to see if the user is opening as admin
+     * @return True if application was opened by admin. False if not
      */
     public static boolean isAdmin() {
         Preferences prefs = Preferences.systemRoot();
@@ -53,6 +56,10 @@ public class GameStoreAnt {
         }
     }
 
+    /**
+     * The main method of the class that will start the program
+     * @param args
+     */
     public static void main(String[] args) {
 
         if (isAdmin()) {

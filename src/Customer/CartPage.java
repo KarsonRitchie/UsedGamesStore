@@ -26,7 +26,9 @@ import javax.swing.*;
 //import Global.CartItem;
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * This is the cart page that is a form that will show the user their current cart and allow them to purchase the games within.
  */
 public class CartPage extends javax.swing.JFrame {
 
@@ -650,6 +652,7 @@ public class CartPage extends javax.swing.JFrame {
 
         } else {
 
+            //If its a manager, reopen the manager page
             try {
                 store.manager.open();
             } catch (ParseException ex) {
@@ -665,8 +668,11 @@ public class CartPage extends javax.swing.JFrame {
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
+        
+        //Dispose of this page
         this.dispose();
         
+        //Return to the store page
         if (Variables.currentLevel.equals("Customer")) {
 
             store.open();
@@ -674,6 +680,8 @@ public class CartPage extends javax.swing.JFrame {
         } else {
 
             store.open();
+            
+            //Run this as manager to make sure the log out button says "Return"
             store.managerReturn();
 
         }
@@ -702,9 +710,11 @@ public class CartPage extends javax.swing.JFrame {
         SQLStore.removeFromCart(Lists.cart.get(cartList.getSelectedIndex()).itemID, Lists.cart.get(cartList.getSelectedIndex()).userID);
         Lists.cart.get(cartList.getSelectedIndex()).remove(cartList.getSelectedIndex());
 
+        //Reset the cart
         resetCart();
     }//GEN-LAST:event_removeButtonActionPerformed
 
+    //These next few are just for checking for input validation
     private void monthBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_monthBoxItemStateChanged
         checkExpire();
     }//GEN-LAST:event_monthBoxItemStateChanged
@@ -727,6 +737,7 @@ public class CartPage extends javax.swing.JFrame {
         Methods.checkForErrors(cardNumErrors, cardNumError);
     }//GEN-LAST:event_cardNumFieldKeyReleased
 
+    
     private void checkoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutButtonActionPerformed
 
         //only run if the cart has an item in it
@@ -768,6 +779,7 @@ public class CartPage extends javax.swing.JFrame {
                 ArrayList<CartItem> cantBuy = SQLStore.checkCart();
                 purchaseError.setVisible(false);
 
+                //Check if the cant buyt is 0, if it is then the customer can make a purchase
                 if (cantBuy.size() == 0) {
 
                     //Now we can process the order
@@ -802,6 +814,7 @@ public class CartPage extends javax.swing.JFrame {
 
                     purchaseError.setVisible(false);
 
+                    //This triggers if something couldnt be bought
                 } else if (cantBuy.get(0).system.equals("ERROR")) {
 
                     //display an error message
@@ -826,6 +839,7 @@ public class CartPage extends javax.swing.JFrame {
 
                     }
 
+                    //Reset the cart
                     resetCart();
 
                 }
@@ -866,6 +880,7 @@ public class CartPage extends javax.swing.JFrame {
             //now we can run it
             //We need another if
             //If a user makes the amount 0 go and remove it for them
+            //After eveything reset the cart
             if ((int) quantity.getValue() == 0) {
 
                 SQLStore.removeFromCart(Lists.cart.get(cartList.getSelectedIndex()).itemID, Lists.cart.get(cartList.getSelectedIndex()).userID);
@@ -891,7 +906,10 @@ public class CartPage extends javax.swing.JFrame {
     private void discountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountButtonActionPerformed
         // TODO add your handling code here:
         discountInfo.clear();
+        //Clear previous discount info
 
+        //If it is not empty check if the discount code can be used
+        //Return results and then check them
         if (!discountCodeField.getText().isEmpty()) {
 
             if (Variables.currentLevel.equals("Customer")) {
@@ -910,6 +928,8 @@ public class CartPage extends javax.swing.JFrame {
 
             checkDiscount();
         } else {
+            
+            //If the field is empty reset it back to the default state
 
             discountPercent.setText("Discount Amount: 0%");
             discountAmount = 0.00f;
@@ -940,6 +960,7 @@ public class CartPage extends javax.swing.JFrame {
         
         }
         
+        //clear the list and then reset the cart
         Lists.cart.clear();
         resetCart();
     }//GEN-LAST:event_clearButtonActionPerformed
@@ -995,13 +1016,16 @@ public class CartPage extends javax.swing.JFrame {
 //            }
 //        });
 //    }
-    //a method to open up this page
+    /**
+     * Opens up the cart page
+     */
     public void open() {
         //We want to make the checkout section be updated the moment its opened
         //for credit card lets put it in a method incase we may need to use it again
         setCardExpire();
         //we only need to set the year
 
+        //Set card info back to default state
         cardNumField.setText("");
         monthBox.setSelectedIndex(0);
         yearBox.setSelectedIndex(0);
@@ -1013,6 +1037,8 @@ public class CartPage extends javax.swing.JFrame {
         cvvError.setVisible(false);
 
         discountError.setVisible(false);
+        
+        //Set discount back to default state
         discountCodeField.setText("");
         discountID = 0;
 
@@ -1023,7 +1049,9 @@ public class CartPage extends javax.swing.JFrame {
         //we dont want explotiable discounts
 
         resetCart();
-
+        //Reset the cart
+        
+        //Depending on the level of user change the log out button text to properly convey the function
         if (Variables.currentLevel.equals("Customer")) {
 
             logOutButton.setText("Log Out");
@@ -1040,7 +1068,9 @@ public class CartPage extends javax.swing.JFrame {
 
     }
 
-    //a method to reset the cart
+    /**
+     * This method is to only reset the cart, basically a way to refresh it and redisplay it if something is altered about it.
+     */
     public void resetCart() {
 
         DefaultListModel itemList = new DefaultListModel();
@@ -1086,6 +1116,7 @@ public class CartPage extends javax.swing.JFrame {
         //discounted = cartTotal * discountAmount;
         checkDiscount();
 
+        //Finalize the prices and display them
         subtotal = cartTotal - discounted;
 
         if (subtotal <= 0.00f) {
@@ -1109,6 +1140,9 @@ public class CartPage extends javax.swing.JFrame {
 
     }
 
+    /**
+     * This method is ran to set credit card expiration dates in the drop boxes. This is to make checking out so much easier for the user.
+     */
     public void setCardExpire() {
 
         //We want to get the current year and have it go up to only five years
@@ -1135,12 +1169,16 @@ public class CartPage extends javax.swing.JFrame {
 
     }
 
-    //we will need to check the date and time of what the user has chosen so we will make a method here
+    /**
+     * This to check if the credit card is not expired
+     */
     public void checkExpire() {
 
         //first clear the list beforehand
         expirationErrors.clear();
 
+        //Only check if a date is chosen
+        //If both boxes are blank tell the use expiration date is required
         if (monthBox.getSelectedIndex() != 0 && yearBox.getSelectedIndex() != 0) {
 
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/yy");
@@ -1179,7 +1217,9 @@ public class CartPage extends javax.swing.JFrame {
 
     }
 
-    //a method to check discount
+    /**
+     * This is ran to check the given discount
+     */
     public void checkDiscount() {
 
         if (!discountInfo.isEmpty()) {
@@ -1194,14 +1234,14 @@ public class CartPage extends javax.swing.JFrame {
 
                 //new discount maybe being used
                 //set all cart items to not use the discount
-                //it will reset anyway or change dpending on the discount added
+                //it will reset anyway or change depending on the discount added
                 for (CartItem item : Lists.cart) {
 
                     item.removeDiscount();
 
                 }
 
-                //now do what we need to do in order to apply the discount
+                //now do what we need to do in order to apply the discount and display it
                 if ((int) discountInfo.get(4) == 0) {
 
                     if ((int) discountInfo.get(1) == 0) {
@@ -1267,6 +1307,8 @@ public class CartPage extends javax.swing.JFrame {
                 }
 
             } else {
+                
+                //Set discount info and display back to default and display an error
 
                 discountError.setText(discountInfo.get(0).toString());
                 discountError.setVisible(true);
@@ -1275,6 +1317,8 @@ public class CartPage extends javax.swing.JFrame {
 
             }
         } else if (discountInfo.isEmpty()) {
+            
+            //Set discount info and display back to a default state
 
             discountPercent.setText("Discount Amount: 0%");
             discountAmount = 0.00f;

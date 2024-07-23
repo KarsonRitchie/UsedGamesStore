@@ -17,7 +17,7 @@ import Login.LogonPage;
 import Manager.CreateAccountPage;
 import SQL.SQLManager;
 import SQL.SQLStore;
-import com.mysql.cj.jdbc.Blob;
+//import com.mysql.cj.jdbc.Blob;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -52,7 +52,8 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * The main manager view and form
  */
 public class ManagerView extends javax.swing.JFrame {
 
@@ -105,6 +106,7 @@ public class ManagerView extends javax.swing.JFrame {
         inventoryErrors.add(editDescError);
         inventoryErrors.add(priceError);
 
+        //Set vertical scroll bar speeds
         userDisplay.getVerticalScrollBar().setUnitIncrement(16);
         itemDisplay.getVerticalScrollBar().setUnitIncrement(16);
         shownDiscounts.getVerticalScrollBar().setUnitIncrement(16);
@@ -113,7 +115,7 @@ public class ManagerView extends javax.swing.JFrame {
 
     }
 
-    //a couple booleans to help with searching users
+    //a few booleans to help with searching users
     public boolean customerSearch = true;
     public boolean managerSearch = true;
     public boolean disabledAccountSearch = true;
@@ -141,7 +143,7 @@ public class ManagerView extends javax.swing.JFrame {
     AddInventoryPage addInv = new AddInventoryPage(this, gameCreate);
 
     //DISCOUNTS
-    //A couple booleans to help with searching discounts
+    //A few booleans to help with searching discounts
     public boolean expiredSearch = true;
     public boolean unexpiredSearch = true;
     public boolean activeSearch = true;
@@ -183,6 +185,7 @@ public class ManagerView extends javax.swing.JFrame {
     ArrayList<JCheckBox> consoleFiltersList = new ArrayList<JCheckBox>();
     ArrayList<JCheckBox> genreFiltersList = new ArrayList<JCheckBox>();
 
+    //An int to help store index
     static int index = 0;
 
     //a boolean to check for if we want to see disabled games
@@ -2571,6 +2574,8 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
+        
+        //Dispose of this page and open login again
         this.dispose();
 
         login.run();
@@ -2578,11 +2583,12 @@ public class ManagerView extends javax.swing.JFrame {
 
     private void quitButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButton1ActionPerformed
         // TODO add your handling code here:
+        //Quit program
         System.exit(0);
     }//GEN-LAST:event_quitButton1ActionPerformed
 
     private void logOutButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButton1ActionPerformed
-        // TODO add your handling code here:
+        //Dispose of this page and open login again
         this.dispose();
 
         login.run();
@@ -2590,6 +2596,7 @@ public class ManagerView extends javax.swing.JFrame {
 
     private void userTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userTableMouseClicked
 
+        //Display the selected row if there is one
         if (userTable.getSelectedRow() != -1) {
 
             displayUser();
@@ -2628,6 +2635,7 @@ public class ManagerView extends javax.swing.JFrame {
 
         }
 
+        //If space is pressed display the user
         if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
 
             displayUser();
@@ -2695,6 +2703,7 @@ public class ManagerView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
+    //These next few are for input validation for editing users
     private void usernameFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameFieldKeyReleased
         usernameErrors = Methods.checkUsername(usernameField.getText(), false, false);
 
@@ -2768,10 +2777,14 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void quitButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButton2ActionPerformed
+        
+        //Quit the program
         System.exit(0);
     }//GEN-LAST:event_quitButton2ActionPerformed
 
     private void logOutButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButton2ActionPerformed
+        
+        //Dispose of this page and open login again
         this.dispose();
 
         login.run();
@@ -2791,6 +2804,7 @@ public class ManagerView extends javax.swing.JFrame {
 
     private void discountsTableKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_discountsTableKeyPressed
 
+        //Like the users table, use this to enable keyboard browsing on the discounts list
         if (evt.getKeyCode() == KeyEvent.VK_TAB) {
 
             if (discountsTable.getSelectedRow() + 1 >= discountsTable.getRowCount()) {
@@ -2818,6 +2832,7 @@ public class ManagerView extends javax.swing.JFrame {
 
         }
 
+        //If space is used then display the selected row
         if (evt.getKeyCode() == KeyEvent.VK_SPACE) {
 
             displayDiscount(discountsTable.getSelectedRow());
@@ -2833,10 +2848,13 @@ public class ManagerView extends javax.swing.JFrame {
             Logger.getLogger(ManagerView.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        //Discounts were refreshed, reload the table
         setDiscountsTable();
     }//GEN-LAST:event_discountRefreshActionPerformed
 
     private void refreshButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButton1ActionPerformed
+        
+        //Reload the users
         SQLManager.loadUsers();
 
         //now set the tables
@@ -2905,10 +2923,12 @@ public class ManagerView extends javax.swing.JFrame {
         //check if it went positive or negative
         if ((int) startDateArrows.getValue() == 1) {
 
+            //If positive, higher the date
             selectedStartDate = selectedStartDate.plusDays(1);
 
         } else if ((int) startDateArrows.getValue() == -1) {
-
+            
+            //If negative, lower the date
             selectedStartDate = selectedStartDate.minusDays(1);
 
         }
@@ -2935,6 +2955,7 @@ public class ManagerView extends javax.swing.JFrame {
 
     private void endDateArrowsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_endDateArrowsStateChanged
 
+        //Same thing as the start date, check if it goes positive or negative
         if ((int) endDateArrows.getValue() == 1) {
 
             selectedEndDate = selectedEndDate.plusDays(1);
@@ -2945,6 +2966,7 @@ public class ManagerView extends javax.swing.JFrame {
 
         }
 
+        //However, now make sure its at least 1 day after the start date
         if (selectedEndDate.isEqual(selectedStartDate) || selectedEndDate.isBefore(selectedStartDate)) {
 
             selectedEndDate = selectedStartDate.plusDays(1);
@@ -2959,6 +2981,7 @@ public class ManagerView extends javax.swing.JFrame {
 
     private void percentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_percentButtonActionPerformed
 
+        //Change the discount type to percent
         discountType = "Percent";
 
         typeChosen.setText("Type: " + discountType);
@@ -2967,6 +2990,7 @@ public class ManagerView extends javax.swing.JFrame {
 
     private void dollarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dollarButtonActionPerformed
 
+        //Change the discount type to dollar or cash
         discountType = "Dollar";
 
         typeChosen.setText("Type: " + discountType);
@@ -3018,6 +3042,7 @@ public class ManagerView extends javax.swing.JFrame {
 
             float discountAmount = 0.00f;
 
+            //Check the type and create the amount accordingly
             if (discountType.equals("Percent")) {
 
                 type = 0;
@@ -3072,12 +3097,14 @@ public class ManagerView extends javax.swing.JFrame {
 
     private void genreAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genreAllActionPerformed
 
+        //Go through all the genre filters and check all off as yes
         for (int x = 0; x < genreFiltersList.size(); x++) {
 
             genreFiltersList.get(x).setSelected(true);
 
         }
 
+        //Redo the search
         searchGames();
     }//GEN-LAST:event_genreAllActionPerformed
 
@@ -3089,17 +3116,20 @@ public class ManagerView extends javax.swing.JFrame {
             consoleFiltersList.get(x).setSelected(true);
 
         }
+        
+        //Redo the search
         searchGames();
     }//GEN-LAST:event_consoleAllActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
 
-        //use a method
+        //Redo the search
         searchGames();
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void filtersButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_filtersButtonItemStateChanged
 
+        //Change the visibility of the filters when the button is toggled
         if (filtersButton.isSelected()) {
 
             inventoryFiltersPanel.setVisible(true);
@@ -3129,6 +3159,7 @@ public class ManagerView extends javax.swing.JFrame {
     private void itemDisplayFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_itemDisplayFocusGained
         // TODO add your handling code here:
 
+        //Allow for keyboard controls in scrolling games when item display is focused
         gamesDisplayed.get(selectedGame).highlight();
 
         controlsLabel.setVisible(true);
@@ -3138,6 +3169,8 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_itemDisplayFocusGained
 
     private void itemDisplayFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_itemDisplayFocusLost
+        
+        //Disable keybaord controls for game scrolling when item display loses its focus
         gamesDisplayed.get(selectedGame).revert();
 
         controlsLabel.setVisible(false);
@@ -3148,6 +3181,7 @@ public class ManagerView extends javax.swing.JFrame {
 
     private void itemDisplayKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_itemDisplayKeyPressed
 
+        //Like in the store page, create keyboard controls for game scrolling
         previousIndex = selectedGame;
 
         if (evt.getKeyCode() == KeyEvent.VK_W) {
@@ -3317,6 +3351,7 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_gameSaveButtonActionPerformed
 
     private void thumbnailButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thumbnailButtonActionPerformed
+        //Uplaod thumbnail
         try {
             uploadImage(0);
         } catch (FileNotFoundException ex) {
@@ -3325,6 +3360,7 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_thumbnailButtonActionPerformed
 
     private void mainImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mainImageButtonActionPerformed
+        //Upload main image
         try {
             uploadImage(1);
         } catch (FileNotFoundException ex) {
@@ -3384,11 +3420,13 @@ public class ManagerView extends javax.swing.JFrame {
 
         System.out.println(Variables.customerID);
 
+        //Open the store as a amanger or the openPOS method
         store.openPOS(this);
     }//GEN-LAST:event_posButtonActionPerformed
 
     private void viewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewButtonActionPerformed
 
+        //Open the past purchases page of the selected customer by using the id. And also dispose of this page
         Variables.customerID = displayedUsers.get(userTable.getSelectedRow()).userID;
 
         this.dispose();
@@ -3397,6 +3435,7 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_viewButtonActionPerformed
 
     private void notificationsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_notificationsButtonActionPerformed
+        //Dispose of this page and open the notifications page
         this.dispose();
 
         notifs.open();
@@ -3412,6 +3451,8 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_inventoryReportBttuonActionPerformed
 
     private void cartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cartButtonActionPerformed
+        
+        //Change the discount level to cart
         discountLevel = "Cart";
 
         gameBox.setSelectedIndex(0);
@@ -3424,6 +3465,7 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_cartButtonActionPerformed
 
     private void itemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemButtonActionPerformed
+        //Change the discount level to item
         discountLevel = "Item";
 
         levelChosen.setText("Level: " + discountLevel);
@@ -3432,7 +3474,7 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_itemButtonActionPerformed
 
     private void minMonthItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_minMonthItemStateChanged
-        //Now we remove the days
+        //When the month is changed we will edit the days
 
         newDate.set(newDate.MONTH, minMonth.getSelectedIndex() + 1);
         newDate.set(newDate.DAY_OF_MONTH, 1);
@@ -3444,7 +3486,7 @@ public class ManagerView extends javax.swing.JFrame {
 
         for (int x = 0; x < 32; x++) {
 
-            //Same principle as the months
+            //Keep getting the days and add the item until we go to the next month
             newDate.roll(newDate.DAY_OF_MONTH, 1);
 
             if (newDate.get(newDate.DAY_OF_MONTH) == 1) {
@@ -3457,6 +3499,8 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_minMonthItemStateChanged
 
     private void maxMonthItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_maxMonthItemStateChanged
+        
+        //Same concept with the minimum month changed, but for the max month and days instead
         newDate.set(newDate.MONTH, maxMonth.getSelectedIndex() + 1);
         newDate.set(newDate.DAY_OF_MONTH, 1);
         newDate.set(newDate.YEAR, Integer.parseInt(maxYear.getSelectedItem().toString()));
@@ -3466,8 +3510,6 @@ public class ManagerView extends javax.swing.JFrame {
         maxDay.addItem("" + newDate.get(newDate.DAY_OF_MONTH));
 
         for (int x = 0; x < 32; x++) {
-
-            //Same principle as the months
             newDate.roll(newDate.DAY_OF_MONTH, 1);
 
             if (newDate.get(newDate.DAY_OF_MONTH) == 1) {
@@ -3509,6 +3551,7 @@ public class ManagerView extends javax.swing.JFrame {
 
     }//GEN-LAST:event_salesReportButtonActionPerformed
 
+    //These next few will be for validating discounts
     private void codeFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_codeFieldKeyReleased
         codeErrors = Methods.checkCode(codeField, false, false);
 
@@ -3560,11 +3603,14 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_descriptionFieldKeyReleased
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        
+        //Refresh the games list and redo the search
         SQLStore.loadGames();
 
         searchGames();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
+    //These next few will be validating user input for editing games
     private void priceFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_priceFieldKeyReleased
         priceErrors = Methods.checkAmount(priceField);
 
@@ -3596,14 +3642,18 @@ public class ManagerView extends javax.swing.JFrame {
     }//GEN-LAST:event_gameDescriptionKeyReleased
 
     private void showLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showLabelMouseEntered
+        //When mouse enters show password
         passwordField.setEchoChar((char) 0);
     }//GEN-LAST:event_showLabelMouseEntered
 
     private void showLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showLabelMouseExited
+        //When mouse exits, hide the password
         passwordField.setEchoChar('*');
     }//GEN-LAST:event_showLabelMouseExited
 
+    //These next few will be used to check filters for discounts, change them, and edit the tables
     private void inactiveCheckItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_inactiveCheckItemStateChanged
+        
         if (inactiveCheck.isSelected()) {
 
             inactiveSearch = true;
@@ -3661,6 +3711,7 @@ public class ManagerView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_unexpiredBoxItemStateChanged
 
+    //Same thing as above but with accounts
     private void disabledAccountItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_disabledAccountItemStateChanged
         if (disabledAccount.isSelected()) {
             disabledAccountSearch = true;
@@ -3715,6 +3766,7 @@ public class ManagerView extends javax.swing.JFrame {
 
     }//GEN-LAST:event_managerBoxItemStateChanged
 
+    //This one is changing depending on if the disabled games box is selected or not
     private void disabledGamesCheckItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_disabledGamesCheckItemStateChanged
         if (disabledGamesCheck.isSelected()) {
 
@@ -3729,6 +3781,7 @@ public class ManagerView extends javax.swing.JFrame {
         searchGames();
     }//GEN-LAST:event_disabledGamesCheckItemStateChanged
 
+    //Opens pdf help files
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
         try {
             //Open up a pdf for a help file
@@ -3779,13 +3832,12 @@ public class ManagerView extends javax.swing.JFrame {
 
     private void addInventoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addInventoryButtonActionPerformed
         // TODO add your handling code here:
+        
+        //Dispose of this page and open add inventory page
         this.dispose();
         addInv.open();
     }//GEN-LAST:event_addInventoryButtonActionPerformed
 
-    /**
-     * //@param args the command line arguments
-     */
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -3817,6 +3869,12 @@ public class ManagerView extends javax.swing.JFrame {
 //            }
 //        });
 //    }
+    
+    /**
+     * This opens the manager page
+     * 
+     * @throws ParseException 
+     */
     public void open() throws ParseException {
 
         //Whenever it opens we need to get users
@@ -3907,8 +3965,7 @@ public class ManagerView extends javax.swing.JFrame {
         });
 
         displayData.start();
-        //this is just to make the state change and we call the ecent to edit the days
-        //therefore its back to defauult even if opened for the first time
+        //Start the thread
 
         controlsLabel.setVisible(false);
         controls1.setVisible(false);
@@ -3919,6 +3976,9 @@ public class ManagerView extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Sets the table that displays users
+     */
     public void setUserTables() {
 
         //first we need to create a table model
@@ -4039,6 +4099,9 @@ public class ManagerView extends javax.swing.JFrame {
 
     }
 
+    /**
+     * This is called upon to display a specific user
+     */
     public void displayUser() {
 
         selectedUser.setVisible(true);
@@ -4083,6 +4146,9 @@ public class ManagerView extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Sets the discounts table for display
+     */
     public void setDiscountsTable() {
 
         displayedDiscounts.clear();
@@ -4226,6 +4292,12 @@ public class ManagerView extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Displays a specific discount
+     * 
+     * @param index 
+     * The index of the discount chosen in the list
+     */
     public void displayDiscount(int index) {
 
         if (index != -1) {
@@ -4283,6 +4355,7 @@ public class ManagerView extends javax.swing.JFrame {
             selectedDiscount.setVisible(true);
             createDiscounts.setVisible(false);
 
+            //Set status labels invisible at first
             successLabel.setVisible(false);
             discountErrorLabel1.setVisible(false);
             discountErrorInstruction1.setVisible(false);
@@ -4296,6 +4369,9 @@ public class ManagerView extends javax.swing.JFrame {
 
     }
 
+    /**
+     * This is to display the create discounts panel to create a brand new discount
+     */
     public void displayCreateDiscounts() {
 
         //first thing we should do is make everything its default value
@@ -4336,7 +4412,12 @@ public class ManagerView extends javax.swing.JFrame {
     }
 
     //INVENTORY
-    //we are starting off by copying and pasting some inventory functions
+    /**
+     * This will display the games in a list like a store front
+     * 
+     * @param search
+     * The string that will filter out search results (Blank space bar will display all)
+     */
     public void displayGames(String search) {
 
         Thread gameDisplaying = new Thread(() -> {
@@ -4507,6 +4588,7 @@ public class ManagerView extends javax.swing.JFrame {
 
                         gameItem.setVisible(true);
 
+                        //Revalidate or repaint the displays
                         itemContainer.repaint();
                         itemDisplay.repaint();
                         itemDisplay.revalidate();
@@ -4519,7 +4601,7 @@ public class ManagerView extends javax.swing.JFrame {
                 }
             } else {
 
-                //since were working for a search we need to use a counter variable to count how many games we put up
+                //Do the same as above but this time we are working with a string from the search bar
                 int gamesShown = 0;
 
                 //lets create a pattern object
@@ -4662,6 +4744,7 @@ public class ManagerView extends javax.swing.JFrame {
 
                             gameItem.setVisible(true);
 
+                            //Revalidate or repaint the displays
                             itemContainer.repaint();
                             itemDisplay.repaint();
                             itemDisplay.revalidate();
@@ -4687,6 +4770,13 @@ public class ManagerView extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Displays a certain game
+     * 
+     * @param x
+     * Used as an index for the list
+     * 
+     */
     public static void displayGame(int x) {
 
         //Make the item display show
@@ -4724,6 +4814,7 @@ public class ManagerView extends javax.swing.JFrame {
 
             boolean hasImage = false;
 
+            //Display the image
             for (Object[] desiredImage : Lists.images) {
 
                 //check if we get an image
@@ -4753,13 +4844,16 @@ public class ManagerView extends javax.swing.JFrame {
 
     }
 
-    //we need to create filters with this method
+    /**
+     * This method creates filters
+     */
     public void createFilters() {
 
         Dimension filterPanelPreffered = new Dimension(191, Lists.consoles.size() * 30);
 
         consoleFiltersPanel.setPreferredSize(filterPanelPreffered);
 
+        //First create filters for consoles
         for (int x = 0; x < Lists.consoles.size(); x++) {
 
             JCheckBox newFilter = new JCheckBox(Lists.consoles.get(x));
@@ -4771,6 +4865,7 @@ public class ManagerView extends javax.swing.JFrame {
             //and now add the new filter to the console
             consoleFiltersList.add(newFilter);
 
+            //everytime a new filter is made, give it the filterChanged event
             newFilter.addItemListener(new java.awt.event.ItemListener() {
                 public void itemStateChanged(java.awt.event.ItemEvent evt) {
                     filterChanged(evt);
@@ -4779,6 +4874,7 @@ public class ManagerView extends javax.swing.JFrame {
 
         }
 
+        //Then create filters for genres
         filterPanelPreffered = new Dimension(191, Lists.genres.size() * 30);
         genreFiltersPanel.setPreferredSize(filterPanelPreffered);
 
@@ -4792,6 +4888,7 @@ public class ManagerView extends javax.swing.JFrame {
 
             genreFiltersList.add(newFilter);
 
+            //everytime a new filter is made, give it the filterChanged event
             newFilter.addItemListener(new java.awt.event.ItemListener() {
                 public void itemStateChanged(java.awt.event.ItemEvent evt) {
                     filterChanged(evt);
@@ -4802,13 +4899,22 @@ public class ManagerView extends javax.swing.JFrame {
 
     }
 
-    //everytime a filter is changed run this method
+    /**
+     * 
+     * This method is going to redo the search every time a filter is changed. 
+     * 
+     * @param e
+     * The event that triggered this method
+     */
     public void filterChanged(ItemEvent e) {
 
         searchGames();
 
     }
 
+    /**
+     * Gets what is in the search bar and calls the display games with it
+     */
     public void searchGames() {
 
         if (searchBar.getText().isBlank()) {
@@ -4823,6 +4929,13 @@ public class ManagerView extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Uploads a new image
+     * 
+     * @param imageType
+     * An integer that represents image type (0 is thumbnail, 1 is main image).
+     * @throws FileNotFoundException 
+     */
     public void uploadImage(int imageType) throws FileNotFoundException {
 
         imageWarning.setVisible(false);
@@ -4917,6 +5030,10 @@ public class ManagerView extends javax.swing.JFrame {
 
     }
 
+    /**
+     * This is a simple method that runs through the games list and check if any have reached below their threshold. 
+     * If any have it will add to the notifications count.
+     */
     public void createNotificationsCount() {
 
         int notificationAmount = 0;
@@ -4926,7 +5043,7 @@ public class ManagerView extends javax.swing.JFrame {
             //first check what the threshold is
             if (game.restock == 0) {
 
-                //make sure its
+                //make sure it is below the threshold
                 if (game.restock >= game.quantity) {
 
                     notificationAmount++;

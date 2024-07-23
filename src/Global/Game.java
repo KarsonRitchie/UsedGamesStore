@@ -8,7 +8,10 @@ import SQL.SQLManager;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class for hosting information over a game object
+ * 
  */
 public class Game {
     
@@ -52,6 +55,22 @@ public class Game {
     
     }
     
+    /**
+     * Saves an edited game
+     * 
+     * @param name
+     * Title
+     * @param price
+     * Price
+     * @param quantity
+     * Amount in stock
+     * @param description
+     * Game's description
+     * @param restock
+     * Restock threshold
+     * @param active
+     * If it can be seen by customers or not
+     */
     public void save(String name, float price, int quantity, String description, int restock, int active){
     
         this.name = name;
@@ -63,18 +82,40 @@ public class Game {
         
     }
     
+    /**
+     * 
+     * Only saves the quantity of the game
+     * 
+     * @param quantity
+     * The amount now in stock
+     */
     public void quantitySave(int quantity){
     
+        //Save the quantity
+        //If database save is ran afterwards you can save all the data including the quantity in the database
         this.quantity = quantity;
         
     }
     
+    /**
+     * 
+     * A method to save the specific game object to the database
+     * 
+     * @return True if game saves to the database
+     */
     public boolean databaseSave(){
     
+        //Save to the database and return the boolean
         return SQLManager.saveGame(this);
     
     }
     
+    /**
+     * A method to delete the specific game object from the database
+     * @return True if deletion was successful
+     * @deprecated 
+     */
+    @Deprecated
     public boolean delete(){
     
         //we need to check if we can delete the game or if it succeeded

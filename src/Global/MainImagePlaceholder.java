@@ -6,7 +6,9 @@ package Global;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * Only meant to hold a placeholder main image to use throughout the program.
  */
 public class MainImagePlaceholder extends javax.swing.JPanel {
 

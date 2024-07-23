@@ -8,11 +8,13 @@ import SQL.SQLManager;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class to create and store information of users
  */
 public class User {
     
-    //some variables to store
+    //Variables that store specifric information of a user
     public String userLevel = "";
     public int userID = 0;
     public String userFirstName = "";
@@ -52,6 +54,46 @@ public class User {
     
     }
     
+    /**
+     * Saves information of the specific user object edited
+     * 
+     * @param userFirstName
+     * First name
+     * 
+     * @param userLastName
+     * Last name
+     * 
+     * @param userEmail
+     * Email
+     * 
+     * @param phoneNum
+     * Phone number
+     * 
+     * @param address1
+     * The first line of the address
+     * @param address2
+     * The second line of the address
+     * @param address3
+     * The third line of the address
+     * 
+     * @param city
+     * City of residence
+     * 
+     * @param state
+     * State of residence
+     * 
+     * @param zip
+     * User's zip
+     * 
+     * @param userName
+     * Username
+     * 
+     * @param password
+     * Password
+     * 
+     * @param enabledCheck
+     * Wether the user is enabled or not (disabled users can not use the program)
+     */
     public void save(String userFirstName, String userLastName, String userEmail, String phoneNum, String address1, String address2, String address3, String city, String state, String zip, String userName, String password, boolean enabledCheck){
     
         //Lets rewrite what we have
@@ -80,8 +122,14 @@ public class User {
         }
     }
     
+    /**
+     * Saves the specific user object information to the database
+     * 
+     * @return  True if save was successful
+     */
     public boolean databaseSave(){
     
+        //Save the user to the database
         return SQLManager.saveUser(this);
     
     }

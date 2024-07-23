@@ -18,7 +18,9 @@ import SQL.SQLManager;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class full of methods to be used throughout the used games program
  */
 public class Methods {
 
@@ -27,9 +29,12 @@ public class Methods {
     //Variables may change in other pages, but all that is needed is to keep track of information for these methods to work properly
     public static String currentPage = "None";
 
-    //This is to store methods we may use on a global scale
-    //Folr example there may be many packages that need the password to be checked and if they do we just import this apckage
-    //Then use the method
+    /**
+     * Gets the password and makes it into a usable string with no need to do it yourself
+     * @param password
+     * The char sequence of the password field
+     * @return 
+     */
     public static String getPassword(char[] password) {
 
         String SPass = "";
@@ -48,7 +53,21 @@ public class Methods {
     }
 
     //These gloabal methods are for input validation
-    //We mayh use these in a lot of cases so lets make them global
+
+    /**
+     * Checks validation for a username
+     * 
+     * @param username
+     * the given username
+     * 
+     * @param userCheck
+     * A true or false of wether it will check if the user already exists. Only should be ran when trying to submit to the database.
+     * 
+     * @param compare
+     * a true or false only to check if the username is the same as it previously was.
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkUsername(String username, boolean userCheck, boolean compare) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -159,6 +178,14 @@ public class Methods {
 
     }
 
+    /**
+     * Validates the password
+     * 
+     * @param password
+     * The password string. Run The get password method to get this string easier.
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkPassword(String password) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -228,7 +255,18 @@ public class Methods {
         return allErrors;
 
     }
-
+    
+    /**
+     * Makes sure the name fields are used.
+     * 
+     * @param firstName
+     * The string for the first name.
+     * 
+     * @param lastName
+     * the string for the last name.
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkName(String firstName, String lastName) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -243,6 +281,14 @@ public class Methods {
 
     }
 
+    /**
+     * Makes sure the address field is used.
+     * 
+     * @param address
+     * The string for the address
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkAddress(String address) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -257,6 +303,15 @@ public class Methods {
 
     }
 
+    /**
+     * Makes sure the city field has been used
+     * 
+     * @param city
+     * The string for the city
+     * 
+     * @return An array list of validation errors
+     */
+    
     public static ArrayList<String> checkCity(String city) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -271,6 +326,13 @@ public class Methods {
 
     }
 
+    /**
+     * Makes sure a proper state is chosen
+     * 
+     * @param chosenIndex
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkState(int chosenIndex) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -285,6 +347,14 @@ public class Methods {
 
     }
 
+    /**
+     * Makes sure the zip is valid
+     * 
+     * @param zip
+     * The given zip
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkZip(String zip) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -311,6 +381,15 @@ public class Methods {
 
     }
 
+    /**
+     * 
+     * Makes sure the email is valid
+     * 
+     * @param email
+     * The given email string
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkEmail(String email) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -335,6 +414,14 @@ public class Methods {
 
     }
 
+    /**
+     * Makes sure the phone number is valid
+     * 
+     * @param phone
+     * The given phone number
+     * 
+     * @return An array list of validation errors 
+     */
     public static ArrayList<String> checkPhone(String phone) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -356,6 +443,17 @@ public class Methods {
 
     }
 
+    /**
+     * Checks if questions have been chosen and if answers have been given for the security questions
+     * 
+     * @param questions
+     * A list of the comboboxes used for the questions
+     * 
+     * @param answers
+     * A list of JTextFields for the answers to the questions
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkQuestions(ArrayList<JComboBox> questions, ArrayList<JTextField> answers) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -389,7 +487,14 @@ public class Methods {
 
     }
 
-    //These methods will be for checking the credit cards
+    /**
+     * Makes sure the credit card number is in a valid format
+     * 
+     * @param num
+     * the credit card number
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkCardNum(String num) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -411,6 +516,14 @@ public class Methods {
 
     }
 
+    /**
+     * Checks if the CVV of a given credit card is valid
+     * 
+     * @param num
+     * the CVV number
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkCVV(String num) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -434,6 +547,20 @@ public class Methods {
 
     //we have three errors for discounts that will be shown twice
     //so we will make them here to reuse them easier
+    /**
+     * A method to check the discount code
+     * 
+     * @param codeField
+     * A TextField that hosts the given discount code
+     * 
+     * @param submitting
+     * A true or false of wether or not its being submitted for checking
+     * 
+     * @param comparing
+     * This is to check if we are comparing it to the code we had previously or not
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkCode(JTextField codeField, boolean submitting, boolean comparing) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -482,6 +609,14 @@ public class Methods {
         return allErrors;
     }
 
+    /**
+     * Checks if an amount is valid
+     * 
+     * @param amountField
+     * the TextField for the amount
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkAmount(JTextField amountField) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -504,6 +639,14 @@ public class Methods {
         return allErrors;
     }
 
+    /**
+     * Checks if the description fields are used
+     * 
+     * @param descField
+     * The TextArea for the description
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkDesc(JTextArea descField) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -534,6 +677,14 @@ public class Methods {
 //    }
     //This method will check for errors ina  given list and act accordingly
     
+    /**
+     * Checks any sort of JLists given and makes sure not all the ones given are blank
+     * 
+     * @param lists
+     * An array list for JLists
+     * 
+     * @return An array list of validation errors
+     */
     public static ArrayList<String> checkLists(ArrayList<JList> lists) {
 
         ArrayList<String> allErrors = new ArrayList<String>();
@@ -561,6 +712,16 @@ public class Methods {
         return allErrors;
     }
     
+    /**
+     * Checks an array list of errors given and sets visibility of messages and message text depending on the list size and objects.
+     * Used for displaying error messages for validation
+     * 
+     * @param errors
+     * ArrayList of error messages
+     * 
+     * @param errorMessage
+     * The JLabel that will display the given error if there are any
+     */
     public static void checkForErrors(ArrayList<String> errors, JLabel errorMessage) {
 
         if (errors.size() > 0) {
@@ -588,6 +749,12 @@ public class Methods {
 
     }
 
+    /**
+     * Displays a game with the correct options and information depending on the view the user is in.
+     * 
+     * @param index
+     * The index of the chosen item in the list
+     */
     public static void displayItem(int index) {
 
         //Check what we have as the current page and call upon that pages function

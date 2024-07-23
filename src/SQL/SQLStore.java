@@ -21,12 +21,15 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class that holds SQL related methods for the storefront
  */
 public class SQLStore extends GeneralSQL {
 
-    //This will be for the storefront itself
-    //The first query we should look into is loading all the games
+    /**
+     * This will run a query that loads the list of games
+     */
     public static void loadGames() {
 
         //we should erase the previous list as well
@@ -35,6 +38,7 @@ public class SQLStore extends GeneralSQL {
         //When this is called we should execute a query that will bring up all the games on the table
         try {
 
+            //Get connection and run statement
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT Title, Price, Genres.Genre, Consoles.Console, Quantity, GameID, Description, RestockThreshold, IsEnabled "
@@ -54,7 +58,8 @@ public class SQLStore extends GeneralSQL {
                 //System.out.println(rs.getString(1));
                 //System.out.println(rs.getString(2));
             }
-
+            
+            //Close connection
             con.close();
 
             //Now we can display the games
@@ -68,14 +73,39 @@ public class SQLStore extends GeneralSQL {
 
     }
 
+    /**
+     * This will add a specific item to the cart
+     * 
+     * @param name
+     * The name of the game
+     * 
+     * @param console
+     * The console the game is on
+     * 
+     * @param amountDesired
+     * The amount desired by the customer
+     * 
+     * @param gameID
+     * The ID of the game
+     * 
+     * @param userID
+     * The ID of the user who added it to their cart
+     * 
+     * @param price
+     * The price for one copy of the game
+     * 
+     * @return True if saved to cart successfully. False if not.
+     */
     public static boolean addCart(String name, String console, int amountDesired, int gameID, int userID, float price) {
 
         //Here we will try to check if we can take away from the databse and act acocrdingly
         try {
             System.out.println("The desired amount is: " + amountDesired);
 
+            //Get the connection
             GeneralSQL.getConnection();
 
+            //First check if the amount can be added to the cart
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT Quantity, Consoles.Console FROM TestGames3 "
                     + "JOIN Consoles ON TestGames3.ConsoleID = Consoles.ConsoleID "
                     + "WHERE Title = \"" + name + "\" AND Consoles.Console = '" + console + "'");
@@ -89,14 +119,15 @@ public class SQLStore extends GeneralSQL {
                 con.close();
                 return false;
 
+            //If it can be added to the cart now we start trying to add it to the database
             } else {
 
                 //Now update the database since there is enough in stock
                 //stmt = GeneralSQL.con.prepareStatement("UPDATE TestGames2 SET Quantity = " + (rs.getInt(1) - amountDesired) + " WHERE Title = '" + name + "' AND TestGames2.System = '" + console + "'");
                 //stmt.execute();
                 //keep this here for reference, but do not use it unless for testing
-                //quantity should be changed when 
-                //now we will add it to the cart
+                //quantity should be changed if it already exists in the cart
+                //we will add it to the cart if it has not been added before
                 //first check if its in the cart
                 //save the max quantity first
                 int max = rs.getInt(1);
@@ -160,6 +191,7 @@ public class SQLStore extends GeneralSQL {
 //                    Lists.cart.add(item);
 //                }
 //
+                //Close the connection
                 con.close();
                 return true;
 
@@ -174,15 +206,30 @@ public class SQLStore extends GeneralSQL {
 
     }
 
+    /**
+     * This is here to edit the quantity of an item in the cart
+     * 
+     * @param userID
+     * The ID of the user who added it to their cart
+     * 
+     * @param gameID
+     * The ID of the game
+     * 
+     * @param amountDesired
+     * The new desired amount of the game
+     */
     public static void editCart(int userID, int gameID, int amountDesired) {
 
         PreparedStatement stmt;
         try {
+            //Get connection
             GeneralSQL.getConnection();
             
+            //Update database
             stmt = GeneralSQL.con.prepareStatement("UPDATE Cart SET Quantity = " + amountDesired + " WHERE ItemID = " + gameID + " AND UserID = " + userID);
             stmt.execute();
 
+            //Create the cart again and then close the connection
             createCart(userID);
             con.close();
 
@@ -192,6 +239,12 @@ public class SQLStore extends GeneralSQL {
 
     }
 
+    /**
+     * Extracts info from the database to create a cart for the specific user
+     * 
+     * @param userID
+     * The ID of the chosen or logged in user to create the cart for
+     */
     public static void createCart(int userID) {
 
         //This is to make the cart list for the current user
@@ -201,9 +254,12 @@ public class SQLStore extends GeneralSQL {
 
         try {
 
+            //connection is gotten before this method runs
+            //Get the cart data of the specific user
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT * FROM Cart WHERE UserID = " + userID);
             ResultSet rs = stmt.executeQuery();
 
+            //Fill up the cart list from the result set
             while (rs.next()) {
 
                 //first create the cartItem
@@ -212,6 +268,7 @@ public class SQLStore extends GeneralSQL {
                 Lists.cart.add(item);
             }
 
+            //Close the connection
             con.close();
 
         } catch (SQLException ex) {
@@ -221,13 +278,24 @@ public class SQLStore extends GeneralSQL {
         }
 
     }
-
+    
+    
+    /**
+     * This is to fetch the item name
+     * 
+     * @param itemID
+     * The itemID of the desired item to get the name of
+     * 
+     * @return the item's name
+     */
     public static String getItemName(int itemID) {
 
         try {
 
+            //Get the connection
             GeneralSQL.getConnection();
 
+            //Fetch the item name
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT Title FROM TestGames3 WHERE GameID = " + itemID);
             ResultSet rs = stmt.executeQuery();
 
@@ -235,12 +303,16 @@ public class SQLStore extends GeneralSQL {
 
                 String newString = rs.getString(1);
 
+                //Close connection
                 con.close();
 
                 return newString;
 
             } else {
 
+                //Close connection
+                con.close();
+                
                 return "NONE";
 
             }
@@ -254,17 +326,31 @@ public class SQLStore extends GeneralSQL {
 
     }
 
+    /**
+     * Deletes an item from the cart in the database
+     * 
+     * @param itemID
+     * The ID of the item
+     * 
+     * @param userID
+     * The ID of the user who added the item to their cart
+     * 
+     * @return the result of the method in the form of a string
+     */
     public static String removeFromCart(int itemID, int userID) {
 
         try {
             //PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT Quantity FROM TestGames2 WHERE GameID = " + itemID);
             //ResultSet rs = stmt.executeQuery();
 
+            //Get connection
             GeneralSQL.getConnection();
 
+            //Delete from the database
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("DELETE FROM Cart WHERE ItemID = " + itemID + " AND UserID = " + userID);
             stmt.execute();
 
+            //Close the connection
             con.close();
 
             return "Success";
@@ -287,13 +373,19 @@ public class SQLStore extends GeneralSQL {
 
     }
 
+    /**
+     * This is to extract data from tables that will be used to create filters by adding the data to lists
+     */
     public static void createFilterLists() {
 
         //here we will create lists that will allow ua to create filters
         try {
 
+            //Get the connection
             GeneralSQL.getConnection();
 
+            //Now extract from the genres and consoles tables and input them into their appropiate lists
+            
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT Genre FROM Genres");
             ResultSet rs = stmt.executeQuery();
 
@@ -312,6 +404,7 @@ public class SQLStore extends GeneralSQL {
 
             }
 
+            //Close the connection
             con.close();
 
         } catch (SQLException ex) {
@@ -322,6 +415,18 @@ public class SQLStore extends GeneralSQL {
 
     }
 
+    /**
+     * This is to search for a discount based on its code and check if it can be used
+     * 
+     * @param enteredCode
+     * The code given by the customer for a discount
+     * 
+     * @param userID
+     * The ID of the user using the discount code
+     * 
+     * @return information over the discount
+     * @throws ParseException 
+     */
     public static ArrayList<Object> searchForCoupon(String enteredCode, int userID) throws ParseException {
 
         //we want to make an array of different objects so we can use what we need in a specific context
@@ -330,6 +435,7 @@ public class SQLStore extends GeneralSQL {
         //first execute the query
         try {
 
+            //Get the connection and get the desired information
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = GeneralSQL.con.prepareStatement("SELECT DiscountCode, DiscountType, DiscountPercent, DiscountDollar, Active, EndDate, DiscountID, DiscountLevel, GameTitle From Discounts WHERE DiscountCode = '" + enteredCode + "'");
@@ -374,6 +480,7 @@ public class SQLStore extends GeneralSQL {
                         } else {
 
                             //Code was not used, now proceed with the discount
+                            //Add the correct information to the list to use later
                             discountInfo.add("Accepted");
                             discountInfo.add(rs.getInt(2));
 
@@ -411,6 +518,7 @@ public class SQLStore extends GeneralSQL {
 
             }
 
+            //Close connection
             con.close();
 
         } catch (SQLException ex) {
@@ -426,6 +534,11 @@ public class SQLStore extends GeneralSQL {
 
     //We are getting ready to let the user checkout
     //these methods will be used for checking out
+    /**
+     * This is used to check if the cart has any games it can't buy with the quantity desired
+     * 
+     * @return the list of games that can not be bough
+     */
     public static ArrayList<CartItem> checkCart() {
 
         //we will loop through the items in the cart and compare them in a query
@@ -436,6 +549,7 @@ public class SQLStore extends GeneralSQL {
         //go ahead and make a prepared statement and rs variable
         try {
 
+            //Get the connection to
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = null;
@@ -448,6 +562,7 @@ public class SQLStore extends GeneralSQL {
 
                 rs.next();
 
+                //check if the game can be bought
                 if (rs.getInt(1) < Lists.cart.get(x).quantity) {
 
                     noBuy.add(Lists.cart.get(x));
@@ -465,6 +580,7 @@ public class SQLStore extends GeneralSQL {
 
             }
 
+            //Close the connection
             con.close();
 
             return noBuy;
@@ -479,6 +595,36 @@ public class SQLStore extends GeneralSQL {
 
     }
 
+    /**
+     * This is a method that will allow the user to purchase the games
+     * 
+     * @param cardNum
+     * The credit card number
+     * 
+     * @param expDate
+     * The cards expiration date
+     * 
+     * @param cvv
+     * The CVV digits of the credit card
+     * 
+     * @param discountID
+     * The ID of the discount
+     * 
+     * @param discounted
+     * The amount discounted
+     * 
+     * @param tax
+     * The tax amount
+     * 
+     * @param finalTotal
+     * The final total
+     * 
+     * @param subtotal
+     * The subtotal
+     * 
+     * @param discountString
+     * A string related to the discount to help with the report display
+     */
     public static void purchase(String cardNum, String expDate, String cvv, int discountID, float discounted, float tax, float finalTotal, float subtotal, String discountString) {
 
         //this is a variable to hold the order ID
@@ -488,11 +634,13 @@ public class SQLStore extends GeneralSQL {
         //if the id is 0 then it is null
         try {
 
+            //Get connection
             GeneralSQL.getConnection();
 
             PreparedStatement stmt = null;
             ResultSet rs = null;
 
+            //We need to get the prvious ID to help with auto incrementing
             int idNum = 0;
 
             stmt = GeneralSQL.con.prepareStatement("SELECT OrderID FROM Orders");
@@ -505,6 +653,7 @@ public class SQLStore extends GeneralSQL {
 
             }
 
+            //Make sure to get the current date
             Date currentDate = new Date();
 
             SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -512,6 +661,8 @@ public class SQLStore extends GeneralSQL {
             //now format the current date
             String newDate = dateFormatter.format(currentDate);
 
+            //Check what the discount ID is and then check if the one making the purchase is the customer or a manger for a customer
+            //Run the correct query for whichever is needed
             if (discountID == 0) {
 
                 if (Variables.currentLevel.equals("Customer")) {
@@ -555,6 +706,8 @@ public class SQLStore extends GeneralSQL {
             stmt = GeneralSQL.con.prepareStatement("SELECT OrderDetailID FROM OrderDetails");
 
             rs = stmt.executeQuery();
+            
+            //Get ID again hoiwever each query will add a higher number to the ID since there will be multiple rows added
 
             while (rs.next()) {
 
@@ -595,6 +748,7 @@ public class SQLStore extends GeneralSQL {
             stmt = GeneralSQL.con.prepareStatement("DELETE FROM Cart WHERE UserID = " + Variables.customerID);
             stmt.execute();
 
+            //Close connection
             con.close();
 
             Lists.cart.clear();
@@ -607,6 +761,30 @@ public class SQLStore extends GeneralSQL {
 
     }
 
+    /**
+     * This is to make the receipt
+     * 
+     * @param results
+     * The result set of the purchase
+     * 
+     * @param discountID
+     * The ID of the discount
+     * 
+     * @param discounted
+     * The discounted amount
+     * 
+     * @param tax
+     * The tax amount
+     * 
+     * @param finalTotal
+     * The final total
+     * 
+     * @param subtotal
+     * The subtotal of the purchase
+     * 
+     * @param discountString
+     * A string relating to the discount to help with the report display
+     */
     public static void makeReport(ResultSet results, int discountID, float discounted, float tax, float finalTotal, float subtotal, String discountString) {
 
         try {

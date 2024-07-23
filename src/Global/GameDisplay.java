@@ -9,7 +9,9 @@ import java.awt.Color;
 
 /**
  *
- * @author karso
+ * @author Karson
+ * 
+ * A class only to host UI elements to display game information in thumbnail like fashion.
  */
 public class GameDisplay extends javax.swing.JPanel {
 
@@ -166,13 +168,18 @@ public class GameDisplay extends javax.swing.JPanel {
         
     }//GEN-LAST:event_formMouseClicked
 
-
+    /**
+     * highlights the specific game display object. Useful for keyboard exclusive controls
+     */
     public void highlight(){
     
         gameInfo.setBackground(Color.cyan);
     
     }
     
+    /**
+     * Reverts the background color back to white. Useful for keyboard exclusive controls
+     */
     public void revert(){
     
         gameInfo.setBackground(Color.white);
