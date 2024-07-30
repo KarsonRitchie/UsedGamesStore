@@ -7,11 +7,24 @@ package Global;
 import SQL.SQLStore;
 
 /**
- *
- * @author karson
+ * This class is meant to be an item of the cart.
  * 
- * A class meant to hold info on an item in the cart
+ * <br><br>
+ * The cart itself is a lit of these items, each item being an object.
+ * <br>
+ * Each object has the necessary information. It has the normal quantity, price, system, and total spent for that specific item. However we can 
+ * also see the item ID and its max quantity. The ID is mean to be able to know the specific item we have here and max quantity is to help us not go 
+ * over the amount that was displayed to the user when added to the cart.
+ * <br>
+ * The user ID is just to know what user has this item and the information in the cart.
  * 
+ * <br><br>
+ * There is also discount info but this is to get a more accurate price and will be edited within this class based on the given discount if the discount 
+ * item level.
+ * 
+ * <br><br>
+ * This class also contains methods to remove itself from the cart, update this specific objects quantity, and even add or remove as discount from itself.
+ * It even can return the item name by calling on a SQL method.
  */
 public class CartItem {
 
@@ -32,6 +45,27 @@ public class CartItem {
     public float amountDiscounted = 0.00f;
     public int typeDiscount = 0;
 
+    /**
+     * This is a constructor to create a new item in the cart
+     * 
+     * @param userID
+     * The ID of the user who has this item and the specifications in their cart
+     * 
+     * @param itemID
+     * The ID of the specific item
+     * 
+     * @param quantity
+     * The amount desired by the user
+     * 
+     * @param maxQuantity
+     * The highest the quantity is able to go and was able to go at the time the user put it into their cart.
+     * 
+     * @param price
+     * The price for just one of these items
+     * 
+     * @param system
+     * The system the game is on to help with displays
+     */
     public CartItem(int userID, int itemID, int quantity, int maxQuantity, float price, String system) {
 
         this.userID = userID;

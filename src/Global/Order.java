@@ -8,10 +8,18 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- *
- * @author Karson
+ * This class is meant to be a way for objects to be created an instanced to represent an order a customer made. This is going to be used when 
+ * looking at a specific customers order history
  * 
- * A class for order objects to store information of a customers orders and use that information
+ * <br><br>
+ * It comprises of information important to an order liking pricing and discount information. Ir also contains the date as well the order was placed.
+ * 
+ * <br><br>
+ * The most important variable though is the array list for array lists. The games bought will comprise of a lot of needed information so its best to create 
+ * an array list of strings for each game bought and then add that list to the gamesBought array list.
+ * 
+ * <br><br>
+ * This class contains methods to add games to the list and even finalize data that needs to be finalized like the discounts.
  */
 public class Order {
 
@@ -33,6 +41,18 @@ public class Order {
     //some discount info
     public int discountLevel = 0;
 
+    /**
+     * The constructor for an order object
+     * 
+     * @param date
+     * A string that represents the date the order was placed
+     * 
+     * @param discountID
+     * The ID of the discount
+     * 
+     * @param discountedOff
+     * The amount discounted off
+     */
     public Order(String date, int discountID, float discountedOff) {
 
         orderDate = date;

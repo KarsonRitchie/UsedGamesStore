@@ -27,14 +27,24 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
- * @author Karson
- * A page to create games
+ * This class is the CreateGame page.
+ * 
+ * <br><br>
+ * This page allows the manager to be able to create a game and see the previews the users will see when browsing the inventory 
+ * in real time as they put in information. The validation is also in real time, at least ones without the database to help create a fluid program.
+ * 
+ * <br><br>
+ * When the managers submits a game and there are no errors with the games information, the fields will all become disabled. When submitting a game, 
+ * the first thing to be created in the database is the games information, and then images will be saved. Each can provide their own errors so the 
+ * game can be valid, but the images may not be uploaded. So the images can be resubmitted without complicating the associated game. You can 
+ * even save them again if you decide on different images than you had before.
+ * 
+ * <br><br>
+ * The only way to start from scratch is to press the new game button, which will bring the page back to a default state and allow you to submit 
+ * another game.
  */
 public class CreateGame extends javax.swing.JFrame {
-
-    /**
-     * Creates new form CreateGame
-     */
+    
     ManagerView manager = null;
     AddInventoryPage addInv = null;
 
@@ -44,6 +54,13 @@ public class CreateGame extends javax.swing.JFrame {
 
     ArrayList<Game> games = new ArrayList<Game>();
 
+    /**
+     * Creates the create game page to allow users to create games to add to the inventory.
+     * 
+     * @param manager
+     * This object is a ManagerView object, this is so we can bring this class here and be able to call any methods we need. This method will most 
+     * likely be just open, since the the method we need the least is the ability to reopen the previous page.
+     */
     public CreateGame(ManagerView manager) {
         initComponents();
 
@@ -59,6 +76,14 @@ public class CreateGame extends javax.swing.JFrame {
 
     }
 
+    /**
+     * We may come from the add inventory page and will need to go back to it. So this method is used 
+     * to be able to create an AddInventoryPage object.
+     * 
+     * @param addInv
+     * This is the made AddInventoryPage object that is being passed on so we can return to that page from here without trouble and be able to properly 
+     * save the games we need if we come from that page.
+     */
     public void addInventoryPage(AddInventoryPage addInv) {
 
         //Adds the add inventory page
@@ -873,7 +898,7 @@ public class CreateGame extends javax.swing.JFrame {
 //    }
     
     /**
-     * Just a class as a placeholder
+     * Just a class for placeholder images
      */
     public class Placeholder {
 
@@ -979,7 +1004,7 @@ public class CreateGame extends javax.swing.JFrame {
     }
 
     /**
-     * Only ran from the AddInventory page. Meant to change some functionality of the page to better suit the add inventory page.
+     * Only ran from the AddInventory page and opens it from there. Meant to change some functionality of the page to better suit the add inventory page.
      */
     public void openInv() {
 
@@ -1093,7 +1118,7 @@ public class CreateGame extends javax.swing.JFrame {
     }
 
     /**
-     * This method validates the game and if its valid upload it to the database
+     * This method validates the game and if its valid this method will upload it to the database
      */
     public void validateGame() {
 

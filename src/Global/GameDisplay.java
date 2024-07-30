@@ -8,15 +8,15 @@ import Customer.StorePage;
 import java.awt.Color;
 
 /**
- *
- * @author Karson
- * 
- * A class only to host UI elements to display game information in thumbnail like fashion.
+ * This is a class that is only mean to act a smaller form to display game information in a list in a more stylized fashion. It even has an 
+ * index variable to be able to know where it is at in the list and methods to display game information and to highlight or revert itself back if this game is selected
+ * using the keyboard.
  */
 public class GameDisplay extends javax.swing.JPanel {
 
     /**
-     * Creates new form GameDisplay
+     * This a constructor for the class, there are no parameters because all that matters is the components. The components will be altered by other forms 
+     * that load the games and display them.
      */
     public GameDisplay() {
         initComponents();

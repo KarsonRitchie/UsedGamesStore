@@ -7,10 +7,19 @@ package Global;
 import SQL.SQLManager;
 
 /**
- *
- * @author Karson
+ * This class is meant to be for games in the inventory. Each instance of this class will be a specific game.
  * 
- * A class for hosting information over a game object
+ * <br><br>
+ * Each game contains the information like the ID, price, its active state, genre and system, amount in stock, its description.
+ * <br>
+ * If a game is not active, then a customer will not be able to see it.
+ * 
+ * <br><br>
+ * There is one interesting variable to bring to attention and its the restock variable. This is to hold the restock threshold, and if a game goes below it 
+ * then the managers will be notified that the game needs to be restocked.
+ * 
+ * <br><br>
+ * This class also hosts methods to save its quantity and even save itself to the database
  * 
  */
 public class Game {
@@ -26,7 +35,37 @@ public class Game {
     public int restock = 0;
     public int active = 0;
     
-    //Now make a constructor
+    /**
+     * This a constructor that will make a Game object
+     * 
+     * @param name
+     * The game's title
+     * 
+     * @param price
+     * The price for just one of this product
+     * 
+     * @param genre
+     * The genre of the game
+     * 
+     * @param system
+     * The system this specific game or item is playable on
+     * 
+     * @param quantity
+     * The amount in stock
+     * 
+     * @param gameID
+     * The ID of the game from the database
+     * 
+     * @param description
+     * The description of the game
+     * 
+     * @param restock
+     * The restock threshold of the game
+     * 
+     * @param active
+     * An integer that shows wether the game is active or not (0 for inactive, 1 for active)
+     * 
+     */
     public Game(String name, float price, String genre, String system, int quantity, int gameID, String description, int restock, int active){
     
         this.name = name;
@@ -41,6 +80,12 @@ public class Game {
     
     }
     
+    /**
+     * This a constructor for a game object using a game object. We may need to make a temporary duplicate so this is here to make it easier on us
+     * 
+     * @param game
+     * This is the game object that will be copied and made into a new object if we ever need a duplicate.
+     */
     public Game(Game game){
     
         this.name = game.name;

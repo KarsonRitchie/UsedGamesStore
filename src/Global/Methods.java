@@ -17,10 +17,18 @@ import Manager.ManagerView;
 import SQL.SQLManager;
 
 /**
- *
- * @author Karson
+ * This class is a big one. It hosts a variety of methods that are meant to be used throughout the program.
  * 
- * A class full of methods to be used throughout the used games program
+ * <br><br>
+ * A lot of the methods here are here for input validation for fields that need them. As the user inputs information in the field or tries to submit a form 
+ * then this class will be used and the specific method or methods will be called using the data given to see if it is valid and return all the errors.
+ * 
+ * <br><br>
+ * There are a couple other useful methods. One specifically is the method that will take the password from the field and convert it to a string. 
+ * There is no need to constantly make it into a string now to use it, just need the specific method.
+ * 
+ * <br>
+ * Also there is one that helps with item display as well
  */
 public class Methods {
 
@@ -33,7 +41,7 @@ public class Methods {
      * Gets the password and makes it into a usable string with no need to do it yourself
      * @param password
      * The char sequence of the password field
-     * @return 
+     * @return the password sequence converted into a string
      */
     public static String getPassword(char[] password) {
 

@@ -17,9 +17,19 @@ import java.util.regex.Pattern;
 import javax.swing.*;
 
 /**
- *
- * @author Karson
- * A page to create accounts as a manager
+ * This class is the CreateAccountPage but for managers.
+ * 
+ * <br><br>
+ * Most of what is already here was a copy and paste job from the login's create account page. However, there are some new things about this page 
+ * specifically.
+ * <br><br>
+ * First of all is a checkbox that allows managers to create a manager account or a customer account. With that there is no longer a default level used, 
+ * Now the level itself will be submitted or at least checked before adding to the database unlike the login's create account page.
+ * 
+ * <br><br>
+ * There is also a reset button which just calls the open method to bring it back to a default state. Also when a valid account is created, the manager 
+ * stays on this page and the open method will be called to bring it back to a default state. Managers may need to create multiple accounts, so it resets 
+ * to make the managers job a lot easier.
  */
 public class CreateAccountPage extends javax.swing.JFrame {
 
@@ -48,7 +58,11 @@ public class CreateAccountPage extends javax.swing.JFrame {
     ArrayList<JTextField> answers = new ArrayList<JTextField>();
         
     /**
-     * Creates new form CreateAccountPage
+     * Creates a new create account page
+     * 
+     * @param manager
+     * Helps create a manager page object to call its methods. This method is most likely going to just be open, so we can go back to 
+     * that page with ease.
      */
     public CreateAccountPage(ManagerView manager) {
         initComponents();

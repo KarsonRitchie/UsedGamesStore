@@ -21,9 +21,18 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Karson
+ * This class is a SQL class that contains SQL methods that concern the store pages.
  * 
- * A class that holds SQL related methods for the storefront
+ * <br><br>
+ * This page is meant to load the games into a list and allow users to have a cart, edit that cart, and purchase the contents of that cart.
+ * 
+ * <br><br>
+ * There are a few methods that help the store front function properly like creating the lists that will be used for filters, searching for a coupon 
+ * based on the code given, and even getting the name of an item.
+ * 
+ * <br><br>
+ * This class was made while the store pages were still being made so future views maybe using the methods of this class. It is encouraged to do so to 
+ * make code more modular and more efficient instead of having to write the same methods.
  */
 public class SQLStore extends GeneralSQL {
 

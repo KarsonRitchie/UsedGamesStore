@@ -51,15 +51,25 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author Karson
- * The main manager view and form
+ * This class is a form that acts as the main view for the managers.
+ * 
+ * <br><br>
+ * They have access to the inventory, users, and discounts, each in their different tabs and with each having their own methods and functions. However, a lot 
+ * of these methods and functions are similar at their. Each tab has the ability to lead the manager to create new items of the category, edit the items, and 
+ * disable them.
+ * 
+ * <br><br>
+ * A lot of the unique functions come from the inventory tab. This tab allows you to get earning reports, view inventory reports and get notified of what 
+ * needs to be restocked, and also allows you to make a trade-in report while editing the inventory with the specific page it leads you to.
+ * 
+ * <br><br>
+ * With the users page, if a customer is clicked you can view their past transactions or even shop for them.
+ * 
+ * <br><br>
+ * The only unique thing about discounts is that discounts are made in the tab itself rather than its own page.
  */
 public class ManagerView extends javax.swing.JFrame {
-
-    /**
-     * Creates new form ManagerView
-     */
+    
     LogonPage login = null;
     StorePage store = null;
 
@@ -72,6 +82,15 @@ public class ManagerView extends javax.swing.JFrame {
     //this is an array list for invetory errors
     ArrayList<JLabel> inventoryErrors = new ArrayList<JLabel>();
 
+    /**
+     * This is a constructor for the ManagerView class
+     * 
+     * @param login
+     * This is a LogonPage object that will help us create that object here and be able to reopen it from here or if we ever needed to, call its other methods.
+     * 
+     * @param store
+     * This is a StorePage object that will help us create that object here and be able to reopen it from here or if we ever needed to, call its other methods.
+     */
     public ManagerView(LogonPage login, StorePage store) {
         initComponents();
 

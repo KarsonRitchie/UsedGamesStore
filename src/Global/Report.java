@@ -24,9 +24,15 @@ import javax.swing.filechooser.FileSystemView;
 
 /**
  *
- * @author Karson
+ * This class is only meant to be able to create reports.
  * 
- * A class used to make html reports
+ * <br><br>
+ * Depending on what constructor is called and what method is called, the report will display the relevant information. There are two 
+ * constructors one for receipts and another for the other possible reports. And each report type has their own methods and header filling methods to 
+ * display information correctly.
+ * 
+ * <br><br>
+ * After a report is made then it will be built and opened along with putting it on the users system.
  */
 public class Report {
 
@@ -52,6 +58,34 @@ public class Report {
     float subtotal = 0.00f;
     String discountAmount = "";
 
+    /**
+     * A constructor meant for the receipts given to the user
+     * 
+     * @param title
+     * The title of the report
+     * 
+     * @param rs
+     * The result set of the specific order that will comprise the information of the report
+     * 
+     * @param discountID
+     * The ID of the discount (0 if there are none)
+     * 
+     * @param discounted
+     * The amount to be discounted off
+     * 
+     * @param tax
+     * The tax amount of the current subtotal
+     * 
+     * @param totalFinal
+     * The final price of the order
+     * 
+     * @param subtotal
+     * The amount before the discount and taxes added on
+     * 
+     * @param discountAmount
+     * A string representing the amount to be discounted off to help with display accurate information
+     * @throws Exception 
+     */
     public Report(String title, ResultSet rs, int discountID, float discounted, float tax, float totalFinal, float subtotal, String discountAmount) throws Exception {
         this.title = title;
         this.rs = rs;
@@ -70,7 +104,19 @@ public class Report {
         buildReport();
     }
 
-    //make another report creator so we can have more specific reports
+    /**
+     * This constructor is for the other reports, inventory and sales reports.
+     * 
+     * @param rs
+     * The result set that will comprise the reports information
+     * 
+     * @param inventory
+     * A true or false that shows if we are making an inventory report or not
+     * 
+     * @param specific
+     * This is a true or false only used for sales reports that will show if this is about a specific user or not.
+     * @throws Exception 
+     */
     public Report(ResultSet rs, boolean inventory, boolean specific) throws Exception {
         setStyle();
         md = rs.getMetaData();
@@ -86,6 +132,12 @@ public class Report {
 
     }
     
+    /**
+     * A basic constructor that makes only a report with a title and should only be for testing purposes if used at all.
+     * 
+     * @param title
+     * The title of the report
+     */
     public Report(String title){
     
         this.title = title;
@@ -619,6 +671,20 @@ public class Report {
 
     }
     
+    /**
+     * This is a method that will run to create a trade report
+     * 
+     * @param games
+     * An array list containing the games with altered inventory
+     * 
+     * @param newGames
+     * The array list of the new games added to the system
+     * 
+     * @param amount
+     * The amount spent on the trade-in
+     * 
+     * @throws Exception 
+     */
     public void tradeReport(ArrayList<Game> games, ArrayList<Game> newGames, float amount) throws Exception{
     
         header = "<div class = TableTitle>" + "Trade-In Report" + "</div><table><tr>\n";

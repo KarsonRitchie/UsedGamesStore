@@ -13,10 +13,18 @@ import java.util.regex.Pattern;
 import javax.swing.*;
 
 /**
- *
- * @author Karson
+ *This class is a form for users to create accounts.
  * 
- * A page made for creating accounts
+ * <br><br>
+ * A user is expected to put in basic information like name, address, phone number, and of course the username and password. As 
+ * the user inputs information in the fields, it will be checked in real time to make sure the field has valid information.
+ * <br>
+ * It is also required to input security questions and answers. In fact, the only field not required is the email field, however it is still validated 
+ * if there is any information in the field.
+ * 
+ * <br><br>
+ * Upon submission the fields are checked once more, username is even checked to make sure it is a unique username, and if there are no errors then 
+ * a new account will be created.
  */
 public class CreateAccountPage extends javax.swing.JFrame {
 
@@ -45,7 +53,10 @@ public class CreateAccountPage extends javax.swing.JFrame {
     ArrayList<JTextField> answers = new ArrayList<JTextField>();
         
     /**
-     * Creates new form CreateAccountPage
+     * A constructor that makes a new CreateAccountPage object
+     * 
+     * @param logon
+     * This is an object to hold the LogonPage in order to give this class access to its methods. Mostly the ability to open it.
      */
     public CreateAccountPage(LogonPage logon) {
         initComponents();

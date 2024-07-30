@@ -42,13 +42,18 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author Karson
  * 
- * A class that acts as a store page, form and all.
+ * This is the page that will display the inventory to a user wether they are a guest, manager, or a customer.
+ * 
+ * <br><br>
+ * 
+ * This is the first page customers and guest will see after logging in and are able to browse through the inventory and if you are logged in as a customer 
+ * or user then you will be able to add to the cart and proceed to the cart page.
+ * 
+ * <br><br>
+ * If you are a manager, you are only adding to the cart of customers, not managers.
  */
 public class StorePage extends javax.swing.JFrame {
-
     //Create a login, cart, and manager page object here
     LogonPage login = null;
     CartPage cart = null;
@@ -56,7 +61,11 @@ public class StorePage extends javax.swing.JFrame {
     //This is to make going back to other pages a breeze
 
     /**
-     * Creates new form StorePage
+     * A constructor that will create a new StorePage object
+     * 
+     * @param logon
+     * This is a LogonPage object that will take the Logon page and give that object to this class. This is so we can call whatever methods we need from
+     * the login page. This is mostly for opening it after existing this form.
      */
     public StorePage(LogonPage logon) {
         initComponents();
@@ -1063,7 +1072,7 @@ public class StorePage extends javax.swing.JFrame {
 //        });
 //    }
     /**
-     * Called when a user logs in
+     * Called when a user logs in to open this page
      * 
      */
     public void open() {
@@ -1159,6 +1168,7 @@ public class StorePage extends javax.swing.JFrame {
 
     /**
      * Opens the store page as a manager. This is only accessible as a manager and acts as a POS page
+     * 
      * @param manager
      * The manager page/view that was used to access the store as a manager
      */
@@ -1668,6 +1678,7 @@ public class StorePage extends javax.swing.JFrame {
 
     /**
      * This is a method triggered by checking off filters to change the search in real time.
+     * 
      * @param e 
      * This is the event that will trigger the method.
      */

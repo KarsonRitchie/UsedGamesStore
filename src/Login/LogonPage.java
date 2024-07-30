@@ -20,15 +20,21 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 /**
- *
- * @author Karson
+ *This class is the first page the user will see upon boot up.
  * 
- * This is the page for logging in as a user, or accessing the create account page or reset password page.
+ * <br><br>
+ * The form allows you to log in using the username and password fields and will check if there are matching results in the database. If there are 
+ * matching results in the database, then the application will take you to the correct pages depending on the users level.
+ * 
+ * <br><br>
+ * However, if a user has trouble getting in then they can do 1 of 3 options. The form allows you to go to the create account page to create an account, 
+ * the reset password page in order to reset their password, and lets you just go to the store as a guest. Though not having an account will 
+ * not allow the user to be able to buy anything
  */
 public class LogonPage extends javax.swing.JFrame {
 
     /**
-     * Creates new form LogonPage
+     * This is a constructor for the LogonPage object. There are no need for parameters because it is the first page made.
      */
     public LogonPage() {
         initComponents();

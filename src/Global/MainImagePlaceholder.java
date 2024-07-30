@@ -6,14 +6,12 @@ package Global;
 
 /**
  *
- * @author Karson
- * 
- * Only meant to hold a placeholder main image to use throughout the program.
+ * This class is only meant to hold a placeholder image for the main images
  */
 public class MainImagePlaceholder extends javax.swing.JPanel {
 
     /**
-     * Creates new form MainImagePlaceholder
+     * This constructor makes the MainImagePlaceHolder object.
      */
     public MainImagePlaceholder() {
         initComponents();

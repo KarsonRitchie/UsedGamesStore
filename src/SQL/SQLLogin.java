@@ -10,10 +10,11 @@ import Global.Variables;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 /**
- *
- * @author Karson
+ * This class is an SQL class that relates to methods that concerns the login page. This page is meant to help login, 
+ * check the username to see if its unique, retrieve security questions, and edit the password.
  * 
- * A class to handle SQL related methods that have to do with users or logging in
+ * <br><br>
+ * This class was made when all there was was the login page, so these methods could be used somewhere else that is not the login.
  */
 public class SQLLogin extends GeneralSQL {
 

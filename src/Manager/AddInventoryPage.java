@@ -26,10 +26,34 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 
 /**
- *
- * @author Karson
+ * This class is meant to be a page that will help managers add games to the inventory (wether they are in the system or not) and give 
+ * the amount spent and then report it.
  * 
- * A page for editing inventory and adding new games from a trade in and create a report over it
+ *  <br><br>
+ * The first list requires the use of a drop down box and counter. These are games already in the inventory and are just being added onto the inventory 
+ * upon submission. Using the controls on the right of the list, the user is able to edit the list quantity, remove an item, or even clear it.
+ * 
+ * <br><br>
+ * The next list, however, are for games not in the system. Clicking on the add game button will bring you to the create game page and whatever games are made 
+ * there will be added to this list. The quantity is what will be added instead of adding on top because we are basically adding to 0. The controls 
+ * on the right of the list work with the same principles however, one major difference is that new games are added to the database by default 
+ * through this page.
+ * <br>
+ * These new games are disabled, and if the form is exited without submission or if a game is deleted from the list before submission 
+ * will be deleted from the database. They disabled so that if this was not a local database then nobody would be able to see the games until 
+ * the manager submits the form.
+ * 
+ * <br><br>
+ * Before submitting the amount field must be filled out.
+ * <br>
+ * This page is designed for trade-ins since it is a used games store, and trade-ins cost money
+ * 
+ * <br><br>
+ * After submission, the user will be given a report of the trade-in.
+ * 
+ * <br><br>
+ * This page might not seem useful, but it allows managers to change inventory in a quick succession and be able to report on it, which 
+ * the store would need to do to keep track of spending and earnings.
  */
 public class AddInventoryPage extends javax.swing.JFrame {
 
@@ -47,6 +71,15 @@ public class AddInventoryPage extends javax.swing.JFrame {
     //an array list for the labels
     ArrayList<JLabel> errorLabels = new ArrayList<JLabel>();
 
+    /**
+     * A constructor for the AddInventoryPage object
+     * 
+     * @param manager
+     * To help create a manager page object to call its functions. This function is mostly going to be open.
+     * 
+     * @param gameCreate
+     * To help create a create game page to call on its functions. This function is mostly going to be open.
+     */
     public AddInventoryPage(ManagerView manager, CreateGame gameCreate) {
         initComponents();
 
@@ -64,6 +97,12 @@ public class AddInventoryPage extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Adds the login page to create an object of it
+     * 
+     * @param login
+     * Helps create a login page object for its methods to be called, which is most likely going to be just open or run in the login's case.
+     */
     public void addLoginPage(LogonPage login) {
 
         //Add the login page to help return to it if needed
@@ -906,7 +945,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
      * Reopens the form from the add games page so its not a full restart
      * 
      * @param games
-     * The list of created games
+     * The list of created games from the create game page
      */
     public void reopen(ArrayList<Game> games) {
 
@@ -944,7 +983,7 @@ public class AddInventoryPage extends javax.swing.JFrame {
     }
 
     /**
-     * This is only ran to referrsh the drop box that is listing the games that are already in the system
+     * This is only ran to refresh the drop box that is listing the games that are already in the system
      */
     public void refreshGames() {
 

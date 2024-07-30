@@ -28,9 +28,11 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Karson
+ * This is the class that contains the main method of the used games program and will run upon boot up.
  * 
- * The main  method of the Used Games program. Runs whenever its opened and starts the program
+ * <br><br>
+ * There is one method here and it is to check if the user is an admin. This is here so that if the program is made into an 
+ * application, they are forced to be an admin so that sqlite will allow them to edit the database.
  */
 public class GameStoreAnt {
     

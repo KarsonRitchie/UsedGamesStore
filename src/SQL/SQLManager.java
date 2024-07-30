@@ -25,10 +25,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Karson
+ * This is an SQL class that contains SQL methods that concern the manager view and it functions.
  * 
- * A class to host SQL related methods that concern manger functions
+ * <br><br>
+ * This class is mostly meant to be used for creating, saving, and loading data for users, discounts, and games. However, this also can delete games, 
+ * create reports, and even compare dates for sales reports.
  */
 public class SQLManager extends GeneralSQL {
 

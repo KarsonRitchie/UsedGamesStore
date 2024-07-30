@@ -5,15 +5,12 @@
 package Global;
 
 /**
- *
- * @author Karson
- * 
- * Only meant to hold a placeholder thumbnail image to use throughout the program.
+ * A class meant to hold a placeholder for thumbnail images
  */
 public class ThumbnailPlaceholder extends javax.swing.JFrame {
 
     /**
-     * Creates new form ThumbnailPlaceholder
+     * The constructor of the thumbnail placeholder object
      */
     public ThumbnailPlaceholder() {
         initComponents();

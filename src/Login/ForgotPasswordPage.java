@@ -12,10 +12,13 @@ import java.util.regex.Pattern;
 import javax.swing.*;
 
 /**
- *
- * @author Karson
+ * This class is a form that allows users to reset their passwords.
  * 
- * This page is used to help users reset their passwords
+ * <br><br>
+ * If the given username is found, then the application will give you the chosen security questions 
+ * and then ask you to answer them and create a new password.
+ * <br><br>
+ * As you create a new password, the field will be validated in real time.
  */
 public class ForgotPasswordPage extends javax.swing.JFrame {
 
@@ -26,7 +29,11 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
     ArrayList<String> passwordErrors = new ArrayList<String>();
 
     /**
-     * Creates new form ForgotPasswordPage
+     * This is a constructor for the ForgetPasswordPage object.
+     * 
+     * @param login
+     * This is a LogonPage object that is used to give that object to this page. This is so we can call any methods from that object, which is mostly 
+     * the open method.
      */
     public ForgotPasswordPage(LogonPage login) {
         initComponents();
@@ -431,7 +438,7 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
 //    }
 
     /**
-     * This is to check the username given and if it was found, display the proper questions.
+     * This is to check the username given. if the username was found the proper questions will be displayed
      */
     public void checkUsername() {
 
@@ -548,6 +555,9 @@ public class ForgotPasswordPage extends javax.swing.JFrame {
         return valid;
     }
 
+    /**
+     * This method is used to open the page in a default state
+     */
     public void open() {
 
         //This is to start the page in its default state and make it visible

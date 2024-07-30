@@ -19,18 +19,24 @@ import java.util.GregorianCalendar;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author Karson
+ * This class is just a form to show the past transactions of a specific user.
  * 
- * A page that shows a specified users past transactions
+ * <br><br>
+ * Upon opening the form the user will be checked for any orders and a list will be created, if there are none it will be said. However, if there are 
+ * any then each order will be displayed separately like a receipt and the manager will be able to browse through them one by one.
+ * <br>
+ * If they so desire, a manager can even create a more specific earning report that concerns the customer and their spending.
  */
 public class PastTransactions extends javax.swing.JFrame {
 
-    /**
-     * Creates new form NotificationsView
-     */
     ManagerView manager = null;
 
+    /**
+     * This is a constructor for the PastTransactions class
+     * 
+     * @param manager
+     * This is a ManagerView object in order to be able to go back to that page with ease.
+     */
     public PastTransactions(ManagerView manager) {
         initComponents();
 

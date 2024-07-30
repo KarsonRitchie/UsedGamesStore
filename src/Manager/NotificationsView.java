@@ -13,18 +13,22 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author Karson
+ * This class is a simple form that shows to managers what has went through the restock threshold or what is sold out. 
+ * anything in need of a restock will be shown here to the manager.
  * 
- * This is a form that shows managers what has went below restock threshold or needs restocking
+ * <br><br>
+ * Upon opening the form it will be checked if any games meet the requirements and the list will display games that have met the requirements.
  */
 public class NotificationsView extends javax.swing.JFrame {
 
-    /**
-     * Creates new form NotificationsView
-     */
     ManagerView manager = null;
 
+    /**
+     * This is a constructor for the notifications view class
+     * 
+     * @param manager
+     * This a ManagerView object that will allow us to create this object so we can reopen the page from here.
+     */
     public NotificationsView(ManagerView manager) {
         initComponents();
 

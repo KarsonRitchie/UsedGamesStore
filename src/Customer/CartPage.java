@@ -26,15 +26,23 @@ import javax.swing.*;
 //import Global.CartItem;
 /**
  *
- * @author Karson
+ * This is the CartPage form.
  * 
- * This is the cart page that is a form that will show the user their current cart and allow them to purchase the games within.
+ * <br><br>
+ * The most important aspect of this form is that it allows you to edit and view the cart. Using the buttons given you can
+ * <br>       Edit the quantity
+ * <br>       Remove the game from the cart
+ * <br>       Clear the cart
+ * 
+ * <br><br>
+ * This cart form also allows the user to be able to checkout with the field on the right side. As you alter the cart or add a discount the 
+ * total price will change in real time to give the user a more accurate price.
+ * <br>
+ * After checking out, the user is given a receipt of the purchase, which displays different information depending on 
+ * if you are a manager or a customer.
  */
 public class CartPage extends javax.swing.JFrame {
 
-    /**
-     * Creates new form CartPage
-     */
     StorePage store = null;
     LogonPage login = null;
 
@@ -46,6 +54,17 @@ public class CartPage extends javax.swing.JFrame {
 
     ArrayList<JLabel> errorMessages = new ArrayList<JLabel>();
 
+    /**
+     * This a constructor for the CartPage object.
+     * 
+     * @param store
+     * This is supposed to be a StorePage object. Due to the cart needing to come after the store page and having to go back to it, 
+     * this object is made in the store page and needs the cart needs to take that object in order to call methods from it. The method called is 
+     * mostly going to be open to reopen the store page.
+     * 
+     * @param login
+     * This is a LogonPage object and is here to create a login page object so we can exit out of this page and go back to the login if so desired.
+     */
     public CartPage(StorePage store, LogonPage login) {
         initComponents();
 

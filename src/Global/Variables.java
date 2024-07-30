@@ -5,10 +5,8 @@
 package Global;
 
 /**
- *
- * @author Karson
- * 
- * A class to host variables that will be needed throughout the program
+ * A class only meant to hold important variables that will be used across the program, like the user and customer ID, the current user or 
+ * manager of the program, and even the current level of the user logged into the program.
  */
 public class Variables {
     

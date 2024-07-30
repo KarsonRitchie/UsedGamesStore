@@ -10,9 +10,8 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Karson
- * 
- * A class meant for establishing a connection to the SQL database
+ * This class is just meant to be an abstract class to derive other SQL classes from for its variables. This class is also meant to establish 
+ * a connection to the database whenever needed.
  */
 //This class will be used as a superclass
 //It will have a default query run for any random queries we may need either for testing or in use but doesnt need its own method

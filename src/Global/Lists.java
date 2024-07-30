@@ -16,9 +16,8 @@ import java.util.*;
 //Import games so we can make an array list off of them
 /**
  *
- * @author Karson
- * 
- * A class only meant to host lists that will be used throughout the program
+ * This class is only meant to hosts lists that will be used throughout the program or can be. Things like games, cart, users, discounts, and even images 
+ * are all here and accounted for with a few others.
  */
 public class Lists {
     

@@ -12,10 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Karson
- * 
- * A class for methods relating to SQL that concern images
+ * This class is an SQL class that will only concern image methods. Mostly just uploading, retrieving, and editing.
  */
 public class SQLImages extends GeneralSQL {
 
@@ -33,7 +30,7 @@ public class SQLImages extends GeneralSQL {
      * The image type (0 for thumbnail, 1 for main image)
      * 
      * @param b
-     * The byte array
+     * The byte array of the image
      * 
      * @return True if image was uploaded successfully. False if not.
      */
